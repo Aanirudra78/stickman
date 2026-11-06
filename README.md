@@ -4,6 +4,12 @@
 backdrop, with a natural male English voiceover. The video is generated from
 `public/script.json` — edit that file, not the components.
 
+## Render from the phone (PC off)
+
+Push this folder to a private GitHub repo and run the **Render video** workflow
+from the GitHub app; the MP4 arrives on Telegram. Setup and script format:
+[`docs/RENDER-IN-CLOUD.md`](docs/RENDER-IN-CLOUD.md).
+
 ## Commands
 
 ```bash
@@ -12,6 +18,7 @@ npm run dev            # Remotion Studio (preview)
 npm run voiceover      # generate/refresh narration from script.json
 npm run voiceover -- --force   # rebuild every clip
 npm run render         # out/stickman-test.mp4
+npm run render:video   # out/video.mp4 (what the cloud workflow renders)
 npx remotion still StickmanExplainer out/frame.png --frame=90
 ```
 

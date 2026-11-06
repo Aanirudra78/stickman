@@ -16,17 +16,9 @@ Free minutes: 2000/month for a private repo (a render uses ~5).
 
 You need a GitHub account: <https://github.com/signup> (free, no card).
 
-### Install Git (Windows)
-
-```powershell
-winget install --id Git.Git -e
-```
-
-Close and reopen the terminal afterwards, then check:
-
-```powershell
-git --version
-```
+Git is now installed on this PC (2.56) and `app/` is already a git repository
+with one commit on `main`, so there is nothing to prepare locally - only the
+remote is missing.
 
 ### Create the repo and push
 
@@ -35,18 +27,18 @@ Do **not** add a README or .gitignore (the project already has one).
 
 ```powershell
 cd "C:\Users\sanir\Music\web\stickman render\app"
-git init
-git add .
-git commit -m "Stickman animation v2 + cloud render pipeline"
-git branch -M main
 git remote add origin https://github.com/<YOUR-USER>/stickman-render.git
 git push -u origin main
 ```
 
-Git will ask you to sign in through the browser the first time.
+Git will ask you to sign in through the browser (or with a personal access
+token) the first time.
 
-> `node_modules/`, `out/*.mp4` and `out/qa/` are ignored, so the push is only a
-> few MB. Renders stay on your PC / in the baseline zip.
+> If you ever need to redo the local repo:
+> `git init -b main; git add .; git commit -m "initial"`.
+
+> `node_modules/`, `out/*.mp4` and `out/qa/` are ignored, so the push is only
+> ~2 MB. Renders stay on your PC / in the baseline zip.
 
 ---
 
