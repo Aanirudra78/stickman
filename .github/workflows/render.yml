@@ -1,0 +1,117 @@
+name: Render video
+
+# Phone-friendly pipeline:
+#   Actions -> Render video -> Run workflow -> video arrives on Telegram.
+# No server, no card. Renders on a free GitHub-hosted runner.
+
+on:
+  workflow_dispatch:
+    inputs:
+      script_json:
+        description: "Optional: full script JSON on ONE line (blank = use public/script.json)"
+        required: false
+        type: string
+      voice:
+        description: "Edge TTS voice"
+        required: false
+        default: "en-US-AndrewMultilingualNeural"
+        type: string
+      caption:
+        description: "Telegram caption (optional)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stickman-render
+  cancel-in-progress: false
+
+env:
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Chrome libraries
+        run: |
+          sudo apt-get update
+          # Ubuntu 24.04 renamed several libs (*t64). Try those names, fall back
+          # to the legacy ones, and never fail: the runner image already ships
+          # Chrome with its dependencies.
+          sudo apt-get install -y --no-install-recommends \
+            libnss3 libnspr4 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 \
+            libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
+            libxrandr2 libgbm1 libasound2t64 libpango-1.0-0t64 libcairo2 \
+          || sudo apt-get install -y --no-install-recommends \
+            libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 \
+            libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
+            libxrandr2 libgbm1 libasound2 libpango-1.0-0 libcairo2 \
+          || echo "note: Chrome libraries already present, continuing"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare browser
+        run: npx remotion browser ensure
+
+      - name: Apply script and voice
+        env:
+          SCRIPT_JSON: ${{ inputs.script_json }}
+          VOICE: ${{ inputs.voice }}
+        run: node scripts/apply-script.mjs
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Generate voiceover
+        run: npm run voiceover
+
+      - name: Render
+        run: npm run render:video -- --log=error
+
+      - name: Fit within Telegram's upload limit
+        id: fit
+        run: node scripts/compress-if-needed.mjs out/video.mp4 --max-mb=45
+
+      - name: Send video to Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_VIDEO: ${{ steps.fit.outputs.out }}
+          TELEGRAM_CAPTION: ${{ inputs.caption }}
+        run: node scripts/telegram-notify.mjs
+
+      - name: Upload video artifact (backup)
+        uses: actions/upload-artifact@v4
+        with:
+          name: stickman-video
+          path: |
+            out/*.mp4
+            src/voice/manifest.json
+            public/script.json
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Notify failure
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          node scripts/telegram-notify.mjs \
+            --text "Stickman render failed. Open the run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

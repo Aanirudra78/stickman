@@ -1,0 +1,8 @@
+node_modules/
+.tmp-check/
+
+# Renders and QA stills stay local - the repo only needs source.
+out/*.mp4
+out/qa/
+
+*.log

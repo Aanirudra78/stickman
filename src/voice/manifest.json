@@ -1,0 +1,330 @@
+{
+  "provider": "@andresaya/edge-tts",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "rate": "-4%",
+  "pitch": "+0Hz",
+  "outputFormat": "audio-24khz-48kbitrate-mono-mp3",
+  "normalization": {
+    "targetPeakDbfs": -3,
+    "maxGainDb": 12
+  },
+  "generatedAt": "2026-11-06T06:13:33.818Z",
+  "totalSeconds": 22.344,
+  "scenes": [
+    {
+      "index": 0,
+      "file": "voice/scene-01.mp3",
+      "text": "The two minute rule, from Atomic Habits.",
+      "hash": "4bf4b23aa6fb",
+      "durationInSeconds": 2.736,
+      "peakDbfs": -3,
+      "gainDb": 0.878,
+      "words": [
+        {
+          "text": "The",
+          "start": 0.104,
+          "end": 0.169
+        },
+        {
+          "text": "two",
+          "start": 0.169,
+          "end": 0.391
+        },
+        {
+          "text": "minute",
+          "start": 0.391,
+          "end": 0.638
+        },
+        {
+          "text": "rule",
+          "start": 0.638,
+          "end": 0.99
+        },
+        {
+          "text": "from",
+          "start": 1.094,
+          "end": 1.263
+        },
+        {
+          "text": "Atomic",
+          "start": 1.263,
+          "end": 1.68
+        },
+        {
+          "text": "Habits",
+          "start": 1.68,
+          "end": 2.357
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "file": "voice/scene-02.mp3",
+      "text": "Starting a new habit? Two minutes is enough.",
+      "hash": "324a1b4da585",
+      "durationInSeconds": 3.336,
+      "peakDbfs": -3,
+      "gainDb": 2.547,
+      "words": [
+        {
+          "text": "Starting",
+          "start": 0.104,
+          "end": 0.378
+        },
+        {
+          "text": "a",
+          "start": 0.391,
+          "end": 0.417
+        },
+        {
+          "text": "new",
+          "start": 0.417,
+          "end": 0.677
+        },
+        {
+          "text": "habit",
+          "start": 0.69,
+          "end": 1.198
+        },
+        {
+          "text": "Two",
+          "start": 1.615,
+          "end": 1.784
+        },
+        {
+          "text": "minutes",
+          "start": 1.784,
+          "end": 2.162
+        },
+        {
+          "text": "is",
+          "start": 2.266,
+          "end": 2.422
+        },
+        {
+          "text": "enough",
+          "start": 2.422,
+          "end": 2.956
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "file": "voice/scene-03.mp3",
+      "text": "Keep the goal tiny. Start with two minutes. Keep it easy and small. Repeat it every day.",
+      "hash": "ce4bd6c9445a",
+      "durationInSeconds": 6.768,
+      "peakDbfs": -3.156,
+      "gainDb": 0,
+      "words": [
+        {
+          "text": "Keep",
+          "start": 0.091,
+          "end": 0.26
+        },
+        {
+          "text": "the",
+          "start": 0.26,
+          "end": 0.326
+        },
+        {
+          "text": "goal",
+          "start": 0.326,
+          "end": 0.573
+        },
+        {
+          "text": "tiny",
+          "start": 0.586,
+          "end": 1.055
+        },
+        {
+          "text": "Start",
+          "start": 1.484,
+          "end": 1.784
+        },
+        {
+          "text": "with",
+          "start": 1.784,
+          "end": 1.914
+        },
+        {
+          "text": "two",
+          "start": 1.914,
+          "end": 2.135
+        },
+        {
+          "text": "minutes",
+          "start": 2.148,
+          "end": 2.695
+        },
+        {
+          "text": "Keep",
+          "start": 3.112,
+          "end": 3.268
+        },
+        {
+          "text": "it",
+          "start": 3.268,
+          "end": 3.346
+        },
+        {
+          "text": "easy",
+          "start": 3.477,
+          "end": 3.854
+        },
+        {
+          "text": "and",
+          "start": 3.854,
+          "end": 3.945
+        },
+        {
+          "text": "small",
+          "start": 3.945,
+          "end": 4.466
+        },
+        {
+          "text": "Repeat",
+          "start": 4.896,
+          "end": 5.286
+        },
+        {
+          "text": "it",
+          "start": 5.443,
+          "end": 5.625
+        },
+        {
+          "text": "every",
+          "start": 5.781,
+          "end": 6.003
+        },
+        {
+          "text": "day",
+          "start": 6.016,
+          "end": 6.38
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "file": "voice/scene-04.mp3",
+      "text": "Just start. Reading? Just one page. Running? Just put on your shoes. Writing? Just one line.",
+      "hash": "0d43c444e364",
+      "durationInSeconds": 7.224,
+      "peakDbfs": -3,
+      "gainDb": 2.383,
+      "words": [
+        {
+          "text": "Just",
+          "start": 0.104,
+          "end": 0.286
+        },
+        {
+          "text": "start",
+          "start": 0.3,
+          "end": 0.703
+        },
+        {
+          "text": "Reading",
+          "start": 1.107,
+          "end": 1.458
+        },
+        {
+          "text": "Just",
+          "start": 1.888,
+          "end": 2.057
+        },
+        {
+          "text": "one",
+          "start": 2.07,
+          "end": 2.266
+        },
+        {
+          "text": "page",
+          "start": 2.279,
+          "end": 2.799
+        },
+        {
+          "text": "Running",
+          "start": 3.229,
+          "end": 3.529
+        },
+        {
+          "text": "Just",
+          "start": 3.919,
+          "end": 4.023
+        },
+        {
+          "text": "put",
+          "start": 4.036,
+          "end": 4.154
+        },
+        {
+          "text": "on",
+          "start": 4.167,
+          "end": 4.258
+        },
+        {
+          "text": "your",
+          "start": 4.271,
+          "end": 4.362
+        },
+        {
+          "text": "shoes",
+          "start": 4.362,
+          "end": 4.948
+        },
+        {
+          "text": "Writing",
+          "start": 5.365,
+          "end": 5.703
+        },
+        {
+          "text": "Just",
+          "start": 6.12,
+          "end": 6.276
+        },
+        {
+          "text": "one",
+          "start": 6.276,
+          "end": 6.458
+        },
+        {
+          "text": "line",
+          "start": 6.458,
+          "end": 6.823
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "file": "voice/scene-05.mp3",
+      "text": "Tiny start, big results.",
+      "hash": "ca8b0e491989",
+      "durationInSeconds": 2.28,
+      "peakDbfs": -3,
+      "gainDb": 0.887,
+      "words": [
+        {
+          "text": "Tiny",
+          "start": 0.104,
+          "end": 0.365
+        },
+        {
+          "text": "start",
+          "start": 0.365,
+          "end": 0.781
+        },
+        {
+          "text": "big",
+          "start": 0.99,
+          "end": 1.198
+        },
+        {
+          "text": "results",
+          "start": 1.211,
+          "end": 1.888
+        }
+      ]
+    }
+  ]
+}

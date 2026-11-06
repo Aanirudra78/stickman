@@ -1,0 +1,8 @@
+# Keep the repo in LF so the Linux runner is happy; Windows-only scripts keep CRLF.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.png binary
+*.jpg binary
+*.mp3 binary
+*.ttf binary
+*.mp4 binary

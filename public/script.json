@@ -1,0 +1,68 @@
+{
+  "title": "The 2-Minute Rule",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "scenes": [
+    {
+      "text": "The 2-Minute Rule\nfrom Atomic Habits",
+      "voiceover": "The two minute rule, from Atomic Habits.",
+      "pose": "idle",
+      "scene_type": "text",
+      "duration": 2,
+      "speaking": false,
+      "pose_changes": [
+        {
+          "at": 1.22,
+          "pose": "pointing"
+        }
+      ]
+    },
+    {
+      "text": "Starting a new habit?\nTwo minutes is enough.",
+      "voiceover": "Starting a new habit? Two minutes is enough.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2,
+      "speaking": true,
+      "pose_changes": [
+        {
+          "at": 1.58,
+          "pose": "pointing"
+        }
+      ]
+    },
+    {
+      "text": "Keep the goal tiny",
+      "voiceover": "Keep the goal tiny. Start with two minutes. Keep it easy and small. Repeat it every day.",
+      "pose": "pointing",
+      "scene_type": "points",
+      "duration": 2,
+      "speaking": false,
+      "items": [
+        "Start with 2 minutes",
+        "Keep it easy and small",
+        "Repeat it every day"
+      ]
+    },
+    {
+      "text": "Just start",
+      "voiceover": "Just start. Reading? Just one page. Running? Just put on your shoes. Writing? Just one line.",
+      "pose": "surprised",
+      "scene_type": "points",
+      "duration": 2,
+      "speaking": false,
+      "items": [
+        "Reading? Just one page",
+        "Running? Just shoes",
+        "Writing? Just one line"
+      ]
+    },
+    {
+      "text": "Tiny start,\nbig results.",
+      "voiceover": "Tiny start, big results.",
+      "pose": "happy",
+      "scene_type": "text",
+      "duration": 2,
+      "speaking": false
+    }
+  ]
+}

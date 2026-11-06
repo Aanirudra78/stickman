@@ -1,0 +1,29 @@
+{
+  "name": "stickman-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Stickman explainer video (1080x1920, 30fps) built with Remotion",
+  "scripts": {
+    "dev": "remotion studio",
+    "studio": "remotion studio",
+    "render": "remotion render StickmanExplainer out/stickman-test.mp4",
+    "render:video": "remotion render StickmanExplainer out/video.mp4",
+    "still": "remotion still",
+    "voiceover": "node scripts/generate-voiceover.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.540",
+    "@remotion/fonts": "4.0.540",
+    "@remotion/media": "4.0.540",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "remotion": "4.0.540"
+  },
+  "devDependencies": {
+    "@andresaya/edge-tts": "^1.9.1",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "typescript": "5.8.2"
+  }
+}
