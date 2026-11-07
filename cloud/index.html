@@ -256,7 +256,11 @@ Starting a new habit? Two minutes is enough.
         });
         const type = response.headers.get("content-type") || "";
         const data = type.includes("json") ? await response.json().catch(() => null) : await response.blob();
-        if (!response.ok) throw new Error((data && data.message) || `HTTP ${response.status}`);
+        if (!response.ok) {
+          const error = new Error((data && data.message) || `HTTP ${response.status}`);
+          error.status = response.status;
+          throw error;
+        }
         return data;
       };
 
@@ -290,15 +294,41 @@ Starting a new habit? Two minutes is enough.
         toast("Saved");
       });
 
+      // Dispatch with a ref that cannot exist: 422 means "write allowed", 403
+      // means the token is read-only. No workflow run is created either way.
+      const probeActionsWrite = async () => {
+        try {
+          await gh(`/repos/${config.repo}/actions/workflows/render.yml/dispatches`, {
+            method: "POST",
+            body: JSON.stringify({ ref: "__permission_probe__" })
+          });
+          return { ok: true };
+        } catch (error) {
+          if (error.status === 422) return { ok: true };
+          return { ok: false, status: error.status, message: error.message };
+        }
+      };
+
       $("#test").addEventListener("click", async () => {
         save();
+        const status = $("#setup-status");
+        status.className = "";
+        status.textContent = "Checking token…";
         try {
           const repo = await gh(`/repos/${config.repo}`);
-          $("#setup-status").textContent = `Connected: ${repo.full_name} (${repo.private ? "private" : "public"})`;
-          $("#setup-status").className = "ok";
+          const write = await probeActionsWrite();
+          if (write.ok) {
+            status.textContent = `Connected: ${repo.full_name} (${repo.private ? "private" : "public"}) · Actions write OK`;
+            status.className = "ok";
+          } else {
+            status.textContent =
+              `Connected to ${repo.full_name}, par Actions ${write.status === 403 ? "Read-only" : "check failed"} — ` +
+              `token edit karke Actions ko "Read and write" karo, phir dobara Test.`;
+            status.className = "danger";
+          }
         } catch (error) {
-          $("#setup-status").textContent = error.message;
-          $("#setup-status").className = "danger";
+          status.textContent = `${error.message}${error.status === 401 ? " — token expired ya galat hai, naya banao." : ""}`;
+          status.className = "danger";
         }
       });
 
@@ -393,9 +423,15 @@ Starting a new habit? Two minutes is enough.
           }
           throw new Error("timed out - GitHub me check karo");
         } catch (error) {
+          const reason =
+            error.status === 403
+              ? "Token ka Actions permission 'Read and write' karo (token edit karke), phir Test connection."
+              : error.status === 401
+                ? "Token expired ya galat hai - naya token banao."
+                : "";
           $("#error").hidden = false;
-          $("#error").textContent = error.message;
-          toast(error.message, true);
+          $("#error").textContent = reason ? `${error.message} · ${reason}` : error.message;
+          toast(reason || error.message, true);
           setBar(100);
           setLines([{ label: "Failed", state: "fail" }]);
         } finally {
