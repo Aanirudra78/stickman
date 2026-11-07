@@ -888,6 +888,11 @@ const server = http.createServer(async (req, res) => {
       return await serveFile(res, path.join(ROOT, "cloud", "index.html"), { req });
     }
 
+    // PWA shell assets for the cloud page (also used when it is installed).
+    if (url.pathname === "/manifest.webmanifest" || url.pathname === "/icon.svg") {
+      return await serveFile(res, path.join(ROOT, "cloud", url.pathname.slice(1)), { req });
+    }
+
     const name = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
     if (!/^[\w.-]+$/.test(name)) return json(res, 404, { error: "not found" });
     const file = path.join(STUDIO_DIR, name);

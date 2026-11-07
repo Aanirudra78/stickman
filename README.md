@@ -23,17 +23,20 @@ Remotion → compress) and shows live progress over SSE. Renders land in
 
 ## Render from the phone (PC off)
 
-Push this folder to a private GitHub repo, set the `ELEVENLABS_API_KEY` secret,
-then run the **Render video** workflow. The MP4 is published as a GitHub
-Release asset. `cloud/index.html` is a one-button phone page for the same
-workflow (fine-grained token with Actions + Contents write). Setup:
-[`docs/RENDER-IN-CLOUD.md`](docs/RENDER-IN-CLOUD.md).
+The project is public at <https://github.com/Aanirudra78/stickman>; the phone
+page runs at <https://aanirudra78.github.io/stickman-studio/>. One button
+dispatches the **Render video** workflow, polls it, then plays and downloads the
+MP4 from the release asset (fine-grained token: Actions read/write + Contents
+read). The repo is public because release assets cannot be fetched cross-origin
+(`cloud/index.html` therefore links the direct asset URL instead of fetching a
+blob). Setup and tradeoffs: [`docs/RENDER-IN-CLOUD.md`](docs/RENDER-IN-CLOUD.md).
 
 ## Commands
 
 ```bash
 npm install
 npm run creator        # local Studio app (script -> video)
+npm run publish:cloud  # republish the phone page to GitHub Pages
 npm run dev            # Remotion Studio (preview)
 npm run voiceover      # generate/refresh narration from script.json
 npm run voiceover -- --force   # rebuild every clip

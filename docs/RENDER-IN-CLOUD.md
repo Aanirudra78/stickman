@@ -10,7 +10,14 @@ phone (GitHub app / cloud page)  ->  Actions: Render video  ->  runner: voice + 
 ```
 
 One render of a ~15-second video takes about 1-2 minutes on the free runner.
-Free minutes: 2000/month for a private repo (a render uses ~3-6).
+Free minutes: unlimited for a public repo (a render uses ~3-6).
+
+> **The repo is public.** GitHub Release assets cannot be downloaded
+> cross-origin in a browser (no CORS on the asset CDN), so the phone page uses
+> the plain download URL - and that only works without a login on a public
+> repo. That means your scripts appear in the public Actions run inputs and the
+> finished videos are public. Nothing secret is in the repo itself: `.env` is
+> gitignored and the API key lives only in the encrypted Actions secret.
 
 ---
 
@@ -18,12 +25,12 @@ Free minutes: 2000/month for a private repo (a render uses ~3-6).
 
 You need a GitHub account: <https://github.com/signup> (free, no card).
 
-On GitHub: **New repository** -> name `stickman-render` -> **Private** -> Create.
-Do **not** add a README or .gitignore (the project already has one).
+The project lives at <https://github.com/Aanirudra78/stickman> (public).
+To use your own copy, fork it, then:
 
 ```powershell
 cd "C:\Users\sanir\Music\web\stickman render\app"
-git remote add origin https://github.com/<YOUR-USER>/stickman-render.git
+git remote add origin https://github.com/<YOUR-USER>/<REPO>.git
 git push -u origin main
 ```
 
@@ -47,17 +54,26 @@ Microsoft Edge (free, different voice).
 
 ## 3. Every video
 
-### Option A - the cloud page (one button)
+### Option A - the phone page (one button)
 
-Open `cloud/index.html` (hosted anywhere, or from the repo), paste the repo
-`owner/name` and a **fine-grained token** with:
+Live at <https://aanirudra78.github.io/stickman-studio/> - open it on the phone
+and use Chrome's **Add to Home screen** so it behaves like an app.
 
-- **Actions: Read and write**
-- **Contents: Read and write**
+On first run, paste the repo (`owner/name`) and a **fine-grained token** with:
 
-`cloud/index.html` triggers the workflow through the GitHub API, polls the run,
-then downloads the release asset into the browser. The token stays in
-`localStorage` on that device.
+- **Actions: Read and write** (dispatch + poll the run)
+- **Contents: Read** (find the finished video)
+
+Create it at <https://github.com/settings/personal-access-tokens/new>; the
+token stays in `localStorage` on that device and expires after a year.
+
+The page triggers the workflow, polls it live, then plays the MP4 inline and
+offers a one-tap download. Because release assets are served without CORS, the
+page links to the asset's direct `browser_download_url` instead of downloading
+it with `fetch` - `<video>` and a normal link both work fine cross-origin.
+
+`npm run publish:cloud` republishes the page (`cloud/`) to the public
+`stickman-studio` repo that GitHub Pages serves.
 
 ### Option B - GitHub app
 
@@ -98,13 +114,14 @@ identical scenes. Keep the narration under ~60-75 seconds.
 4. `npm run render:video` -> `out/video.mp4` (`--scale=0.5` for `quality: draft`).
 5. `scripts/compress-if-needed.mjs` re-encodes only if the file is over 45 MB.
 6. `gh release create render-<run_number>` publishes the MP4 as a release
-   asset; the one-button page downloads it with the API token.
+   asset; the phone page plays/downloads it through the direct asset URL.
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---|---|
-| Run not found on the cloud page | Check the token has Actions + Contents write on that repo. |
+| Run not found on the cloud page | Check the token has Actions: Read and write on that repo. |
+| Preview/download asks to sign in | The repo is private. Release assets need a public repo for cross-origin playback. |
 | `script error: ...` | A scene is missing `text` / `voiceover` / `pose`; the message names it. |
 | ElevenLabs 401 | The repo secret is missing or the key was rotated. |
 | ElevenLabs 402 | A Voice Library voice (Ron Sage, Hagen, Atlas, Don) needs the paid plan; pick a premade voice. |

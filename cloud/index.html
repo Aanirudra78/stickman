@@ -4,6 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0b0b0e" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Stickman" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon.svg" />
     <title>Stickman Cloud</title>
     <style>
       :root {
@@ -99,7 +106,7 @@
         <h2><span class="n">1</span> GitHub setup (ek baar)</h2>
         <label>
           <span>Repository</span>
-          <input id="repo" placeholder="username/stickman-render" autocomplete="off" />
+          <input id="repo" placeholder="Aanirudra78/stickman" autocomplete="off" />
         </label>
         <label>
           <span>Fine-grained token</span>
@@ -111,12 +118,16 @@
         </div>
         <p class="hint" id="setup-status">Token sirf tumhare browser me save hota hai (localStorage).</p>
         <details>
-          <summary>Token kaise banaye (2 min)</summary>
+          <summary>Token kaise banaye (2 min, saal me ek baar)</summary>
           <ol>
-            <li>github.com → Settings → Developer settings → <b>Fine-grained tokens</b> → Generate new token</li>
-            <li>Repository access: <b>Only select repositories</b> → apna stickman repo</li>
-            <li>Permissions: <b>Actions: Read and write</b>, <b>Contents: Read and write</b></li>
-            <li>Generate → token copy karke upar paste karo (ghp_ / github_pat_ dono chalega)</li>
+            <li>github.com/settings/personal-access-tokens/new kholo</li>
+            <li>Token name: <code>stickman-phone</code>, Expiration: 1 year</li>
+            <li>Repository access: <b>Only select repositories</b> → <code>Aanirudra78/stickman</code></li>
+            <li>Permissions → Repository permissions:<br />
+              <b>Actions: Read and write</b> (dispatch + status)<br />
+              <b>Contents: Read</b> (find the finished video)</li>
+            <li>Generate token → copy → upar paste karo → Save → Test connection</li>
+            <li>Chrome menu → <b>Add to Home screen</b> (app ki tarah khulega)</li>
           </ol>
         </details>
       </section>
@@ -193,7 +204,7 @@ Starting a new habit? Two minutes is enough.
         { id: "hi-IN-MadhurNeural", name: "Madhur · Hindi (Edge)", provider: "edge" }
       ];
 
-      let config = { repo: "", token: "", voice: VOICES[0].id };
+      let config = { repo: "Aanirudra78/stickman", token: "", voice: VOICES[0].id };
       let toastTimer;
 
       const toast = (message, isError = false) => {
@@ -396,7 +407,7 @@ Starting a new habit? Two minutes is enough.
       const finish = async (run) => {
         const tag = `render-${run.run_number}`;
         const release = await gh(`/repos/${config.repo}/releases/tags/${tag}`);
-        const asset = release.assets?.[0];
+        const asset = (release.assets || []).find((item) => item.name.endsWith(".mp4")) || release.assets?.[0];
         if (!asset) throw new Error(`release ${tag} has no video`);
 
         setLines([
@@ -407,32 +418,32 @@ Starting a new habit? Two minutes is enough.
         ]);
         setBar(100);
 
-        const response = await fetch(`https://api.github.com/repos/${config.repo}/releases/assets/${asset.id}`, {
-          headers: {
-            authorization: `Bearer ${config.token}`,
-            accept: "application/octet-stream",
-            "x-github-api-version": "2022-11-28"
-          }
-        });
-        if (!response.ok) throw new Error(`download failed (HTTP ${response.status})`);
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
+        // GitHub release assets cannot be fetched with CORS, so use the direct
+        // download URL: <video> plays it and the link downloads it natively.
+        const url = asset.browser_download_url;
+        const size = asset.size ? `${(asset.size / 1024 / 1024).toFixed(1)} MB` : "";
 
         $("#result-card").hidden = false;
         $("#player").src = url;
         $("#download").href = url;
-        $("#download").download = asset.name;
+        $("#download").setAttribute("download", asset.name);
         $("#run-link").href = run.html_url;
-        $("#result-meta").textContent = `${asset.name} · ${(blob.size / 1024 / 1024).toFixed(1)} MB · #${run.run_number}`;
+        $("#result-meta").textContent = [asset.name, size, `#${run.run_number}`].filter(Boolean).join(" · ");
         $("#result-card").scrollIntoView({ behavior: "smooth", block: "start" });
         toast("Video ready");
         setLines([
           { label: "Triggered", state: "done" },
           { label: "Runner", state: "done" },
           { label: "Pipeline", state: "done" },
-          { label: "Downloaded to this device", state: "done" }
+          { label: "Video ready", state: "done" }
         ]);
       };
+
+      // A private repo cannot stream its release asset without a login session.
+      $("#player").addEventListener("error", () => {
+        const hint = $("#result-meta");
+        if (hint) hint.textContent += " · preview blocked (repo private) - tap Download";
+      });
     </script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 /**
- * Keeps the delivered file small enough for Telegram (bot upload limit 50 MB).
+ * Keeps the delivered file small enough to download comfortably on a phone.
  *
  *   node scripts/compress-if-needed.mjs out/video.mp4 [--max-mb=45]
  *
