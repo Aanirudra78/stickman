@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "remotion studio",
     "studio": "remotion studio",
+    "creator": "node studio/server.mjs",
     "render": "remotion render StickmanExplainer out/stickman-test.mp4",
     "render:video": "remotion render StickmanExplainer out/video.mp4",
     "still": "remotion still",
@@ -24,6 +25,7 @@
     "@andresaya/edge-tts": "^1.9.1",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
+    "ffmpeg-static": "^5.2.0",
     "typescript": "5.8.2"
   }
 }

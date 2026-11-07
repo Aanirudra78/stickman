@@ -1,29 +1,47 @@
 name: Render video
 
-# Phone-friendly pipeline:
-#   Actions -> Render video -> Run workflow -> video arrives on Telegram.
-# No server, no card. Renders on a free GitHub-hosted runner.
+# Phone-friendly pipeline: one click (or one API call) -> voice -> render ->
+# a downloadable mp4 on the Releases page. No server, no card.
+#
+# Inputs come either from the GitHub UI or from `cloud/index.html`
+# (workflow_dispatch API - that is what the one-button page uses).
 
 on:
   workflow_dispatch:
     inputs:
-      script_json:
-        description: "Optional: full script JSON on ONE line (blank = use public/script.json)"
+      script_text:
+        description: "Script text (blank = render the committed public/script.json)"
         required: false
         type: string
+      title:
+        description: "Video title (optional)"
+        required: false
+        default: ""
+        type: string
+      quality:
+        description: "draft = 540x960 fast, final = 1080x1920"
+        required: false
+        default: "final"
+        type: choice
+        options:
+          - final
+          - draft
+      provider:
+        description: "Voice provider"
+        required: false
+        default: "elevenlabs"
+        type: choice
+        options:
+          - elevenlabs
+          - edge
       voice:
-        description: "Edge TTS voice"
-        required: false
-        default: "en-US-AndrewMultilingualNeural"
-        type: string
-      caption:
-        description: "Telegram caption (optional)"
+        description: "Voice id (blank = default voice)"
         required: false
         default: ""
         type: string
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: stickman-render
@@ -35,7 +53,7 @@ env:
 jobs:
   render:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -69,49 +87,69 @@ jobs:
       - name: Prepare browser
         run: npx remotion browser ensure
 
-      - name: Apply script and voice
+      - name: Prepare script
         env:
-          SCRIPT_JSON: ${{ inputs.script_json }}
+          SCRIPT_TEXT: ${{ inputs.script_text }}
+          SCRIPT_TITLE: ${{ inputs.title }}
           VOICE: ${{ inputs.voice }}
-        run: node scripts/apply-script.mjs
+          PROVIDER: ${{ inputs.provider }}
+        run: |
+          if [ -n "$SCRIPT_TEXT" ]; then
+            node studio/split.mjs --text-env=SCRIPT_TEXT --out=.studio-script.json \
+              --title="$SCRIPT_TITLE" --voice="$VOICE" --provider="$PROVIDER"
+            node scripts/apply-script.mjs .studio-script.json
+          else
+            echo "no script_text - using the committed public/script.json"
+            VOICE="$VOICE" node scripts/apply-script.mjs
+          fi
 
       - name: Typecheck
         run: npx tsc --noEmit
 
       - name: Generate voiceover
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
         run: npm run voiceover
 
       - name: Render
-        run: npm run render:video -- --log=error
+        run: |
+          if [ "${{ inputs.quality }}" = "draft" ]; then
+            npx remotion render StickmanExplainer out/video.mp4 --log=error --scale=0.5
+          else
+            npx remotion render StickmanExplainer out/video.mp4 --log=error
+          fi
 
-      - name: Fit within Telegram's upload limit
+      - name: Fit upload limit
         id: fit
         run: node scripts/compress-if-needed.mjs out/video.mp4 --max-mb=45
 
-      - name: Send video to Telegram
+      - name: Publish download
+        id: release
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_VIDEO: ${{ steps.fit.outputs.out }}
-          TELEGRAM_CAPTION: ${{ inputs.caption }}
-        run: node scripts/telegram-notify.mjs
-
-      - name: Upload video artifact (backup)
-        uses: actions/upload-artifact@v4
-        with:
-          name: stickman-video
-          path: |
-            out/*.mp4
-            src/voice/manifest.json
-            public/script.json
-          retention-days: 14
-          if-no-files-found: warn
-
-      - name: Notify failure
-        if: failure()
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILE: ${{ steps.fit.outputs.out }}
+          TITLE: ${{ inputs.title }}
         run: |
-          node scripts/telegram-notify.mjs \
-            --text "Stickman render failed. Open the run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          ASSET="stickman-${{ github.run_number }}.mp4"
+          cp "$FILE" "$ASSET"
+          TAG="render-${{ github.run_number }}"
+          gh release create "$TAG" "$ASSET" \
+            --title "${TITLE:-Stickman video #${{ github.run_number }}}" \
+            --notes "Auto-rendered by Stickman Studio." \
+            --latest=false
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "asset=$ASSET" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        if: success()
+        run: |
+          {
+            echo "### Video ready"
+            echo ""
+            echo "- Release: \`${{ steps.release.outputs.tag }}\`"
+            echo "- Asset: \`${{ steps.release.outputs.asset }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Failure summary
+        if: failure()
+        run: echo "Render failed - open the step log above." >> "$GITHUB_STEP_SUMMARY"

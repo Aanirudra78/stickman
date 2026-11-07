@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0b0e" />
+    <title>Stickman Cloud</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0b0e;
+        --panel: #14141a;
+        --panel-2: #1a1a22;
+        --panel-3: #20202a;
+        --line: #2a2a35;
+        --text: #ececf1;
+        --muted: #9a9aa8;
+        --accent: #f0b429;
+        --accent-ink: #1b1400;
+        --ok: #4ade80;
+        --err: #f87171;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: radial-gradient(1000px 500px at 50% -10%, #1b1b26 0%, var(--bg) 55%) no-repeat, var(--bg);
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        min-height: 100vh;
+      }
+      header {
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        padding: 14px 16px; border-bottom: 1px solid var(--line);
+        position: sticky; top: 0; background: rgba(11,11,14,.82); backdrop-filter: blur(14px); z-index: 5;
+      }
+      .brand { display: flex; align-items: center; gap: 9px; font-size: .8rem; letter-spacing: .14em; color: var(--muted); }
+      .brand b { color: var(--text); }
+      .mark { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center;
+        background: linear-gradient(140deg, var(--accent), #ff8a3d); color: var(--accent-ink); font-weight: 800; }
+      main { max-width: 720px; margin: 0 auto; padding: 16px 14px 60px; display: flex; flex-direction: column; gap: 14px; }
+      .card { background: linear-gradient(180deg, var(--panel), #121218); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+      h2 { font-size: .95rem; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+      .n { width: 22px; height: 22px; border-radius: 7px; background: var(--panel-3); border: 1px solid var(--line);
+        display: grid; place-items: center; font-size: .7rem; color: var(--accent); }
+      label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+      label > span { font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+      input, textarea, select {
+        width: 100%; background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+        border-radius: 11px; padding: 11px 12px; font: inherit; font-size: .92rem; outline: none;
+      }
+      textarea { min-height: 150px; line-height: 1.5; resize: vertical; }
+      input:focus, textarea:focus, select:focus { border-color: #4b4b5c; box-shadow: 0 0 0 3px rgba(240,180,41,.12); }
+      .row { display: flex; gap: 10px; flex-wrap: wrap; }
+      .row > * { flex: 1; min-width: 150px; }
+      button {
+        font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer; border-radius: 11px;
+        padding: 12px 16px; border: 1px solid transparent;
+      }
+      .primary { background: linear-gradient(180deg, #f7c449, var(--accent)); color: var(--accent-ink); flex: 1; }
+      .primary:disabled { opacity: .45; cursor: not-allowed; }
+      .ghost { background: var(--panel-2); border-color: var(--line); color: var(--text); }
+      .hint { font-size: .76rem; color: var(--muted); line-height: 1.5; margin: 8px 0 0; }
+      .muted { color: var(--muted); }
+      .status { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+      .line { display: flex; align-items: center; gap: 10px; font-size: .84rem; color: var(--muted); }
+      .line .bullet { width: 9px; height: 9px; border-radius: 50%; background: #3a3a48; flex: none; }
+      .line.active { color: var(--text); }
+      .line.active .bullet { background: var(--accent); box-shadow: 0 0 9px var(--accent); animation: pulse 1.1s infinite; }
+      .line.done { color: var(--ok); }
+      .line.done .bullet { background: var(--ok); }
+      .line.fail { color: var(--err); }
+      .line.fail .bullet { background: var(--err); }
+      @keyframes pulse { 50% { opacity: .3; } }
+      .bar { height: 7px; border-radius: 99px; background: var(--panel-3); overflow: hidden; margin: 10px 0; border: 1px solid var(--line); }
+      .bar > i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, #ff8a3d, var(--accent)); transition: width .4s; }
+      .danger { color: var(--err); font-size: .82rem; }
+      .ok { color: var(--ok); font-size: .82rem; }
+      details { margin-top: 6px; }
+      summary { cursor: pointer; color: var(--muted); font-size: .8rem; }
+      ol { margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: .8rem; line-height: 1.65; }
+      code { background: var(--panel-3); padding: 1px 5px; border-radius: 5px; font-size: .85em; }
+      a { color: var(--accent); }
+      .toast {
+        position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+        background: var(--panel-3); border: 1px solid var(--line); padding: 11px 16px; border-radius: 12px;
+        font-size: .85rem; max-width: 90vw; z-index: 20;
+      }
+      .toast.err { border-color: rgba(248,113,113,.5); color: #ffc9c9; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand"><span class="mark">S</span><span>STICKMAN <b>CLOUD</b></span></div>
+      <span class="muted" style="font-size: .75rem" id="repo-chip">no repo</span>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2><span class="n">1</span> GitHub setup (ek baar)</h2>
+        <label>
+          <span>Repository</span>
+          <input id="repo" placeholder="username/stickman-render" autocomplete="off" />
+        </label>
+        <label>
+          <span>Fine-grained token</span>
+          <input id="token" type="password" placeholder="github_pat_..." autocomplete="off" />
+        </label>
+        <div class="row">
+          <button id="save" class="ghost">Save</button>
+          <button id="test" class="ghost">Test connection</button>
+        </div>
+        <p class="hint" id="setup-status">Token sirf tumhare browser me save hota hai (localStorage).</p>
+        <details>
+          <summary>Token kaise banaye (2 min)</summary>
+          <ol>
+            <li>github.com → Settings → Developer settings → <b>Fine-grained tokens</b> → Generate new token</li>
+            <li>Repository access: <b>Only select repositories</b> → apna stickman repo</li>
+            <li>Permissions: <b>Actions: Read and write</b>, <b>Contents: Read and write</b></li>
+            <li>Generate → token copy karke upar paste karo (ghp_ / github_pat_ dono chalega)</li>
+          </ol>
+        </details>
+      </section>
+
+      <section class="card">
+        <h2><span class="n">2</span> Script</h2>
+        <label>
+          <span>Script text</span>
+          <textarea id="script" spellcheck="false" placeholder="The 2-Minute Rule
+
+Starting a new habit? Two minutes is enough.
+
+- Start with 2 minutes
+- Keep it easy and small
+- Repeat it every day"></textarea>
+        </label>
+        <div class="row">
+          <label>
+            <span>Title</span>
+            <input id="title" placeholder="optional" />
+          </label>
+          <label>
+            <span>Quality</span>
+            <select id="quality">
+              <option value="final">Final · 1080×1920</option>
+              <option value="draft">Draft · 540×960 (fast)</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          <span>Voice</span>
+          <select id="voice"></select>
+        </label>
+        <button id="generate" class="primary" style="width: 100%">Generate video</button>
+        <p class="hint" id="estimate"></p>
+      </section>
+
+      <section class="card" id="status-card" hidden>
+        <h2><span class="n">3</span> Progress</h2>
+        <div class="bar"><i id="bar"></i></div>
+        <div class="status" id="status"></div>
+        <p class="hint" id="status-hint"></p>
+        <p class="danger" id="error" hidden></p>
+      </section>
+
+      <section class="card" id="result-card" hidden>
+        <h2><span class="n">4</span> Download</h2>
+        <video id="player" controls playsinline style="width: 100%; border-radius: 12px; background: #000; border: 1px solid var(--line)"></video>
+        <div class="row" style="margin-top: 12px">
+          <a id="download" class="primary" style="text-align: center; text-decoration: none; padding: 12px 16px; border-radius: 11px; font-weight: 600" download>Download MP4</a>
+          <a id="run-link" class="ghost" style="text-align: center; text-decoration: none; padding: 12px 16px; border-radius: 11px" target="_blank" rel="noreferrer">View run</a>
+        </div>
+        <p class="hint" id="result-meta"></p>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <script>
+      const $ = (selector) => document.querySelector(selector);
+      const STORE = "stickman.cloud.v1";
+
+      const VOICES = [
+        { id: "nPczCjzI2devNBz1zQrb", name: "Brian · Deep, Resonant & Comforting (default)", provider: "elevenlabs" },
+        { id: "pqHfZKP75CvOlQylNhV4", name: "Bill · Wise, Mature, Balanced", provider: "elevenlabs" },
+        { id: "pNInz6obpgDQGcFmaJgB", name: "Adam · Dominant & Firm", provider: "elevenlabs" },
+        { id: "cjVigY5qzO86Huf0OWal", name: "Eric · Smooth & Trustworthy", provider: "elevenlabs" },
+        { id: "JBFqnCBsd6RMkjVDRZzb", name: "George · Warm Storyteller (British)", provider: "elevenlabs" },
+        { id: "jWu9BIg1r9UOe2ivl02q", name: "Ron Sage · Warm & Soulful (paid plan)", provider: "elevenlabs" },
+        { id: "t1yzxMpe9zK42bXmI1T2", name: "K. V. Hagen · Deep Warm (paid plan)", provider: "elevenlabs" },
+        { id: "en-US-AndrewMultilingualNeural", name: "Andrew · Edge (free)", provider: "edge" },
+        { id: "en-US-BrianNeural", name: "Brian · Edge (free)", provider: "edge" },
+        { id: "en-US-ChristopherNeural", name: "Christopher · Edge (free)", provider: "edge" },
+        { id: "hi-IN-MadhurNeural", name: "Madhur · Hindi (Edge)", provider: "edge" }
+      ];
+
+      let config = { repo: "", token: "", voice: VOICES[0].id };
+      let toastTimer;
+
+      const toast = (message, isError = false) => {
+        const el = $("#toast");
+        el.textContent = message;
+        el.classList.toggle("err", isError);
+        el.hidden = false;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => (el.hidden = true), isError ? 6000 : 3000);
+      };
+
+      const load = () => {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORE) || "{}");
+          config = { ...config, ...saved };
+        } catch {}
+        $("#repo").value = config.repo || "";
+        $("#token").value = config.token || "";
+        $("#voice").value = config.voice || VOICES[0].id;
+        $("#repo-chip").textContent = config.repo || "no repo";
+        const draft = localStorage.getItem("stickman.cloud.script");
+        if (draft) $("#script").value = draft;
+      };
+
+      const save = () => {
+        config.repo = $("#repo").value.trim();
+        config.token = $("#token").value.trim();
+        config.voice = $("#voice").value;
+        try {
+          localStorage.setItem(STORE, JSON.stringify(config));
+        } catch {}
+        $("#repo-chip").textContent = config.repo || "no repo";
+      };
+
+      const voiceProvider = (id) =>
+        VOICES.find((voice) => voice.id === id)?.provider ||
+        (id.endsWith("Neural") ? "edge" : "elevenlabs");
+
+      const gh = async (path, options = {}) => {
+        const response = await fetch(`https://api.github.com${path}`, {
+          ...options,
+          headers: {
+            accept: "application/vnd.github+json",
+            "x-github-api-version": "2022-11-28",
+            authorization: `Bearer ${config.token}`,
+            ...(options.body ? { "content-type": "application/json" } : {}),
+            ...(options.headers || {})
+          }
+        });
+        const type = response.headers.get("content-type") || "";
+        const data = type.includes("json") ? await response.json().catch(() => null) : await response.blob();
+        if (!response.ok) throw new Error((data && data.message) || `HTTP ${response.status}`);
+        return data;
+      };
+
+      const setLines = (items) => {
+        $("#status").innerHTML = items
+          .map((item) => `<div class="line ${item.state || ""}"><i class="bullet"></i><span>${item.label}</span></div>`)
+          .join("");
+      };
+
+      const setBar = (percent) => {
+        $("#bar").style.width = `${Math.max(2, Math.min(100, percent))}%`;
+      };
+
+      $("#voice").innerHTML = VOICES.map(
+        (voice) => `<option value="${voice.id}">${voice.name}</option>`
+      ).join("");
+
+      load();
+
+      $("#script").addEventListener("input", () => {
+        try {
+          localStorage.setItem("stickman.cloud.script", $("#script").value);
+        } catch {}
+        const words = ($("#script").value.match(/[\p{L}\p{N}][\p{L}\p{N}'-]*/gu) || []).length;
+        $("#estimate").textContent = words ? `${words} words · ~${Math.round(words / 2.6 + 1)}s` : "";
+      });
+      $("#script").dispatchEvent(new Event("input"));
+
+      $("#save").addEventListener("click", () => {
+        save();
+        toast("Saved");
+      });
+
+      $("#test").addEventListener("click", async () => {
+        save();
+        try {
+          const repo = await gh(`/repos/${config.repo}`);
+          $("#setup-status").textContent = `Connected: ${repo.full_name} (${repo.private ? "private" : "public"})`;
+          $("#setup-status").className = "ok";
+        } catch (error) {
+          $("#setup-status").textContent = error.message;
+          $("#setup-status").className = "danger";
+        }
+      });
+
+      const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      $("#generate").addEventListener("click", async () => {
+        save();
+        const script = $("#script").value.trim();
+        if (!config.repo || !config.token) return toast("Repo aur token daalo", true);
+        if (!script) return toast("Script paste karo", true);
+
+        const button = $("#generate");
+        button.disabled = true;
+        button.textContent = "Starting…";
+        $("#status-card").hidden = false;
+        $("#result-card").hidden = true;
+        $("#error").hidden = true;
+        $("#status-hint").textContent = "";
+        setLines([
+          { label: "Triggering GitHub Actions", state: "active" },
+          { label: "Queue" },
+          { label: "Voice + render" },
+          { label: "Download" }
+        ]);
+        setBar(4);
+
+        const startedAt = Date.now();
+
+        try {
+          await gh(`/repos/${config.repo}/actions/workflows/render.yml/dispatches`, {
+            method: "POST",
+            body: JSON.stringify({
+              ref: "main",
+              inputs: {
+                script_text: script,
+                title: $("#title").value.trim(),
+                quality: $("#quality").value,
+                provider: voiceProvider(config.voice),
+                voice: config.voice
+              }
+            })
+          });
+
+          setLines([
+            { label: "Triggered", state: "done" },
+            { label: "Waiting for runner", state: "active" },
+            { label: "Voice + render" },
+            { label: "Download" }
+          ]);
+          setBar(10);
+
+          let run = null;
+          for (let attempt = 0; attempt < 20 && !run; attempt++) {
+            await sleep(3000);
+            const data = await gh(
+              `/repos/${config.repo}/actions/workflows/render.yml/runs?event=workflow_dispatch&per_page=5`
+            );
+            run = (data.workflow_runs || []).find(
+              (item) => new Date(item.created_at).getTime() >= startedAt - 15000
+            );
+          }
+          if (!run) throw new Error("run not found - GitHub me Actions tab check karo");
+
+          $("#status-hint").innerHTML = `<a href="${run.html_url}" target="_blank" rel="noreferrer">Run #${run.run_number}</a>`;
+
+          for (let tick = 0; tick < 240; tick++) {
+            const current = await gh(`/repos/${config.repo}/actions/runs/${run.id}`);
+            const jobs = await gh(`/repos/${config.repo}/actions/runs/${run.id}/jobs`).catch(() => ({ jobs: [] }));
+            const steps = jobs.jobs?.[0]?.steps || [];
+            const doneSteps = steps.filter((step) => step.status === "completed").length;
+            const percent = current.status === "completed" ? 100 : 12 + Math.min(80, steps.length ? (doneSteps / steps.length) * 80 : 12);
+
+            setBar(percent);
+            setLines([
+              { label: "Triggered", state: "done" },
+              { label: "Runner", state: current.status === "queued" ? "active" : "done" },
+              {
+                label: `Pipeline (${doneSteps}/${steps.length || "?"} steps)`,
+                state: current.status === "in_progress" ? "active" : current.status === "completed" ? (current.conclusion === "success" ? "done" : "fail") : ""
+              },
+              { label: "Download", state: current.conclusion === "success" ? "active" : "" }
+            ]);
+
+            if (current.status === "completed") {
+              if (current.conclusion !== "success") {
+                throw new Error(`Render ${current.conclusion}. Logs: ${current.html_url}`);
+              }
+              await finish(current);
+              return;
+            }
+            await sleep(5000);
+          }
+          throw new Error("timed out - GitHub me check karo");
+        } catch (error) {
+          $("#error").hidden = false;
+          $("#error").textContent = error.message;
+          toast(error.message, true);
+          setBar(100);
+          setLines([{ label: "Failed", state: "fail" }]);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Generate video";
+        }
+      });
+
+      const finish = async (run) => {
+        const tag = `render-${run.run_number}`;
+        const release = await gh(`/repos/${config.repo}/releases/tags/${tag}`);
+        const asset = release.assets?.[0];
+        if (!asset) throw new Error(`release ${tag} has no video`);
+
+        setLines([
+          { label: "Triggered", state: "done" },
+          { label: "Runner", state: "done" },
+          { label: "Pipeline", state: "done" },
+          { label: "Download ready", state: "done" }
+        ]);
+        setBar(100);
+
+        const response = await fetch(`https://api.github.com/repos/${config.repo}/releases/assets/${asset.id}`, {
+          headers: {
+            authorization: `Bearer ${config.token}`,
+            accept: "application/octet-stream",
+            "x-github-api-version": "2022-11-28"
+          }
+        });
+        if (!response.ok) throw new Error(`download failed (HTTP ${response.status})`);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        $("#result-card").hidden = false;
+        $("#player").src = url;
+        $("#download").href = url;
+        $("#download").download = asset.name;
+        $("#run-link").href = run.html_url;
+        $("#result-meta").textContent = `${asset.name} · ${(blob.size / 1024 / 1024).toFixed(1)} MB · #${run.run_number}`;
+        $("#result-card").scrollIntoView({ behavior: "smooth", block: "start" });
+        toast("Video ready");
+        setLines([
+          { label: "Triggered", state: "done" },
+          { label: "Runner", state: "done" },
+          { label: "Pipeline", state: "done" },
+          { label: "Downloaded to this device", state: "done" }
+        ]);
+      };
+    </script>
+  </body>
+</html>

@@ -4,16 +4,36 @@
 backdrop, with a natural male English voiceover. The video is generated from
 `public/script.json` — edit that file, not the components.
 
+## Studio (paste a script, get a video)
+
+```bash
+npm run creator        # -> http://localhost:4321 (also on your phone, same WiFi)
+```
+
+Paste a script, hit **Auto-split**, edit the scene cards, pick a voice and
+**Render**. The server runs the same pipeline as CI (script → voiceover →
+Remotion → compress) and shows live progress over SSE. Renders land in
+`studio/jobs/<id>/video.mp4` and stay in the History list.
+
+- `Draft` = 540×960 (fast check), `Final` = 1080×1920.
+- Voice: ElevenLabs (needs `ELEVENLABS_API_KEY`) or Microsoft Edge (free).
+  Both providers produce word timings, so lip sync works either way.
+- Settings dialog stores the key in `.env` and shows a QR code for the phone.
+  Set `STUDIO_PIN` to require a PIN on LAN access.
+
 ## Render from the phone (PC off)
 
-Push this folder to a private GitHub repo and run the **Render video** workflow
-from the GitHub app; the MP4 arrives on Telegram. Setup and script format:
+Push this folder to a private GitHub repo, set the `ELEVENLABS_API_KEY` secret,
+then run the **Render video** workflow. The MP4 is published as a GitHub
+Release asset. `cloud/index.html` is a one-button phone page for the same
+workflow (fine-grained token with Actions + Contents write). Setup:
 [`docs/RENDER-IN-CLOUD.md`](docs/RENDER-IN-CLOUD.md).
 
 ## Commands
 
 ```bash
 npm install
+npm run creator        # local Studio app (script -> video)
 npm run dev            # Remotion Studio (preview)
 npm run voiceover      # generate/refresh narration from script.json
 npm run voiceover -- --force   # rebuild every clip
@@ -46,7 +66,11 @@ is derived from the script plus the measured narration.
 
 ```jsonc
 {
-  "voice": "en-US-AndrewMultilingualNeural", // optional Edge TTS voice
+  "voice": "nPczCjzI2devNBz1zQrb", // ElevenLabs id, or an Edge "…Neural" name
+  "tts": {
+    "provider": "elevenlabs",       // "elevenlabs" | "edge"
+    "heavy": true                   // deep-narrator EQ + compressor
+  },
   "scenes": [
     {
       "text": "Headline",              // "\n" = line break
@@ -88,17 +112,24 @@ is derived from the script plus the measured narration.
 `scripts/generate-voiceover.mjs`:
 
 1. reads `public/script.json`,
-2. synthesizes each `voiceover` with Microsoft Edge neural TTS
-   (`@andresaya/edge-tts`, free, no API key). The default is
-   `en-US-AndrewMultilingualNeural` at `rate: "-4%"` — a natural male read
-   (~180 wpm) instead of a rushed reel voice,
-3. peak-normalizes each clip to **-3 dBFS** with ffmpeg (`volume` filter only,
-   so word timings never shift),
+2. synthesizes each `voiceover` through `scripts/tts/` — either **ElevenLabs**
+   (default: `eleven_multilingual_v2`, `with-timestamps` for word-level timing)
+   or **Microsoft Edge** (`@andresaya/edge-tts`, free, no key). Provider is
+   `tts.provider`, or auto: ElevenLabs when `ELEVENLABS_API_KEY` is set,
+   otherwise Edge. Voice ids are validated per provider so an Edge name can
+   never be sent to ElevenLabs (and vice versa),
+3. applies the **heavy narrator chain** in one ffmpeg pass when
+   `tts.heavy` is on (`HEAVY_CHAIN` in `scripts/audio.mjs`): highpass 70 Hz →
+   lowshelf +2 dB @180 Hz → +1.5 dB @3 kHz → compressor → limiter −3 dBFS,
+   plus peak normalization to **−3 dBFS**. Filters only touch amplitude, so
+   word timings never shift,
 4. writes `public/voice/scene-NN.mp3` and `src/voice/manifest.json`
    (durations, per-word timings, gain applied).
 
-Results are cached by a hash of `text + voice + rate + normalization`, so
-re-running only pays for lines that changed.
+Results are cached by a hash of `provider + voice + settings + text + chain`, so
+re-running only pays for lines that changed. Voice Library voices (Ron Sage,
+Hagen, Atlas, Don) require a paid ElevenLabs plan; the free plan can only use
+premade voices (default: Brian - Deep, Resonant & Comforting).
 
 ## Motion rules
 

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0b0e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Stickman Studio</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="pin-screen" class="pin-screen" hidden>
+      <form id="pin-form" class="pin-card">
+        <h1>Stickman Studio</h1>
+        <p class="muted">4-digit PIN daalo</p>
+        <input id="pin-input" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="••••" />
+        <button class="primary" type="submit">Unlock</button>
+        <p id="pin-error" class="error" hidden>Galat PIN</p>
+      </form>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">S</span>
+        <span>STICKMAN <b>STUDIO</b></span>
+      </div>
+      <div class="top-actions">
+        <span id="credits-chip" class="chip" hidden></span>
+        <span id="state-chip" class="chip"><i class="dot"></i><span id="state-text">connecting</span></span>
+        <button id="install-btn" class="icon-btn" hidden title="Install app">⤓</button>
+        <button id="settings-btn" class="icon-btn" title="Settings">⚙</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="card" id="composer-card">
+        <div class="card-head">
+          <h2><span class="step-num">1</span> Script paste karo</h2>
+          <span id="estimate" class="muted"></span>
+        </div>
+        <textarea
+          id="script-input"
+          rows="9"
+          spellcheck="false"
+          placeholder="The 2-Minute Rule
+
+Starting a new habit? Two minutes is enough.
+
+- Start with 2 minutes
+- Keep it easy and small
+- Repeat it every day
+
+Tiny start, big results."
+        ></textarea>
+        <div class="composer-row">
+          <label class="field grow">
+            <span>Title (optional)</span>
+            <input id="title-input" placeholder="Auto-detected from the first line" />
+          </label>
+          <button id="split-btn" class="primary">Auto-split →</button>
+        </div>
+        <p class="hint">
+          Lines starting with <code>-</code> <code>•</code> <code>1.</code> become a points scene.
+          Blank line = new block. 60–75s se lamba script avoid karo.
+        </p>
+        <div id="split-warnings" class="warnings"></div>
+      </section>
+
+      <section class="card" id="scenes-card" hidden>
+        <div class="card-head">
+          <h2><span class="step-num">2</span> Scenes</h2>
+          <span id="scene-summary" class="muted"></span>
+        </div>
+        <div id="scenes" class="scenes"></div>
+        <button id="add-scene" class="ghost small">+ Add scene</button>
+      </section>
+
+      <section class="card" id="render-card" hidden>
+        <div class="card-head">
+          <h2><span class="step-num">3</span> Render</h2>
+        </div>
+        <div class="controls">
+          <label class="field">
+            <span>Voice</span>
+            <select id="voice-select"></select>
+          </label>
+          <label class="field">
+            <span>Speed <output id="speed-out">0.92</output></span>
+            <input id="speed" type="range" min="0.82" max="1.08" step="0.01" value="0.92" />
+          </label>
+          <div class="field">
+            <span>Quality</span>
+            <div class="segmented" id="quality">
+              <button type="button" data-quality="draft">Draft · fast</button>
+              <button type="button" data-quality="final" class="active">Final</button>
+            </div>
+          </div>
+          <label class="check">
+            <input type="checkbox" id="heavy" checked />
+            <span>Heavy voice (EQ + compressor)</span>
+          </label>
+        </div>
+        <div class="render-row">
+          <button id="voice-test" class="ghost">▶ Test voice</button>
+          <button id="render-btn" class="primary big">Render video</button>
+        </div>
+        <p class="hint" id="render-hint">Draft ~1–2 min · Final ~5–8 min. Server ek time pe ek render karta hai.</p>
+      </section>
+
+      <section class="card" id="progress-card" hidden>
+        <div class="steps" id="steps"></div>
+        <div class="bar"><div id="bar-fill"></div></div>
+        <div class="progress-row">
+          <span id="progress-detail" class="muted">starting…</span>
+          <button id="cancel-btn" class="ghost tiny">Cancel</button>
+        </div>
+        <details class="log-wrap">
+          <summary>Log</summary>
+          <pre id="log"></pre>
+        </details>
+      </section>
+
+      <section class="card" id="result-card" hidden>
+        <video id="player" controls playsinline></video>
+        <div class="result-row">
+          <a id="download-btn" class="primary" download>Download MP4</a>
+          <button id="folder-btn" class="ghost">Open folder</button>
+          <span id="result-meta" class="muted"></span>
+        </div>
+        <p class="hint">Phone pe: Download → <code>Downloads/StickmanStudio</code> → Instagram/WhatsApp me share.</p>
+      </section>
+
+      <section class="card" id="history-card" hidden>
+        <div class="card-head">
+          <h2>History</h2>
+          <button id="refresh-history" class="ghost tiny">Refresh</button>
+        </div>
+        <div id="history"></div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span id="lan-url" class="muted"></span>
+      <span class="muted">local · no cloud · PC on hona chahiye · <a href="/cloud">cloud page</a></span>
+    </footer>
+
+    <dialog id="settings-dialog" class="dialog">
+      <form method="dialog" class="dialog-body">
+        <h2>Settings</h2>
+        <label class="field">
+          <span>ElevenLabs API key</span>
+          <input id="settings-key" type="password" autocomplete="off" placeholder="sk_..." />
+        </label>
+        <p class="hint" id="settings-credits"></p>
+        <div class="qr-row" id="qr-row" hidden>
+          <img id="qr-img" alt="Phone link QR" width="140" height="140" />
+          <div>
+            <strong>Phone pe kholo</strong>
+            <p class="muted" id="qr-url"></p>
+            <p class="hint">Same WiFi chahiye.</p>
+          </div>
+        </div>
+        <div class="dialog-actions">
+          <button id="settings-clear" type="button" class="ghost">Remove key</button>
+          <button id="settings-save" type="button" class="primary">Save</button>
+          <button class="ghost" value="close">Close</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

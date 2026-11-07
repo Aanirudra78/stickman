@@ -1,68 +1,51 @@
 {
   "title": "The 2-Minute Rule",
-  "voice": "en-US-AndrewMultilingualNeural",
+  "voice": "nPczCjzI2devNBz1zQrb",
+  "tts": {
+    "provider": "elevenlabs",
+    "model": "eleven_multilingual_v2",
+    "heavy": true,
+    "voiceSettings": {
+      "stability": 0.45,
+      "similarity_boost": 0.8,
+      "style": 0.3,
+      "use_speaker_boost": true,
+      "speed": 0.92
+    }
+  },
   "scenes": [
     {
-      "text": "The 2-Minute Rule\nfrom Atomic Habits",
-      "voiceover": "The two minute rule, from Atomic Habits.",
+      "voiceover": "The 2-Minute Rule.",
+      "duration": 1.7,
       "pose": "idle",
       "scene_type": "text",
-      "duration": 2,
-      "speaking": false,
-      "pose_changes": [
-        {
-          "at": 1.22,
-          "pose": "pointing"
-        }
-      ]
+      "text": "The 2-Minute Rule"
     },
     {
-      "text": "Starting a new habit?\nTwo minutes is enough.",
       "voiceover": "Starting a new habit? Two minutes is enough.",
+      "duration": 3.6,
       "pose": "talking",
       "scene_type": "text",
-      "duration": 2,
-      "speaking": true,
-      "pose_changes": [
-        {
-          "at": 1.58,
-          "pose": "pointing"
-        }
-      ]
+      "text": "Starting a new habit"
     },
     {
-      "text": "Keep the goal tiny",
-      "voiceover": "Keep the goal tiny. Start with two minutes. Keep it easy and small. Repeat it every day.",
-      "pose": "pointing",
-      "scene_type": "points",
-      "duration": 2,
-      "speaking": false,
       "items": [
         "Start with 2 minutes",
         "Keep it easy and small",
         "Repeat it every day"
-      ]
+      ],
+      "text": "Key points",
+      "pose": "pointing",
+      "duration": 6.3,
+      "voiceover": "Key points. Start with 2 minutes. Keep it easy and small. Repeat it every day.",
+      "scene_type": "points"
     },
     {
-      "text": "Just start",
-      "voiceover": "Just start. Reading? Just one page. Running? Just put on your shoes. Writing? Just one line.",
-      "pose": "surprised",
-      "scene_type": "points",
-      "duration": 2,
-      "speaking": false,
-      "items": [
-        "Reading? Just one page",
-        "Running? Just shoes",
-        "Writing? Just one line"
-      ]
-    },
-    {
-      "text": "Tiny start,\nbig results.",
       "voiceover": "Tiny start, big results.",
+      "duration": 2,
       "pose": "happy",
       "scene_type": "text",
-      "duration": 2,
-      "speaking": false
+      "text": "Tiny start, big results"
     }
   ]
 }

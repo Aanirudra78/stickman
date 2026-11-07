@@ -1,52 +1,38 @@
 /**
  * Generates the voiceover for `public/script.json`.
  *
- *   npm run voiceover            # only synthesize new/changed lines
- *   npm run voiceover -- --force # re-synthesize everything
+ *   npm run voiceover                    # only synthesize new/changed lines
+ *   npm run voiceover -- --force         # re-synthesize everything
+ *   npm run voiceover -- --provider=edge # override the script's provider
  *
- * Provider: Microsoft Edge neural TTS via `@andresaya/edge-tts`
- * (free, no API key, real neural voices + word-level timings).
+ * Provider is chosen from `script.json` -> `tts.provider` (falls back to
+ * elevenlabs when ELEVENLABS_API_KEY exists, otherwise Microsoft Edge TTS).
  *
  * Outputs:
  *   public/voice/scene-01.mp3 ...   played by <Audio> in the composition
  *   src/voice/manifest.json         durations + word timings, imported by TS
  *
- * Everything is cached by a hash of (text + voice + rate), so re-running is
- * cheap and only pays for lines that actually changed.
+ * Everything is cached by a hash of (provider + voice + settings + text), so
+ * re-running is cheap and only pays for lines that actually changed.
  */
 import { createHash } from "node:crypto";
-import { spawn } from "node:child_process";
-import fsSync from "node:fs";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import edgeTts from "@andresaya/edge-tts";
+import { createProvider } from "./tts/index.mjs";
+import { HEAVY_CHAIN, ROOT, processClip, probeDuration, round } from "./audio.mjs";
 
-const { EdgeTTS } = edgeTts;
-
-const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const SCRIPT_PATH = path.join(ROOT, "public", "script.json");
 const AUDIO_DIR = path.join(ROOT, "public", "voice");
 const MANIFEST_PATH = path.join(ROOT, "src", "voice", "manifest.json");
 
-const DEFAULT_VOICE = "en-US-AndrewMultilingualNeural";
-/** Natural pace - the narration should sound like a person, not a reel. */
-const RATE = "-4%";
-const PITCH = "+0Hz";
-const OUTPUT_FORMAT = "audio-24khz-48kbitrate-mono-mp3";
-
 /** Peak-normalize every clip so the voice sits at a normal social-video level. */
 const TARGET_PEAK_DBFS = -3;
 const MAX_GAIN_DB = 12;
-const ENCODE_BITRATE = "96k";
-const SAMPLE_RATE = 24000;
 
 const force = process.argv.includes("--force");
+const providerArg = process.argv.find((arg) => arg.startsWith("--provider="))?.split("=")[1];
 
 const sha1 = (value) => createHash("sha1").update(value).digest("hex").slice(0, 12);
-
-const round = (value) => Math.round(value * 1000) / 1000;
 
 const readJson = async (file, fallback) => {
   try {
@@ -56,182 +42,19 @@ const readJson = async (file, fallback) => {
   }
 };
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 /**
- * ffmpeg/ffprobe that ship with Remotion - no system install needed.
- * The compositor package name depends on the OS/arch (Windows dev machine vs
- * the Linux GitHub Actions runner).
+ * Safety net when a provider returns audio without word timings: spread the
+ * words evenly over the clip so lip sync degrades instead of breaking.
  */
-const COMPOSITOR_PACKAGE = (() => {
-  const arch = process.arch === "arm64" ? "arm64" : "x64";
-  if (process.platform === "win32") return `compositor-win32-${arch}-msvc`;
-  if (process.platform === "darwin") return `compositor-darwin-${arch}`;
-  return `compositor-linux-${arch}-gnu`;
-})();
-
-const findBinary = (name) => {
-  const extension = process.platform === "win32" ? ".exe" : "";
-  const override = process.env[`${name.toUpperCase()}_PATH`];
-  const compositor = path.join(
-    ROOT,
-    "node_modules",
-    "@remotion",
-    COMPOSITOR_PACKAGE,
-    `${name}${extension}`,
-  );
-  const fallback = path.join(
-    ROOT,
-    "node_modules",
-    "ffmpeg-static",
-    `${name}${extension}`,
-  );
-  return [override, compositor, fallback].find(
-    (candidate) => candidate && fsSync.existsSync(candidate),
-  ) ?? `${name}${extension}`;
-};
-
-const FFMPEG = findBinary("ffmpeg");
-const FFPROBE = findBinary("ffprobe");
-
-const run = (binary, args) =>
-  new Promise((resolve, reject) => {
-    const child = spawn(binary, args);
-    let stderr = "";
-    child.stderr.on("data", (chunk) => {
-      stderr += chunk.toString();
-    });
-    child.on("error", reject);
-    child.on("close", (code) =>
-      code === 0
-        ? resolve(stderr)
-        : reject(new Error(`${path.basename(binary)} exited ${code}: ${stderr.trim()}`)),
-    );
-  });
-
-/** MP3 files start with an ID3 tag or an 0xFF 0xEx/0xFx frame header. */
-const looksLikeMp3 = (buffer) => {
-  if (buffer.length < 1024) return false;
-  if (buffer.subarray(0, 3).toString("latin1") === "ID3") return true;
-  return buffer[0] === 0xff && (buffer[1] & 0xe0) === 0xe0;
-};
-
-const synthesize = async (tts, text, voice) => {
-  let lastError;
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      const result = await tts.generate(text, voice, {
-        rate: RATE,
-        pitch: PITCH,
-        outputFormat: OUTPUT_FORMAT,
-        timeout: 60000,
-      });
-      const audio = Buffer.from(result.audio);
-      if (!looksLikeMp3(audio)) {
-        throw new Error(`response is not an MP3 (${audio.length} bytes)`);
-      }
-      return { audio, words: result.wordBoundaries ?? [], duration: result.duration };
-    } catch (error) {
-      lastError = error;
-      if (attempt < 3) await sleep(700 * attempt);
-    }
-  }
-  throw lastError;
-};
-
-let tempCounter = 0;
-const tempPath = (extension) =>
-  path.join(
-    os.tmpdir(),
-    `stickman-voice-${process.pid}-${tempCounter++}.${extension}`,
-  );
-
-/** Decodes to WAV and returns the absolute peak (0..1). */
-const measurePeak = async (audioFile) => {
-  const wavFile = tempPath("wav");
-  await run(FFMPEG, [
-    "-y", "-v", "error",
-    "-i", audioFile,
-    "-ac", "1",
-    "-ar", String(SAMPLE_RATE),
-    "-f", "wav",
-    wavFile,
-  ]);
-
-  const wav = await fs.readFile(wavFile);
-  await fs.unlink(wavFile);
-
-  let offset = 12;
-  while (offset + 8 <= wav.length) {
-    const id = wav.toString("latin1", offset, offset + 4);
-    const size = wav.readUInt32LE(offset + 4);
-    if (id === "data") {
-      const samples = Math.floor(size / 2);
-      let peak = 0;
-      for (let i = 0; i < samples; i++) {
-        const value = Math.abs(wav.readInt16LE(offset + 8 + i * 2));
-        if (value > peak) peak = value;
-      }
-      return peak / 32768;
-    }
-    offset += 8 + size + (size % 2);
-  }
-
-  throw new Error("no data chunk in decoded WAV");
-};
-
-/**
- * Applies a flat gain so the clip peaks at `TARGET_PEAK_DBFS`.
- * Unity-gain is applied with ffmpeg's `volume` filter - no dynamics processing,
- * so word timings stay exactly where the TTS reported them.
- */
-const normalizeClip = async (audioFile) => {
-  const peak = await measurePeak(audioFile);
-  if (peak === 0) {
-    throw new Error("decoded clip is silent");
-  }
-
-  const gainDb = Math.min(
-    Math.max(TARGET_PEAK_DBFS - 20 * Math.log10(peak), 0),
-    MAX_GAIN_DB,
-  );
-
-  if (gainDb < 0.5) {
-    return { gainDb: 0, peakDbfs: round(20 * Math.log10(peak)) };
-  }
-
-  const out = tempPath("mp3");
-  await run(FFMPEG, [
-    "-y", "-v", "error",
-    "-i", audioFile,
-    "-af", `volume=${gainDb.toFixed(2)}dB`,
-    "-ac", "1",
-    "-ar", String(SAMPLE_RATE),
-    "-c:a", "libmp3lame",
-    "-b:a", ENCODE_BITRATE,
-    out,
-  ]);
-  await fs.rename(out, audioFile);
-
-  return {
-    gainDb: round(gainDb),
-    peakDbfs: round(20 * Math.log10(peak) + gainDb),
-  };
-};
-
-const probeDuration = async (audioFile) => {
-  try {
-    const stdout = await run(FFPROBE, [
-      "-v", "error",
-      "-show_entries", "format=duration",
-      "-of", "csv=p=0",
-      audioFile,
-    ]);
-    const value = Number.parseFloat(stdout.trim());
-    return Number.isFinite(value) ? round(value) : undefined;
-  } catch {
-    return undefined;
-  }
+const estimateWords = (text, duration) => {
+  const tokens = text.split(/\s+/).filter(Boolean);
+  if (tokens.length === 0 || !duration) return [];
+  const step = duration / tokens.length;
+  return tokens.map((token, index) => ({
+    text: token.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "") || token,
+    start: round(index * step),
+    end: round((index + 1) * step * 0.92),
+  }));
 };
 
 const main = async () => {
@@ -251,24 +74,37 @@ const main = async () => {
     );
   }
 
-  const voice = script.voice ?? DEFAULT_VOICE;
+  const ttsConfig = script.tts ?? {};
+  const provider = createProvider({
+    provider: providerArg ?? ttsConfig.provider,
+    voice: ttsConfig.voice ?? script.voice,
+    model: ttsConfig.model,
+    voiceSettings: ttsConfig.voiceSettings,
+    heavy: ttsConfig.heavy,
+    rate: ttsConfig.rate,
+  });
+
+  const chain = provider.heavy ? HEAVY_CHAIN : "";
   const previous = await readJson(MANIFEST_PATH, { scenes: [] });
   const previousByIndex = new Map((previous.scenes ?? []).map((s) => [s.index, s]));
 
   await fs.mkdir(AUDIO_DIR, { recursive: true });
   await fs.mkdir(path.dirname(MANIFEST_PATH), { recursive: true });
 
-  const tts = new EdgeTTS();
   const generated = [];
 
-  console.log(`voice: ${voice}   rate: ${RATE}   scenes: ${scenes.length}\n`);
+  console.log(
+    `provider: ${provider.name}   voice: ${provider.voice}   ` +
+      `${provider.model ? `model: ${provider.model}   ` : ""}` +
+      `heavy: ${provider.heavy ? "on" : "off"}   scenes: ${scenes.length}\n`,
+  );
 
   for (let index = 0; index < scenes.length; index++) {
     const text = scenes[index].voiceover.trim();
     const file = `voice/scene-${String(index + 1).padStart(2, "0")}.mp3`;
     const absolute = path.join(ROOT, "public", file);
     const hash = sha1(
-      `${voice}|${RATE}|${PITCH}|${TARGET_PEAK_DBFS}|${ENCODE_BITRATE}|${text}`,
+      `${provider.cacheKey}|${chain}|${TARGET_PEAK_DBFS}|${provider.sampleRate}|${provider.bitrate}|${text}`,
     );
 
     const cached = previousByIndex.get(index);
@@ -285,32 +121,47 @@ const main = async () => {
       continue;
     }
 
-    const result = await synthesize(tts, text, voice);
+    const result = await provider.synthesize(text);
     await fs.writeFile(absolute, result.audio);
 
-    // Loudness only - gain changes the level, never the timing.
-    const normalization = await normalizeClip(absolute);
+    // Loudness + optional "heavy" shaping in one pass - never touches timing.
+    const processing = await processClip(absolute, {
+      targetPeakDbfs: TARGET_PEAK_DBFS,
+      maxGainDb: MAX_GAIN_DB,
+      chain,
+      sampleRate: provider.sampleRate,
+      bitrate: provider.bitrate,
+    });
+
     const measured = await probeDuration(absolute);
+    const fallbackDuration =
+      result.duration && result.duration > 0 ? result.duration : undefined;
+    const duration = measured ?? fallbackDuration ?? 0;
 
-    const words = result.words.map((word) => ({
-      text: word.text,
-      start: round(word.offset / 1e7),
-      end: round((word.offset + word.duration) / 1e7),
-    }));
-
-    // Prefer the re-measured clip length; fall back to the last word boundary.
-    const duration =
-      measured ?? (result.duration > 0 ? result.duration : undefined) ??
-      (words[words.length - 1]?.end ?? 0) + 0.15;
+    let words = result.words ?? [];
+    // Drop the small silence the model sometimes puts before the first word.
+    if (words.length > 0 && words[0].start > 0.4) {
+      const shift = words[0].start - 0.08;
+      words = words.map((word) => ({
+        ...word,
+        start: round(Math.max(0, word.start - shift)),
+        end: round(Math.max(0.02, word.end - shift)),
+      }));
+    }
+    if (words.length === 0) {
+      words = estimateWords(text, duration);
+    }
 
     const entry = {
       index,
       file,
       text,
       hash,
-      durationInSeconds: round(duration),
-      peakDbfs: normalization.peakDbfs,
-      gainDb: normalization.gainDb,
+      durationInSeconds: round(
+        duration || (words[words.length - 1]?.end ?? 0) + 0.15,
+      ),
+      peakDbfs: processing.peakDbfs,
+      gainDb: processing.gainDb,
       words,
     };
 
@@ -318,7 +169,8 @@ const main = async () => {
     generated.push(entry);
     console.log(
       `${String(index + 1).padStart(2, "0")}  created  ${entry.durationInSeconds.toFixed(2)}s  ` +
-        `${(size / 1024).toFixed(1)} KB  ${normalization.gainDb >= 0.5 ? `+${normalization.gainDb} dB` : "no gain"}  ` +
+        `${(size / 1024).toFixed(1)} KB  ` +
+        `${processing.gainDb >= 0.5 ? `+${processing.gainDb} dB` : "no gain"}  ` +
         `${words.length} words  ${text}`,
     );
   }
@@ -328,11 +180,13 @@ const main = async () => {
   );
 
   const manifest = {
-    provider: "@andresaya/edge-tts",
-    voice,
-    rate: RATE,
-    pitch: PITCH,
-    outputFormat: OUTPUT_FORMAT,
+    provider: provider.name,
+    voice: provider.voice,
+    model: provider.model,
+    rate: provider.rateLabel,
+    pitch: provider.pitch,
+    outputFormat: provider.outputFormat,
+    heavy: provider.heavy,
     normalization: { targetPeakDbfs: TARGET_PEAK_DBFS, maxGainDb: MAX_GAIN_DB },
     generatedAt: new Date().toISOString(),
     totalSeconds,
