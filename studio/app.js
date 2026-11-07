@@ -180,6 +180,7 @@ const sceneCard = (scene, index) => `
         ? `<label><span>Points (one per line)</span><textarea data-field="items" rows="3">${escapeHtml((scene.items ?? []).join("\n"))}</textarea></label>`
         : ""
     }
+    ${sceneActChips(scene)}
     <div class="scene-foot">
       <span class="muted"></span>
       <label style="flex-direction: row; align-items: center; gap: 6px">
@@ -188,6 +189,27 @@ const sceneCard = (scene, index) => `
       </label>
     </div>
   </div>`;
+
+/** What the stickman will actually do in this scene (auto-detected). */
+const sceneActChips = (scene) => {
+  const actions = (scene.actions ?? []).map(
+    (action, chipIndex) =>
+      `<span class="act-chip action">${escapeHtml(String(action.at))}s ${escapeHtml(action.id)}<button type="button" data-action="drop-action" data-i="${chipIndex}" title="Remove action">✕</button></span>`,
+  );
+  const props = (scene.props ?? []).map(
+    (prop, chipIndex) =>
+      `<span class="act-chip prop">${escapeHtml(prop)}<button type="button" data-action="drop-prop" data-i="${chipIndex}" title="Remove prop">✕</button></span>`,
+  );
+  const guest = scene.guest
+    ? `<span class="act-chip guest">guest: ${escapeHtml(scene.guest.name)}<button type="button" data-action="drop-guest" title="Remove guest">✕</button></span>`
+    : "";
+
+  const chips = [...actions, ...props, guest].filter(Boolean);
+  if (chips.length === 0) {
+    return `<div class="scene-acts"><span class="none">No acting yet — Auto-split detects actions</span></div>`;
+  }
+  return `<div class="scene-acts">${chips.join("")}</div>`;
+};
 
 const updateSceneStats = (card, scene) => {
   const label = card.querySelector(".scene-foot .muted");
@@ -258,10 +280,31 @@ scenesEl.addEventListener("change", (event) => {
 });
 
 scenesEl.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-action=remove]");
+  const button = event.target.closest("button[data-action]");
   if (!button) return;
   const card = button.closest(".scene");
-  state.scenes.splice(Number(card.dataset.index), 1);
+  if (!card) return;
+  const index = Number(card.dataset.index);
+  const scene = state.scenes[index];
+  if (!scene) return;
+
+  switch (button.dataset.action) {
+    case "remove":
+      state.scenes.splice(index, 1);
+      break;
+    case "drop-action":
+      scene.actions?.splice(Number(button.dataset.i), 1);
+      break;
+    case "drop-prop":
+      scene.props?.splice(Number(button.dataset.i), 1);
+      break;
+    case "drop-guest":
+      delete scene.guest;
+      break;
+    default:
+      return;
+  }
+
   renderScenes();
   saveDraft();
 });
@@ -465,6 +508,20 @@ const cleanScene = (scene) => ({
   // Lip sync only for the talking pose (same default the renderer uses).
   speaking: scene.pose === "talking",
   ...(scene.scene_type === "points" ? { items: (scene.items ?? []).filter(Boolean) } : {}),
+  // Carrying the detected acting through is what makes the render match the
+  // chips the user is looking at.
+  ...(Array.isArray(scene.actions) && scene.actions.length > 0
+    ? {
+        actions: scene.actions.map((action) => ({
+          at: Number(action.at) || 0,
+          id: action.id,
+        })),
+      }
+    : {}),
+  ...(Array.isArray(scene.props) && scene.props.length > 0
+    ? { props: scene.props.slice(0, 2) }
+    : {}),
+  ...(scene.guest ? { guest: { ...scene.guest } } : {}),
 });
 
 $("#render-btn").addEventListener("click", async () => {

@@ -371,6 +371,39 @@ input[type="range"] {
 }
 .scene .remove:hover { color: var(--err); border-color: rgba(248, 113, 113, 0.4); }
 
+/* What the character will do in this scene (auto-detected, removable). */
+.scene-acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.scene-acts .none { font-size: 0.72rem; color: var(--muted); font-style: italic; }
+
+.act-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 4px 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-3);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: var(--text);
+}
+.act-chip.action { border-color: rgba(217, 119, 6, 0.45); color: #f2b665; }
+.act-chip.prop { border-color: rgba(96, 165, 250, 0.4); color: #93c5fd; }
+.act-chip.guest { border-color: rgba(74, 222, 128, 0.35); color: #86efac; }
+
+.act-chip button {
+  background: transparent;
+  border: 0;
+  padding: 0 4px;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.55;
+  cursor: pointer;
+}
+.act-chip button:hover { opacity: 1; color: var(--err); }
+
 /* ----------------------------------------------------------- progress --- */
 
 .steps {

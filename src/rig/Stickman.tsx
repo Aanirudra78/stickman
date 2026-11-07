@@ -1,6 +1,8 @@
 import React from "react";
 import { COLORS } from "../config";
 import type { FaceParams, JointAngles } from "../poses/poses";
+import type { PropId } from "../props/ids";
+import { PropShape } from "../props/Props";
 import {
   RIG,
   STICKMAN_HEIGHT,
@@ -42,17 +44,37 @@ const clamp = (value: number, min: number, max: number) =>
 const toPolyline = (list: Point[]) =>
   list.map((p) => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" ");
 
+export type StickmanProp = {
+  id: PropId;
+  /** Which hand holds it. Defaults to the right hand. */
+  hand?: "L" | "R";
+  scale?: number;
+  /** Extra rotation in degrees, on top of the hand-aligned tilt. */
+  rotate?: number;
+  opacity?: number;
+};
+
 export type StickmanProps = {
   angles: JointAngles;
   face: FaceParams;
   /** 0 = eyes closed, 1 = fully open. */
   blink?: number;
+  /** Props held in the hands (drawn after the hands). */
+  props?: readonly StickmanProp[];
+  /**
+   * How far the floor is from the hip, in rig px. Jumping moves the whole SVG
+   * up, so the contact shadow must be pushed back down by the same amount to
+   * stay on the ground. Defaults to the resting floor line.
+   */
+  groundY?: number;
 };
 
 export const Stickman: React.FC<StickmanProps> = ({
   angles,
   face,
   blink = 1,
+  props = [],
+  groundY = 158,
 }) => {
   const s = solveSkeleton(angles);
 
@@ -83,7 +105,7 @@ export const Stickman: React.FC<StickmanProps> = ({
       style={{ overflow: "visible" }}
     >
       {/* Ground shadow: keeps the character planted on the floor. */}
-      <ellipse cx={0} cy={158} rx={104} ry={13} fill={COLORS.shadow} />
+      <ellipse cx={0} cy={groundY} rx={104} ry={13} fill={COLORS.shadow} />
 
       <g
         fill="none"
@@ -232,6 +254,26 @@ export const Stickman: React.FC<StickmanProps> = ({
           />
         </g>
       </g>
+
+      {/* Props are drawn last so they sit on top of the hand (and of the face
+          when the action brings food/drink to the mouth). */}
+      {props.map((prop, index) => {
+        const hand = prop.hand === "L" ? s.handL : s.handR;
+        const tilt = (prop.hand === "L" ? -8 : 8) + (prop.rotate ?? 0);
+        return (
+          <g
+            key={`${prop.id}-${index}`}
+            transform={`translate(${hand.x.toFixed(2)} ${hand.y.toFixed(
+              2,
+            )}) rotate(${tilt.toFixed(2)}) scale(${(prop.scale ?? 0.9).toFixed(
+              2,
+            )})`}
+            opacity={prop.opacity ?? 1}
+          >
+            <PropShape id={prop.id} />
+          </g>
+        );
+      })}
     </svg>
   );
 };

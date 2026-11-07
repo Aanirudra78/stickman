@@ -11,6 +11,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { applyDetection } from "../shared/detect.mjs";
 
 const WORD_RE = /[\p{L}\p{N}][\p{L}\p{N}'\u2019-]*/gu;
 const MAX_SCENES = 12;
@@ -265,6 +266,11 @@ export const splitScript = (rawText, options = {}) => {
       scene.pose = poseFor(scene.voiceover);
     }
   });
+
+  // Actions, props and guest cameos are inferred from the words themselves, so
+  // the same pasted script produces the same acting everywhere (Studio, CLI,
+  // GitHub Actions). The title scene stays still and prop-free.
+  applyDetection(limited, { title });
 
   const totalSeconds = limited.reduce((sum, scene) => sum + scene.duration, 0);
 

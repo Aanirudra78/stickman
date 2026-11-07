@@ -10,11 +10,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { ACTION_IDS, PROP_IDS, applyDetection } from "../shared/detect.mjs";
 
 const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const TARGET = path.join(ROOT, "public", "script.json");
 const POSES = ["idle", "talking", "pointing", "thinking", "surprised", "happy"];
 const TYPES = ["text", "points"];
+const GUEST_ENTRANCES = ["walk", "jump", "magic"];
+/** Detection rules + the generic "hold a prop" fallback clip. */
+const ACTIONS = [...ACTION_IDS, "hold"];
 
 const fail = (message) => {
   console.error(`script error: ${message}`);
@@ -88,6 +92,62 @@ const main = async () => {
     if (scene.pose_changes && !Array.isArray(scene.pose_changes)) {
       problems.push(`${at}: "pose_changes" must be an array`);
     }
+
+    if (scene.actions !== undefined) {
+      if (!Array.isArray(scene.actions)) {
+        problems.push(`${at}: "actions" must be an array of { at, id }`);
+      } else {
+        scene.actions.forEach((action, actionIndex) => {
+          const actionAt = `${at}, actions[${actionIndex}]`;
+          if (!action || typeof action !== "object") {
+            problems.push(`${actionAt}: must be { at, id }`);
+            return;
+          }
+          if (typeof action.at !== "number" || !(action.at >= 0)) {
+            problems.push(`${actionAt}: "at" must be a non-negative number`);
+          }
+          if (!ACTIONS.includes(action.id)) {
+            problems.push(
+              `${actionAt}: "id" must be one of ${ACTIONS.join(", ")}`,
+            );
+          }
+        });
+      }
+    }
+
+    if (scene.props !== undefined) {
+      if (!Array.isArray(scene.props)) {
+        problems.push(`${at}: "props" must be an array of prop ids`);
+      } else if (scene.props.length > 2) {
+        problems.push(`${at}: at most 2 props per scene`);
+      } else {
+        scene.props.forEach((prop, propIndex) => {
+          if (!PROP_IDS.includes(prop)) {
+            problems.push(
+              `${at}, props[${propIndex}]: must be one of ${PROP_IDS.join(", ")}`,
+            );
+          }
+        });
+      }
+    }
+
+    if (scene.guest !== undefined) {
+      if (!scene.guest || typeof scene.guest !== "object") {
+        problems.push(`${at}: "guest" must be { name, at?, exit?, enter? }`);
+      } else {
+        if (typeof scene.guest.name !== "string" || scene.guest.name.trim() === "") {
+          problems.push(`${at}, guest: "name" must be a non-empty string`);
+        }
+        if (
+          scene.guest.enter !== undefined &&
+          !GUEST_ENTRANCES.includes(scene.guest.enter)
+        ) {
+          problems.push(
+            `${at}, guest: "enter" must be one of ${GUEST_ENTRANCES.join(", ")}`,
+          );
+        }
+      }
+    }
   });
 
   if (problems.length > 0) {
@@ -98,6 +158,11 @@ const main = async () => {
   if (process.env.VOICE && process.env.VOICE.trim() !== "") {
     script.voice = process.env.VOICE.trim();
   }
+
+  // Last safety net: any scene that arrived without acting gets the same
+  // detection the text pipeline uses, so a hand-written JSON can never render
+  // a frozen stickman.
+  applyDetection(script.scenes, { title: script.title });
 
   await fs.writeFile(TARGET, `${JSON.stringify(script, null, 2)}\n`);
 

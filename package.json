@@ -8,6 +8,7 @@
     "studio": "remotion studio",
     "creator": "node studio/server.mjs",
     "publish:cloud": "node scripts/publish-cloud.mjs",
+    "test:detect": "node scripts/check-ids.mjs && node scripts/test-detect.mjs",
     "render": "remotion render StickmanExplainer out/stickman-test.mp4",
     "render:video": "remotion render StickmanExplainer out/video.mp4",
     "still": "remotion still",

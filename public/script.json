@@ -19,14 +19,25 @@
       "duration": 1.7,
       "pose": "idle",
       "scene_type": "text",
-      "text": "The 2-Minute Rule"
+      "text": "The 2-Minute Rule",
+      "actions": [],
+      "props": []
     },
     {
       "voiceover": "Starting a new habit? Two minutes is enough.",
       "duration": 3.6,
       "pose": "talking",
       "scene_type": "text",
-      "text": "Starting a new habit"
+      "text": "Starting a new habit",
+      "actions": [
+        {
+          "at": 0,
+          "id": "think"
+        }
+      ],
+      "props": [
+        "clock"
+      ]
     },
     {
       "items": [
@@ -38,14 +49,38 @@
       "pose": "pointing",
       "duration": 6.3,
       "voiceover": "Key points. Start with 2 minutes. Keep it easy and small. Repeat it every day.",
-      "scene_type": "points"
+      "scene_type": "points",
+      "actions": [
+        {
+          "at": 0.8,
+          "id": "point_up"
+        },
+        {
+          "at": 2.7,
+          "id": "happy"
+        },
+        {
+          "at": 5,
+          "id": "point_aside"
+        }
+      ],
+      "props": [
+        "clock"
+      ]
     },
     {
       "voiceover": "Tiny start, big results.",
       "duration": 2,
       "pose": "happy",
       "scene_type": "text",
-      "text": "Tiny start, big results"
+      "text": "Tiny start, big results",
+      "actions": [
+        {
+          "at": 0.4,
+          "id": "point_up"
+        }
+      ],
+      "props": []
     }
   ]
 }

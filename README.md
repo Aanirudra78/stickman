@@ -60,6 +60,9 @@ npx remotion still StickmanExplainer out/frame.png --frame=90
 | `src/video/StickmanVideo.tsx` | Timeline driver (scene, pose, placement, mouth, blink, audio) | Yes, but changes affect everything |
 | `src/rig/skeleton.ts` | Joint solver (angles -> points) | **No** — rig |
 | `src/rig/Stickman.tsx` | Rig SVG painting (bones + face) | **No** — rig |
+| `shared/detect.mjs` | Script understanding: verb -> action, noun -> prop, name -> guest | Yes |
+| `src/actions/library.ts` | 61 hand-authored action clips | Yes |
+| `src/props/Props.tsx` | 22 prop drawings | Yes |
 
 Adding a scene: append an object to `public/script.json`, run
 `npm run voiceover`, done. Nothing else is required — the composition duration
@@ -85,11 +88,43 @@ is derived from the script plus the measured narration.
       "items": ["only for points"],     // required when scene_type = "points"
       "pose_changes": [                 // optional mid-scene pose flip
         { "at": 1.1, "pose": "surprised" }
-      ]
+      ],
+      "actions": [                      // optional; auto-detected when omitted
+        { "at": 2.3, "id": "invest" }   // seconds from the scene start
+      ],
+      "props": ["money", "phone"],      // optional; max 2, auto-detected too
+      "guest": {                        // optional cameo on a mentioned name
+        "name": "Rahul",
+        "at": 0.9,                      // when the guest walks in
+        "enter": "walk"                 // "walk" | "jump" | "magic"
+      }
     }
   ]
 }
 ```
+
+## Acting, props and guests (auto-detected)
+
+Every pasted script is run through `shared/detect.mjs` by `studio/split.mjs`,
+so the Studio, the CLI and the GitHub Actions render all produce the same
+acting. You can still hand-edit the fields, or drop a chip in the Studio.
+
+- **Actions** — 61 clips (`src/actions/library.ts`): run, walk, jump, dance,
+  fight, sit, give, throw, type, count, invest, cry, laugh, facepalm, ... The
+  clip is layered over the pose, so `talking` keeps breathing while the arms
+  act. A scene always gets at least one action (3-level fallback: verb -> line
+  shape -> a safe gesture), so the character is never frozen.
+- **Props** — 22 drawings (`money`, `phone`, `laptop`, `chart_up`, `house`,
+  `clock`, `warning`, ...). Amounts like "50,000" imply money even when the
+  script never says "paisa".
+- **Guests** — when a person's name is mentioned, a second stickman walks,
+  jumps or pops in, shows a **name tag**, and leaves at the end of the scene.
+  The main character slides left to make room. Only names count (a Hindi
+  postposition or a repeated capitalised name); sentence-opening nouns like
+  "Mehnat karo" are ignored. There is no permanent duo.
+- The title scene is always still and prop-free.
+
+Run the detector contract checks with `npm run test:detect`.
 
 ## Timing with voiceover
 

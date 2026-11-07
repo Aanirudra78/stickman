@@ -1,5 +1,15 @@
+import { ACTION_IDS, isActionId } from "../actions/types";
 import { POSE_NAMES, type PoseName } from "../poses/poses";
-import type { PoseChange, Scene, SceneType, VideoScript } from "../config";
+import { isPropId, PROP_IDS } from "../props/ids";
+import type {
+  GuestEntrance,
+  PoseChange,
+  Scene,
+  SceneAction,
+  SceneGuest,
+  SceneType,
+  VideoScript,
+} from "../config";
 
 /**
  * Validates the JSON script and turns it into a typed `VideoScript`.
@@ -60,6 +70,84 @@ const parsePoseChanges = (value: unknown, path: string): PoseChange[] => {
   });
 };
 
+const parseActions = (value: unknown, path: string): SceneAction[] | undefined => {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) {
+    fail(path, "must be an array of { at, id }");
+  }
+  const entries = value as unknown[];
+
+  return entries.map((entry, index) => {
+    if (!isRecord(entry)) {
+      fail(`${path}[${index}]`, "must be an object { at, id }");
+    }
+    const at = entry.at;
+    if (typeof at !== "number" || !Number.isFinite(at) || at < 0) {
+      fail(`${path}[${index}].at`, "must be a non-negative number of seconds");
+    }
+    if (!isActionId(entry.id)) {
+      fail(
+        `${path}[${index}].id`,
+        `must be one of ${ACTION_IDS.join(" | ")}, got ${JSON.stringify(entry.id)}`,
+      );
+    }
+    return { at, id: entry.id };
+  });
+};
+
+const parseProps = (value: unknown, path: string): Scene["props"] | undefined => {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) {
+    fail(path, "must be an array of prop ids");
+  }
+  const entries = value as unknown[];
+  return entries.map((entry, index) => {
+    if (!isPropId(entry)) {
+      fail(
+        `${path}[${index}]`,
+        `must be one of ${PROP_IDS.join(" | ")}, got ${JSON.stringify(entry)}`,
+      );
+    }
+    return entry;
+  });
+};
+
+const GUEST_ENTRANCES: GuestEntrance[] = ["walk", "jump", "magic"];
+
+const parseGuest = (value: unknown, path: string): SceneGuest | undefined => {
+  if (value === undefined) return undefined;
+  if (!isRecord(value)) {
+    fail(path, "must be an object { name, at?, exit?, enter?, pose? }");
+  }
+  if (typeof value.name !== "string" || value.name.trim().length === 0) {
+    fail(`${path}.name`, "must be a non-empty string");
+  }
+
+  const numberField = (field: "at" | "exit") => {
+    const raw = value[field];
+    if (raw === undefined) return undefined;
+    if (typeof raw !== "number" || !Number.isFinite(raw) || raw < 0) {
+      fail(`${path}.${field}`, "must be a non-negative number of seconds");
+    }
+    return raw;
+  };
+
+  if (value.enter !== undefined && !GUEST_ENTRANCES.includes(value.enter as GuestEntrance)) {
+    fail(`${path}.enter`, `must be one of ${GUEST_ENTRANCES.join(" | ")}`);
+  }
+
+  return {
+    name: value.name,
+    at: numberField("at"),
+    exit: numberField("exit"),
+    enter: value.enter as GuestEntrance | undefined,
+    pose:
+      value.pose === undefined
+        ? undefined
+        : parsePose(value.pose, `${path}.pose`),
+  };
+};
+
 const parseScene = (raw: unknown, index: number): Scene => {
   const path = `scenes[${index}]`;
   if (!isRecord(raw)) {
@@ -109,6 +197,9 @@ const parseScene = (raw: unknown, index: number): Scene => {
     items,
     speaking: raw.speaking as boolean | undefined,
     pose_changes: parsePoseChanges(raw.pose_changes, `${path}.pose_changes`),
+    actions: parseActions(raw.actions, `${path}.actions`),
+    props: parseProps(raw.props, `${path}.props`),
+    guest: parseGuest(raw.guest, `${path}.guest`),
     voiceover: raw.voiceover as string | undefined,
   };
 };

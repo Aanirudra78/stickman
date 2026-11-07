@@ -1,4 +1,6 @@
+import type { ActionId } from "./actions/types";
 import type { PoseName } from "./poses/poses";
+import type { PropId } from "./props/ids";
 
 /** Composition constants. */
 export const FPS = 30;
@@ -67,6 +69,31 @@ export type PoseChange = {
   pose: PoseName;
 };
 
+/** One scheduled action, starting `at` seconds into the scene. */
+export type SceneAction = {
+  at: number;
+  id: ActionId;
+};
+
+/** How a guest arrives when their name is mentioned. */
+export type GuestEntrance = "walk" | "jump" | "magic";
+
+/**
+ * A cameo. The guest shows a name tag, reacts, and leaves - the main
+ * character keeps narrating. Optional: scenes without a `guest` simply have
+ * no visitor.
+ */
+export type SceneGuest = {
+  name: string;
+  /** Seconds into the scene when the guest appears. Defaults to 0.2. */
+  at?: number;
+  /** Seconds into the scene when the guest leaves. Defaults to near the end. */
+  exit?: number;
+  enter?: GuestEntrance;
+  /** Optional pose override (defaults to a friendly idle). */
+  pose?: PoseName;
+};
+
 export type Scene = {
   /** Headline for "text" scenes; heading for "points" scenes. `\n` = line break. */
   text: string;
@@ -83,6 +110,12 @@ export type Scene = {
   speaking?: boolean;
   /** Optional mid-scene pose flip, blended with the same 8-frame transition. */
   pose_changes?: PoseChange[];
+  /** What the character acts out. Empty/omitted = just the pose. */
+  actions?: SceneAction[];
+  /** Props held in the hands during this scene (max two). */
+  props?: PropId[];
+  /** Optional guest cameo. */
+  guest?: SceneGuest;
   /**
    * Narration for this scene. Run `npm run voiceover` after changing it;
    * the generated clip is what actually gets played.
