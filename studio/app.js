@@ -384,10 +384,26 @@ const applyVoiceSelection = () => {
   state.voice = rest.join("|");
 };
 
+const loadCredits = async () => {
+  try {
+    const data = await api("/api/credits");
+    if (!data.ok || !data.subscription) return;
+    const chip = $("#credits-chip");
+    chip.hidden = false;
+    const remaining = Math.max(0, data.subscription.limit - data.subscription.used);
+    chip.textContent = `${remaining.toLocaleString()} chars left`;
+    chip.title = `${data.subscription.tier} plan · resets ${data.subscription.resetsAt ?? "monthly"}`;
+  } catch {
+    /* no key or offline */
+  }
+};
+
 voiceSelect.addEventListener("change", () => {
   applyVoiceSelection();
   saveDraft();
 });
+
+loadCredits();
 
 /* ------------------------------------------------------- render controls --- */
 

@@ -612,19 +612,24 @@ const handleApi = async (req, res, url) => {
   }
 
   if (route === "/api/voices") {
-    const info = await getElevenInfo();
     const { EDGE_VOICES, ELEVEN_VOICES } = await import("../scripts/tts/index.mjs");
+    // Never block the UI on the ElevenLabs network call: return the builtin
+    // catalog now and refresh the account/credits cache in the background.
+    const cached = elevenCache.data?.ok ? elevenCache.data : null;
+    if (!elevenCache.at || Date.now() - elevenCache.at > 90_000) {
+      getElevenInfo().catch(() => {});
+    }
     return json(res, 200, {
       provider: settings.provider,
       apiKey: Boolean(settings.apiKey),
       defaultVoice: settings.voice,
       eleven: {
         builtin: ELEVEN_VOICES,
-        account: info.ok ? info.voices : [],
-        error: info.ok ? null : info.error,
+        account: cached?.voices ?? [],
+        error: null,
       },
       edge: EDGE_VOICES,
-      credits: info.ok ? info.subscription : null,
+      credits: cached?.subscription ?? null,
     });
   }
 
