@@ -73,10 +73,16 @@ const setStateChip = (text, kind = "") => {
 };
 
 const api = async (path, options = {}) => {
-  const response = await fetch(path, {
-    headers: { "content-type": "application/json" },
-    ...options,
-  });
+  let response;
+  try {
+    response = await fetch(path, {
+      headers: { "content-type": "application/json" },
+      ...options,
+    });
+  } catch {
+    setStateChip("server offline", "err");
+    throw new Error("Cannot reach the Studio server on this machine.");
+  }
 
   if (response.status === 401) {
     showPin();
@@ -101,16 +107,20 @@ const showPin = () => {
 $("#pin-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const pin = $("#pin-input").value.trim();
-  const response = await fetch("/api/login", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ pin }),
-  });
-  if (response.ok) {
-    location.reload();
-  } else {
-    $("#pin-error").hidden = false;
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ pin }),
+    });
+    if (response.ok) {
+      location.reload();
+      return;
+    }
+  } catch {
+    toast("Studio server unreachable", true);
   }
+  $("#pin-error").hidden = false;
 });
 
 /* ------------------------------------------------------------ composer --- */
@@ -845,8 +855,11 @@ const boot = async () => {
       $("#progress-card").hidden = false;
     }
   } catch (error) {
-    setStateChip("offline", "err");
+    setStateChip("server offline", "err");
     console.warn(error);
+    toast("Studio server unreachable - retrying every 3s", true);
+    setTimeout(boot, 3000);
+    return;
   }
 
   try {
