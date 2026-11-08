@@ -82,7 +82,21 @@ jobs:
           || echo "note: Chrome libraries already present, continuing"
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          # ffmpeg-static downloads its binary in a postinstall script, and that
+          # download occasionally fails on the runner (rate limit / transient
+          # 5xx). Retry the whole install, then the binary on its own.
+          for attempt in 1 2 3; do
+            npm ci && break
+            echo "npm ci failed (attempt $attempt) - retrying in 10s"
+            sleep 10
+          done
+          if [ ! -x node_modules/ffmpeg-static/ffmpeg ]; then
+            echo "ffmpeg binary missing - downloading it directly"
+            (cd node_modules/ffmpeg-static && node install.js) || true
+          fi
+          test -x node_modules/ffmpeg-static/ffmpeg
+          node_modules/ffmpeg-static/ffmpeg -version | head -n 1
 
       - name: Prepare browser
         run: npx remotion browser ensure
