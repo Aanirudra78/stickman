@@ -3,6 +3,8 @@ node_modules/
 
 # Renders and QA stills stay local - the repo only needs source.
 out/*.mp4
+out/*.txt
+out/*.json
 out/qa/
 
 # Studio: local secrets, render history, temp scripts.

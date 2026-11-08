@@ -19,6 +19,14 @@ import type {
 
 const SCENE_TYPES: SceneType[] = ["text", "points"];
 
+const parseWordIndex = (value: unknown, path: string): number | undefined => {
+  if (value === undefined) return undefined;
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
+    fail(path, "must be a non-negative integer word index");
+  }
+  return value;
+};
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
@@ -91,7 +99,11 @@ const parseActions = (value: unknown, path: string): SceneAction[] | undefined =
         `must be one of ${ACTION_IDS.join(" | ")}, got ${JSON.stringify(entry.id)}`,
       );
     }
-    return { at, id: entry.id };
+    return {
+      at,
+      id: entry.id,
+      word: parseWordIndex(entry.word, `${path}[${index}].word`),
+    };
   });
 };
 
@@ -139,6 +151,7 @@ const parseGuest = (value: unknown, path: string): SceneGuest | undefined => {
   return {
     name: value.name,
     at: numberField("at"),
+    word: parseWordIndex(value.word, `${path}.word`),
     exit: numberField("exit"),
     enter: value.enter as GuestEntrance | undefined,
     pose:

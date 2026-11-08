@@ -40,6 +40,9 @@ npm run publish:cloud  # republish the phone page to GitHub Pages
 npm run dev            # Remotion Studio (preview)
 npm run voiceover      # generate/refresh narration from script.json
 npm run voiceover -- --force   # rebuild every clip
+npm run storyboard -- --text-file=notes.txt   # acting plan, before rendering
+npm run split -- --text-file=notes.txt --out=public/script.json
+npm run probe -- out/draft.mp4 out/timings.json  # pixel + motion probe
 npm run render         # out/stickman-test.mp4
 npm run render:video   # out/video.mp4 (what the cloud workflow renders)
 npx remotion still StickmanExplainer out/frame.png --frame=90
@@ -110,10 +113,15 @@ so the Studio, the CLI and the GitHub Actions render all produce the same
 acting. You can still hand-edit the fields, or drop a chip in the Studio.
 
 - **Actions** — 61 clips (`src/actions/library.ts`): run, walk, jump, dance,
-  fight, sit, give, throw, type, count, invest, cry, laugh, facepalm, ... The
-  clip is layered over the pose, so `talking` keeps breathing while the arms
+  fight, sit, give, throw, type, count, invest, cry, laugh, facepalm, read, ...
+  The clip is layered over the pose, so `talking` keeps breathing while the arms
   act. A scene always gets at least one action (3-level fallback: verb -> line
   shape -> a safe gesture), so the character is never frozen.
+- **Beats are word-accurate.** Detection stores the index of the word that
+  triggered each action (`"word": 3`), and the renderer swaps it for the real
+  TTS timestamp, so a gesture starts on the spoken verb, not on a guess. When a
+  sentence holds two verbs ("tea was brewing ... he read"), both play in the
+  order they are spoken.
 - **Props** — 22 drawings (`money`, `phone`, `laptop`, `chart_up`, `house`,
   `clock`, `warning`, ...). Amounts like "50,000" imply money even when the
   script never says "paisa".
@@ -121,16 +129,22 @@ acting. You can still hand-edit the fields, or drop a chip in the Studio.
   jumps or pops in, shows a **name tag**, and leaves at the end of the scene.
   The main character slides left to make room. Only names count (a Hindi
   postposition or a repeated capitalised name); sentence-opening nouns like
-  "Mehnat karo" are ignored. There is no permanent duo.
+  "Mehnat karo" are ignored, book titles stay props, and "Aman told himself"
+  is the narrator, not a visitor. There is no permanent duo.
 - The title scene is always still and prop-free.
 
-Run the detector contract checks with `npm run test:detect`.
+Run the detector contract checks with `npm run test:detect`. To see the plan
+before spending a render, `npm run storyboard -- --text-file=notes.txt` prints
+one row per scene with start time, caption, the word that triggers each action,
+props and guests (`synced` once the narration exists).
 
 ## Timing with voiceover
 
 - `duration` is a floor. The real length of a scene is
   `last spoken word + 0.45s` (`VOICE_TAIL_SECONDS`), so the text stays on
-  screen for the whole line and a beat longer.
+  screen for the whole line and a beat longer. The pre-audio estimate may add at
+  most `0.6s` on top (`VOICE_HOLD_SECONDS`), so 22 short sentences do not add
+  15 seconds of dead air.
 - We size from the last **word**, not the clip length: the TTS clips carry
   ~0.8s of trailing silence that is deliberately cut. The `<Audio>` sits inside
   the scene `<Sequence>`, so it is trimmed at the scene boundary.

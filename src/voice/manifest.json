@@ -10,200 +10,788 @@
     "targetPeakDbfs": -3,
     "maxGainDb": 12
   },
-  "generatedAt": "2026-11-07T06:07:59.263Z",
-  "totalSeconds": 11.834,
+  "generatedAt": "2026-11-08T06:44:32.601Z",
+  "totalSeconds": 40.122,
   "scenes": [
     {
       "index": 0,
       "file": "voice/scene-01.mp3",
-      "text": "The 2-Minute Rule.",
-      "hash": "da255516a1d5",
-      "durationInSeconds": 1.384,
-      "peakDbfs": -3,
-      "gainDb": 3.331,
+      "text": "Every night, Aman told himself.",
+      "hash": "f2ce858bf606",
+      "durationInSeconds": 1.933,
+      "peakDbfs": -2.088,
+      "gainDb": 0,
       "words": [
         {
-          "text": "The",
+          "text": "Every",
           "start": 0,
-          "end": 0.151
+          "end": 0.29
         },
         {
-          "text": "2-Minute",
-          "start": 0.209,
-          "end": 0.604
+          "text": "night",
+          "start": 0.348,
+          "end": 0.569
         },
         {
-          "text": "Rule",
-          "start": 0.639,
-          "end": 0.987
+          "text": "Aman",
+          "start": 0.627,
+          "end": 0.871
+        },
+        {
+          "text": "told",
+          "start": 0.929,
+          "end": 1.115
+        },
+        {
+          "text": "himself",
+          "start": 1.149,
+          "end": 1.498
         }
       ]
     },
     {
       "index": 1,
       "file": "voice/scene-02.mp3",
-      "text": "Starting a new habit? Two minutes is enough.",
-      "hash": "2a5ef7e88c01",
-      "durationInSeconds": 2.926,
+      "text": "Tomorrow, I'll start reading.",
+      "hash": "d310c67fc1f4",
+      "durationInSeconds": 2.116,
       "peakDbfs": -3,
-      "gainDb": 1.705,
+      "gainDb": 2.55,
       "words": [
         {
-          "text": "Starting",
+          "text": "Tomorrow",
           "start": 0,
-          "end": 0.406
-        },
-        {
-          "text": "a",
-          "start": 0.441,
-          "end": 0.464
-        },
-        {
-          "text": "new",
-          "start": 0.511,
           "end": 0.604
         },
         {
-          "text": "habit",
-          "start": 0.662,
-          "end": 0.975
+          "text": "I'll",
+          "start": 0.894,
+          "end": 1.103
         },
         {
-          "text": "Two",
-          "start": 1.533,
-          "end": 1.73
+          "text": "start",
+          "start": 1.138,
+          "end": 1.358
         },
         {
-          "text": "minutes",
-          "start": 1.788,
-          "end": 2.02
-        },
-        {
-          "text": "is",
-          "start": 2.055,
-          "end": 2.136
-        },
-        {
-          "text": "enough",
-          "start": 2.194,
-          "end": 2.438
+          "text": "reading",
+          "start": 1.405,
+          "end": 1.695
         }
       ]
     },
     {
       "index": 2,
       "file": "voice/scene-03.mp3",
-      "text": "Key points. Start with 2 minutes. Keep it easy and small. Repeat it every day.",
-      "hash": "8f0495fc1783",
-      "durationInSeconds": 5.669,
+      "text": "Tomorrow came.",
+      "hash": "e51e8c45a4ab",
+      "durationInSeconds": 1.332,
       "peakDbfs": -3,
-      "gainDb": 1.513,
+      "gainDb": 2.47,
       "words": [
         {
-          "text": "Key",
+          "text": "Tomorrow",
           "start": 0,
-          "end": 0.279
+          "end": 0.534
         },
         {
-          "text": "points",
-          "start": 0.372,
-          "end": 0.755
-        },
-        {
-          "text": "Start",
-          "start": 1.3,
-          "end": 1.544
-        },
-        {
-          "text": "with",
-          "start": 1.579,
-          "end": 1.683
-        },
-        {
-          "text": "2",
-          "start": 1.718,
-          "end": 1.823
-        },
-        {
-          "text": "minutes",
-          "start": 1.904,
-          "end": 2.194
-        },
-        {
-          "text": "Keep",
-          "start": 2.752,
-          "end": 2.984
-        },
-        {
-          "text": "it",
-          "start": 3.03,
-          "end": 3.1
-        },
-        {
-          "text": "easy",
-          "start": 3.146,
-          "end": 3.367
-        },
-        {
-          "text": "and",
-          "start": 3.413,
-          "end": 3.483
-        },
-        {
-          "text": "small",
-          "start": 3.518,
-          "end": 3.878
-        },
-        {
-          "text": "Repeat",
-          "start": 4.354,
-          "end": 4.667
-        },
-        {
-          "text": "it",
-          "start": 4.714,
-          "end": 4.772
-        },
-        {
-          "text": "every",
-          "start": 4.807,
-          "end": 4.969
-        },
-        {
-          "text": "day",
-          "start": 5.004,
-          "end": 5.236
+          "text": "came",
+          "start": 0.592,
+          "end": 0.94
         }
       ]
     },
     {
       "index": 3,
       "file": "voice/scene-04.mp3",
-      "text": "Tiny start, big results.",
-      "hash": "43a74403fef1",
-      "durationInSeconds": 1.855,
+      "text": "Nothing changed.",
+      "hash": "93744d0ca925",
+      "durationInSeconds": 1.332,
       "peakDbfs": -3,
-      "gainDb": 2.56,
+      "gainDb": 5.691,
       "words": [
         {
-          "text": "Tiny",
+          "text": "Nothing",
+          "start": 0,
+          "end": 0.348
+        },
+        {
+          "text": "changed",
+          "start": 0.43,
+          "end": 0.882
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "file": "voice/scene-05.mp3",
+      "text": "Again... and again.",
+      "hash": "14b7ba627e67",
+      "durationInSeconds": 1.907,
+      "peakDbfs": -3,
+      "gainDb": 3.149,
+      "words": [
+        {
+          "text": "Again",
+          "start": 0,
+          "end": 0.569
+        },
+        {
+          "text": "and",
+          "start": 0.743,
+          "end": 0.952
+        },
+        {
+          "text": "again",
+          "start": 1.01,
+          "end": 1.44
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "file": "voice/scene-06.mp3",
+      "text": "Then he tried something different.",
+      "hash": "7a0e128da7c8",
+      "durationInSeconds": 1.62,
+      "peakDbfs": -2.429,
+      "gainDb": 0,
+      "words": [
+        {
+          "text": "Then",
+          "start": 0,
+          "end": 0.186
+        },
+        {
+          "text": "he",
+          "start": 0.232,
+          "end": 0.279
+        },
+        {
+          "text": "tried",
+          "start": 0.313,
+          "end": 0.534
+        },
+        {
+          "text": "something",
+          "start": 0.557,
+          "end": 0.801
+        },
+        {
+          "text": "different",
+          "start": 0.848,
+          "end": 1.184
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "file": "voice/scene-07.mp3",
+      "text": "He didn't wait for motivation.",
+      "hash": "8e8b7438b5a9",
+      "durationInSeconds": 1.698,
+      "peakDbfs": -3,
+      "gainDb": 4.654,
+      "words": [
+        {
+          "text": "He",
+          "start": 0,
+          "end": 0.151
+        },
+        {
+          "text": "didn't",
+          "start": 0.197,
+          "end": 0.406
+        },
+        {
+          "text": "wait",
+          "start": 0.441,
+          "end": 0.592
+        },
+        {
+          "text": "for",
+          "start": 0.627,
+          "end": 0.72
+        },
+        {
+          "text": "motivation",
+          "start": 0.766,
+          "end": 1.335
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "file": "voice/scene-08.mp3",
+      "text": "He didn't need a new routine.",
+      "hash": "c1b3e3c9d1fe",
+      "durationInSeconds": 1.75,
+      "peakDbfs": -3,
+      "gainDb": 2.513,
+      "words": [
+        {
+          "text": "He",
+          "start": 0,
+          "end": 0.174
+        },
+        {
+          "text": "didn't",
+          "start": 0.232,
+          "end": 0.453
+        },
+        {
+          "text": "need",
+          "start": 0.476,
+          "end": 0.627
+        },
+        {
+          "text": "a",
+          "start": 0.662,
+          "end": 0.697
+        },
+        {
+          "text": "new",
+          "start": 0.743,
+          "end": 0.859
+        },
+        {
+          "text": "routine",
+          "start": 0.94,
+          "end": 1.358
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "file": "voice/scene-09.mp3",
+      "text": "He just attached the new habit to an old one.",
+      "hash": "7a390bad4edc",
+      "durationInSeconds": 3.004,
+      "peakDbfs": -3,
+      "gainDb": 2.94,
+      "words": [
+        {
+          "text": "He",
+          "start": 0,
+          "end": 0.186
+        },
+        {
+          "text": "just",
+          "start": 0.313,
+          "end": 0.615
+        },
+        {
+          "text": "attached",
+          "start": 0.662,
+          "end": 1.115
+        },
+        {
+          "text": "the",
+          "start": 1.149,
+          "end": 1.219
+        },
+        {
+          "text": "new",
+          "start": 1.277,
+          "end": 1.393
+        },
+        {
+          "text": "habit",
+          "start": 1.474,
+          "end": 1.8
+        },
+        {
+          "text": "to",
+          "start": 1.846,
+          "end": 1.916
+        },
+        {
+          "text": "an",
+          "start": 1.997,
+          "end": 2.067
+        },
+        {
+          "text": "old",
+          "start": 2.113,
+          "end": 2.276
+        },
+        {
+          "text": "one",
+          "start": 2.368,
+          "end": 2.624
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "file": "voice/scene-10.mp3",
+      "text": "Every morning, he made his tea.",
+      "hash": "c74dba3c6ff2",
+      "durationInSeconds": 1.802,
+      "peakDbfs": -1.633,
+      "gainDb": 0,
+      "words": [
+        {
+          "text": "Every",
+          "start": 0,
+          "end": 0.302
+        },
+        {
+          "text": "morning",
+          "start": 0.383,
+          "end": 0.65
+        },
+        {
+          "text": "he",
+          "start": 0.697,
+          "end": 0.743
+        },
+        {
+          "text": "made",
+          "start": 0.789,
+          "end": 0.94
+        },
+        {
+          "text": "his",
+          "start": 0.964,
+          "end": 1.045
+        },
+        {
+          "text": "tea",
+          "start": 1.08,
+          "end": 1.335
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "file": "voice/scene-11.mp3",
+      "text": "And while the tea was brewing.",
+      "hash": "08e83eebf50b",
+      "durationInSeconds": 1.698,
+      "peakDbfs": -3,
+      "gainDb": 3.34,
+      "words": [
+        {
+          "text": "And",
+          "start": 0,
+          "end": 0.163
+        },
+        {
+          "text": "while",
+          "start": 0.209,
+          "end": 0.383
+        },
+        {
+          "text": "the",
+          "start": 0.418,
+          "end": 0.488
+        },
+        {
+          "text": "tea",
+          "start": 0.534,
+          "end": 0.697
+        },
+        {
+          "text": "was",
+          "start": 0.743,
+          "end": 0.859
+        },
+        {
+          "text": "brewing",
+          "start": 0.917,
+          "end": 1.265
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "file": "voice/scene-12.mp3",
+      "text": "he read one page.",
+      "hash": "d96c0a94beec",
+      "durationInSeconds": 1.567,
+      "peakDbfs": -3,
+      "gainDb": 4.427,
+      "words": [
+        {
+          "text": "he",
+          "start": 0,
+          "end": 0.163
+        },
+        {
+          "text": "read",
+          "start": 0.255,
+          "end": 0.441
+        },
+        {
+          "text": "one",
+          "start": 0.534,
+          "end": 0.731
+        },
+        {
+          "text": "page",
+          "start": 0.778,
+          "end": 1.219
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "file": "voice/scene-13.mp3",
+      "text": "Just one page.",
+      "hash": "b3cd3b5b24d5",
+      "durationInSeconds": 1.515,
+      "peakDbfs": -3,
+      "gainDb": 4.426,
+      "words": [
+        {
+          "text": "Just",
+          "start": 0,
+          "end": 0.313
+        },
+        {
+          "text": "one",
+          "start": 0.406,
+          "end": 0.627
+        },
+        {
+          "text": "page",
+          "start": 0.673,
+          "end": 1.103
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "file": "voice/scene-14.mp3",
+      "text": "In Atomic Habits, James Clear calls this habit stacking.",
+      "hash": "eebf3eb88d28",
+      "durationInSeconds": 3.291,
+      "peakDbfs": -3,
+      "gainDb": 3.926,
+      "words": [
+        {
+          "text": "In",
+          "start": 0,
+          "end": 0.139
+        },
+        {
+          "text": "Atomic",
+          "start": 0.197,
+          "end": 0.604
+        },
+        {
+          "text": "Habits",
+          "start": 0.65,
+          "end": 0.94
+        },
+        {
+          "text": "James",
+          "start": 0.998,
+          "end": 1.3
+        },
+        {
+          "text": "Clear",
+          "start": 1.347,
+          "end": 1.567
+        },
+        {
+          "text": "calls",
+          "start": 1.625,
+          "end": 1.869
+        },
+        {
+          "text": "this",
+          "start": 1.892,
+          "end": 2.009
+        },
+        {
+          "text": "habit",
+          "start": 2.067,
+          "end": 2.345
+        },
+        {
+          "text": "stacking",
+          "start": 2.403,
+          "end": 2.879
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "file": "voice/scene-15.mp3",
+      "text": "After I do this existing habit.",
+      "hash": "02bd5ba75f49",
+      "durationInSeconds": 2.586,
+      "peakDbfs": -1.275,
+      "gainDb": 0,
+      "words": [
+        {
+          "text": "After",
+          "start": 0,
+          "end": 0.337
+        },
+        {
+          "text": "I",
+          "start": 0.418,
+          "end": 0.453
+        },
+        {
+          "text": "do",
+          "start": 0.615,
+          "end": 0.766
+        },
+        {
+          "text": "this",
+          "start": 0.824,
+          "end": 0.975
+        },
+        {
+          "text": "existing",
+          "start": 1.057,
+          "end": 1.672
+        },
+        {
+          "text": "habit",
+          "start": 1.776,
+          "end": 2.194
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "file": "voice/scene-16.mp3",
+      "text": "I will do this new one.",
+      "hash": "84539e25e41a",
+      "durationInSeconds": 1.672,
+      "peakDbfs": -2.455,
+      "gainDb": 0,
+      "words": [
+        {
+          "text": "I",
+          "start": 0,
+          "end": 0.093
+        },
+        {
+          "text": "will",
+          "start": 0.151,
+          "end": 0.302
+        },
+        {
+          "text": "do",
+          "start": 0.348,
+          "end": 0.441
+        },
+        {
+          "text": "this",
+          "start": 0.499,
+          "end": 0.65
+        },
+        {
+          "text": "new",
+          "start": 0.778,
+          "end": 0.964
+        },
+        {
+          "text": "one",
+          "start": 1.045,
+          "end": 1.277
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "file": "voice/scene-17.mp3",
+      "text": "Your day already has habits you never skip.",
+      "hash": "99c152469b10",
+      "durationInSeconds": 2.586,
+      "peakDbfs": -3,
+      "gainDb": 3.649,
+      "words": [
+        {
+          "text": "Your",
+          "start": 0,
+          "end": 0.221
+        },
+        {
+          "text": "day",
+          "start": 0.267,
+          "end": 0.453
+        },
+        {
+          "text": "already",
+          "start": 0.511,
+          "end": 0.871
+        },
+        {
+          "text": "has",
+          "start": 0.917,
+          "end": 1.068
+        },
+        {
+          "text": "habits",
+          "start": 1.161,
+          "end": 1.509
+        },
+        {
+          "text": "you",
+          "start": 1.533,
+          "end": 1.602
+        },
+        {
+          "text": "never",
+          "start": 1.683,
+          "end": 1.846
+        },
+        {
+          "text": "skip",
+          "start": 1.881,
+          "end": 2.159
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "file": "voice/scene-18.mp3",
+      "text": "Brushing.",
+      "hash": "638748f266e3",
+      "durationInSeconds": 1.071,
+      "peakDbfs": -3,
+      "gainDb": 4.606,
+      "words": [
+        {
+          "text": "Brushing",
+          "start": 0,
+          "end": 0.557
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "file": "voice/scene-19.mp3",
+      "text": "Tea.",
+      "hash": "c002a80dd9b9",
+      "durationInSeconds": 0.914,
+      "peakDbfs": -3,
+      "gainDb": 3.955,
+      "words": [
+        {
+          "text": "Tea",
+          "start": 0,
+          "end": 0.464
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "file": "voice/scene-20.mp3",
+      "text": "Charging your phone.",
+      "hash": "800b86336bd3",
+      "durationInSeconds": 1.28,
+      "peakDbfs": -3,
+      "gainDb": 0.772,
+      "words": [
+        {
+          "text": "Charging",
           "start": 0,
           "end": 0.383
         },
         {
-          "text": "start",
+          "text": "your",
           "start": 0.43,
-          "end": 0.731
+          "end": 0.534
         },
         {
-          "text": "big",
-          "start": 0.801,
-          "end": 0.975
+          "text": "phone",
+          "start": 0.58,
+          "end": 0.894
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "file": "voice/scene-21.mp3",
+      "text": "So which one will carry your new habit.",
+      "hash": "add0e9bb621e",
+      "durationInSeconds": 2.116,
+      "peakDbfs": -3,
+      "gainDb": 2.944,
+      "words": [
+        {
+          "text": "So",
+          "start": 0,
+          "end": 0.221
         },
         {
-          "text": "results",
-          "start": 1.033,
-          "end": 1.44
+          "text": "which",
+          "start": 0.279,
+          "end": 0.488
+        },
+        {
+          "text": "one",
+          "start": 0.569,
+          "end": 0.685
+        },
+        {
+          "text": "will",
+          "start": 0.708,
+          "end": 0.848
+        },
+        {
+          "text": "carry",
+          "start": 0.894,
+          "end": 1.149
+        },
+        {
+          "text": "your",
+          "start": 1.184,
+          "end": 1.277
+        },
+        {
+          "text": "new",
+          "start": 1.324,
+          "end": 1.416
+        },
+        {
+          "text": "habit",
+          "start": 1.474,
+          "end": 1.765
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "file": "voice/scene-22.mp3",
+      "text": "Tell me in the comments.",
+      "hash": "11953d099a5e",
+      "durationInSeconds": 1.332,
+      "peakDbfs": -2.724,
+      "gainDb": 0,
+      "words": [
+        {
+          "text": "Tell",
+          "start": 0,
+          "end": 0.209
+        },
+        {
+          "text": "me",
+          "start": 0.255,
+          "end": 0.302
+        },
+        {
+          "text": "in",
+          "start": 0.337,
+          "end": 0.383
+        },
+        {
+          "text": "the",
+          "start": 0.418,
+          "end": 0.488
+        },
+        {
+          "text": "comments",
+          "start": 0.522,
+          "end": 0.94
         }
       ]
     }

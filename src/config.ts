@@ -72,6 +72,12 @@ export type PoseChange = {
 /** One scheduled action, starting `at` seconds into the scene. */
 export type SceneAction = {
   at: number;
+  /**
+   * Index into the narration's word timings. When present the renderer starts
+   * the action on that spoken word instead of the `at` estimate, which is what
+   * makes the acting land exactly on the script.
+   */
+  word?: number;
   id: ActionId;
 };
 
@@ -87,6 +93,8 @@ export type SceneGuest = {
   name: string;
   /** Seconds into the scene when the guest appears. Defaults to 0.2. */
   at?: number;
+  /** Word index of the name in the narration (wins over `at` when present). */
+  word?: number;
   /** Seconds into the scene when the guest leaves. Defaults to near the end. */
   exit?: number;
   enter?: GuestEntrance;

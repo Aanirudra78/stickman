@@ -14,6 +14,7 @@ import {
   detectLine,
   detectProps,
 } from "../shared/detect.mjs";
+import { splitScript } from "../studio/split.mjs";
 
 const cases = [];
 
@@ -55,6 +56,65 @@ test("guest names only for people", () => {
   assert.deepEqual(detectGuestNames("Key points"), []);
   assert.deepEqual(detectGuestNames("Mehnat karo"), []);
   assert.deepEqual(detectGuestNames("Paisa hi sab kuch hai"), []);
+});
+
+test("book titles are not people, full names are", () => {
+  assert.deepEqual(
+    detectGuestNames("In Atomic Habits, James Clear calls this habit stacking."),
+    ["James Clear"],
+  );
+  // The name tag keeps both words and points at the first one.
+  const line = detectLine("In Atomic Habits, James Clear calls this habit stacking.");
+  assert.equal(line.guest.name, "James Clear");
+  assert.equal(line.guest.word, 3);
+});
+
+test("beats land on the spoken word, in script order", () => {
+  assert.equal(detectLine("He just attached the new habit to an old one").actions[0].word, 2);
+  assert.equal(detectLine("he read one page").actions[0].id, "read");
+  // "brewing" comes before "read" in the line, so the beats follow the line.
+  const words = "And while the tea was brewing he read one page".split(" ");
+  const beats = detectLine("And while the tea was brewing he read one page").actions;
+  for (let i = 1; i < beats.length; i++) {
+    assert.ok(beats[i].word > beats[i - 1].word, "beats must be in spoken order");
+  }
+  assert.ok(beats.every((beat) => beat.word < words.length));
+});
+
+test("a narrator talking to himself is not a guest", () => {
+  // "Aman told himself" names the storyteller, not a visitor.
+  assert.equal(detectLine("Every night, Aman told himself").guest, null);
+  assert.equal(detectLine("Aman ne khud se kaha").guest, null);
+  // A third party named in the line still walks in.
+  assert.equal(
+    detectLine("In Atomic Habits, James Clear calls this habit stacking").guest.name,
+    "James Clear",
+  );
+});
+
+test("one scene per sentence: caption, voice and acting share a line", () => {
+  const { title, scenes } = splitScript(
+    'Every night, Aman told himself:\n"Tomorrow, I\'ll start reading."\n\nAgain... and again.',
+  );
+  assert.equal(title, "Untitled", "narration must not be mistaken for a title");
+  assert.deepEqual(
+    scenes.map((scene) => scene.voiceover),
+    [
+      "Every night, Aman told himself.",
+      "Tomorrow, I'll start reading.",
+      "Again... and again.",
+    ],
+  );
+  for (const scene of scenes) {
+    assert.equal(
+      scene.text,
+      scene.voiceover.replace(/[.!?]+$/, ""),
+      `caption and voice disagree: "${scene.text}" vs "${scene.voiceover}"`,
+    );
+  }
+  // Props follow the nouns in that same sentence.
+  assert.deepEqual(scenes[1].props, ["book"]);
+  assert.equal(scenes[1].actions[0].id, "read");
 });
 
 test("applyDetection fills every scene, keeps the title still", () => {

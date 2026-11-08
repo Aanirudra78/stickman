@@ -18,12 +18,23 @@ export type SceneWindow = {
 export const VOICE_TAIL_SECONDS = 0.45;
 
 /**
+ * Most extra hold a narrated scene may add on top of its speech.
+ *
+ * `scene.duration` is an estimate made before the audio exists (and it has to
+ * be, because the splitter runs before TTS). Once the real timings exist we
+ * trust them, but allow up to this much slack so a short line still gets a
+ * beat to breathe instead of cutting straight to the next caption.
+ */
+export const VOICE_HOLD_SECONDS = 0.6;
+
+/**
  * Per-scene duration.
  *
  * `scene.duration` is a minimum. When the scene has narration, the scene grows
- * to fit it: last spoken word + `VOICE_TAIL_SECONDS`. We size from the last
- * word (not the clip length) because the TTS clips carry ~0.8s of trailing
- * silence that would otherwise pad the video.
+ * to fit it: last spoken word + `VOICE_TAIL_SECONDS`, capped at
+ * `VOICE_HOLD_SECONDS` of extra hold. We size from the last word (not the clip
+ * length) because the TTS clips carry ~0.8s of trailing silence that would
+ * otherwise pad the video.
  */
 export const getSceneWindows = (
   scenes: readonly Scene[],
@@ -39,8 +50,16 @@ export const getSceneWindows = (
       speechEnd === undefined
         ? 0
         : Math.ceil((speechEnd + VOICE_TAIL_SECONDS) * fps);
+    // The estimate may be longer than the actual speech; only keep a little.
+    const cappedMinFrames =
+      speechEnd === undefined
+        ? minFrames
+        : Math.min(
+            minFrames,
+            Math.ceil((speechEnd + VOICE_TAIL_SECONDS + VOICE_HOLD_SECONDS) * fps),
+          );
 
-    const durationInFrames = Math.max(1, minFrames, voiceFrames);
+    const durationInFrames = Math.max(1, cappedMinFrames, voiceFrames);
     const window: SceneWindow = {
       index,
       start: cursor,

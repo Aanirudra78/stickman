@@ -76,6 +76,51 @@ const Shape: React.FC<ShapeProps> = ({ id }) => {
         </g>
       );
 
+    case "book":
+      return (
+        <g strokeLinejoin="round">
+          <path d="M -30 -22 h 27 v 44 h -27 z" fill={PAPER} stroke={INK} strokeWidth={5} />
+          <path d="M 30 -22 h -27 v 44 h 27 z" fill={PAPER} stroke={INK} strokeWidth={5} />
+          <line x1={0} y1={-22} x2={0} y2={22} stroke={INK} strokeWidth={4} />
+          <g stroke={INK} strokeWidth={2.6} strokeLinecap="round" opacity={0.55}>
+            <line x1={-23} y1={-12} x2={-8} y2={-12} />
+            <line x1={-23} y1={-4} x2={-8} y2={-4} />
+            <line x1={-23} y1={4} x2={-8} y2={4} />
+            <line x1={-23} y1={12} x2={-12} y2={12} />
+            <line x1={8} y1={-12} x2={23} y2={-12} />
+            <line x1={8} y1={-4} x2={23} y2={-4} />
+            <line x1={8} y1={4} x2={23} y2={4} />
+            <line x1={12} y1={12} x2={23} y2={12} />
+          </g>
+          <rect x={22} y={-26} width={7} height={16} rx={2} fill={ACCENT} stroke={INK} strokeWidth={3} />
+        </g>
+      );
+
+    case "tea":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M -22 -10 h 40 v 20 a 12 12 0 0 1 -12 12 h -16 a 12 12 0 0 1 -12 -12 z"
+            fill={PAPER}
+            stroke={INK}
+            strokeWidth={5}
+          />
+          <path
+            d="M 18 -4 a 9 9 0 0 1 0 16"
+            fill="none"
+            stroke={INK}
+            strokeWidth={4.5}
+            strokeLinecap="round"
+          />
+          <path d="M -18 2 h 32" stroke={ACCENT} strokeWidth={4} opacity={0.55} />
+          <g stroke={ACCENT} strokeWidth={3.6} strokeLinecap="round" fill="none" opacity={0.85}>
+            <path d="M -9 -16 c 4 -6 -4 -9 0 -15" />
+            <path d="M 2 -16 c 4 -6 -4 -9 0 -15" />
+            <path d="M 12 -16 c 4 -6 -4 -9 0 -15" />
+          </g>
+        </g>
+      );
+
     case "chart_up":
       return (
         <g fill="none" strokeLinecap="round" strokeLinejoin="round">

@@ -514,6 +514,11 @@ const cleanScene = (scene) => ({
     ? {
         actions: scene.actions.map((action) => ({
           at: Number(action.at) || 0,
+          // The word index is what locks the gesture to the narration; dropping
+          // it here was why the phone render drifted from the storyboard.
+          ...(Number.isInteger(action.word) && action.word >= 0
+            ? { word: action.word }
+            : {}),
           id: action.id,
         })),
       }
@@ -521,6 +526,7 @@ const cleanScene = (scene) => ({
   ...(Array.isArray(scene.props) && scene.props.length > 0
     ? { props: scene.props.slice(0, 2) }
     : {}),
+  // Spread keeps `word`, so the cameo also enters on the spoken name.
   ...(scene.guest ? { guest: { ...scene.guest } } : {}),
 });
 

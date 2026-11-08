@@ -49,32 +49,33 @@ const ACTION_RULES = [
   ["crouch", ["crouch", "crouching", "bend down", stem("jhuk"), "झुक"]],
   ["sit", ["sit", "sitting", "sat", stem("baith"), "बैठ"]],
   ["stand", ["stand", "standing", "stood", "khada", "khade", "khadi", stem("uth"), "खड़ा"]],
-  ["cross_arms", ["cross arms", "crossed arms", "arms crossed", "strict", "firm"]],
+  ["cross_arms", ["cross arms", "crossed arms", "arms crossed", "strict", "firm", "refuse", "refused", "never", "skip", "skipped", "avoid"]],
   ["hands_hips", ["hands on hips", "confident", "confidence", "boss", "authority", "control"]],
   ["lean_in", ["lean in", "leaning", "listen", "listening", "dhyan", "dhyaan", "suno", "sunna", "suni", "sunte", "sunke", "ध्यान", "सुन"]],
-  ["shrug", ["shrug", "shrugging", "no idea", "pata nahi", "maybe", "idk", "not sure", "पता नहीं"]],
+  ["shrug", ["shrug", "shrugging", "no idea", "pata nahi", "maybe", "idk", "not sure", "need", "needed", "routine", "पता नहीं"]],
 
   // ---- hands / work -----------------------------------------------------
   ["give", ["give", "gave", "given", "hand over", "handed", "transfer", "donate", "de do", "diya", "deta", "dega", "दिया", "दे"]],
-  ["take", ["take", "took", "taken", "receive", "collect", "grab", "loot", "liya", "lega", "लिया", "ले"]],
+  ["take", ["take", "took", "taken", "receive", "collect", "grab", "carry", "carrying", "loot", "liya", "lega", "लिया", "ले"]],
   ["throw", ["throw", "threw", "thrown", "toss", stem("phenk"), stem("fek"), "फेंक"]],
   ["catch", ["catch", "caught", stem("pakad"), "पकड़"]],
   ["open", ["open", "opened", stem("khol"), "unlock", "खोल"]],
-  ["close", ["close", "closed", "band", "bandh", "shut", "lock", "बंद"]],
+  ["close", ["close", "closed", "band", "bandh", "shut", "lock", "attach", "attached", "stack", "stacking", "combine", "connect", "join", "link", "chain", "merge", "बंद"]],
   ["push", ["push", "pushed", "dhakka", stem("dhakel"), "धक्का"]],
   ["pull", ["pull", "pulled", stem("kheench"), stem("khinch"), "खींच"]],
   ["fight", ["fight", "fighting", "fought", "ladai", "lada", "jhagda", "marpeet", "attack", "लड़ाई", "झगड़ा"]],
   ["write", ["write", "wrote", "writing", "note down", "sign", stem("likh"), "लिख"]],
   ["type", ["type", "typing", "laptop", "computer", "keyboard", "टाइप"]],
+  ["read", ["read", "reading", "reads", "page", "pages", "book", "books", "novel", "kitab", "किताब", "पढ़", stem("padh")]],
   ["count", ["count", "counting", "ginti", stem("gin"), "number", "numbers", "गिनती"]],
   ["build", ["build", "built", "building", "banao", stem("bana"), "construct", "create", "बना"]],
   ["search", ["search", "searching", stem("dhoond"), "dhundo", "find", stem("khoj"), "look for", "ढूंढ", "खोज"]],
   ["point_up", ["point up", "upar", "upward", "growth", "increase", stem("badh"), "high", "top", "start", "begin", "shuru", "result", "results", "ऊपर"]],
   ["point_aside", ["wahan", "udhar", "that side", "there", "side", "us taraf", "वहां", "उधर"]],
-  ["wave", ["wave", "waving", "hello", "bye", "namaste", "welcome", "नमस्ते"]],
+  ["wave", ["wave", "waving", "hello", "bye", "namaste", "welcome", "comment", "comments", "feedback", "subscribe", "नमस्ते"]],
 
   // ---- money / business -------------------------------------------------
-  ["pay", ["pay", "paid", "payment", "bill", "fees", "charge", "kharch", "kharcha", "bhugtan", "भुगतान", "खर्च"]],
+  ["pay", ["pay", "paid", "payment", "bill", "fees", "kharch", "kharcha", "bhugtan", "भुगतान", "खर्च"]],
   ["earn", ["earn", "earned", "earning", "kamai", stem("kamay"), "income", "salary", "revenue", "कमाई", "कमाया"]],
   ["save", ["save", "saved", "saving", "savings", "bachat", stem("bacha"), "deposit", "emergency fund", "बचत"]],
   ["invest", ["invest", "invested", "investing", "investment", "sip", "mutual fund", "stock", "share", "crypto", "compounding", "निवेश"]],
@@ -83,10 +84,10 @@ const ACTION_RULES = [
 
   // ---- daily life -------------------------------------------------------
   ["eat", ["eat", "eating", "ate", "khao", "khaya", "khana", "khane", "khata", "khate", "khati", "khai", "food", "lunch", "dinner", "breakfast", "खाना", "खा"]],
-  ["drink", ["drink", "drinking", "drank", "pee", "piya", "pina", "chai", "coffee", "juice", "पीया", "पी"]],
-  ["sleep", ["sleep", "sleeping", "slept", "soya", "sona", "raat", "night", "rest", "सोया", "सो"]],
-  ["cook", ["cook", "cooking", "cooked", "pakao", "pakaya", "rasoi", "kitchen", "recipe", "पकाया"]],
-  ["wash", ["wash", "washing", stem("dhul"), "dhona", "clean", "saaf", "धो"]],
+  ["cook", ["cook", "cooking", "cooked", "pakao", "pakaya", "rasoi", "kitchen", "recipe", "brewing", "brew", "boil", "kettle", "पकाया"]],
+  ["drink", ["drink", "drinking", "drank", "sip", "sipped", "pee", "piya", "pina", "chai", "coffee", "juice", "tea", "cup", "पीया", "पी"]],
+  ["sleep", ["sleep", "sleeping", "slept", "soya", "sona", "sleepy", "good night", "neend", "nind", "सोया", "सो"]],
+  ["wash", ["wash", "washing", stem("dhul"), "dhona", "clean", "saaf", "brush", "brushing", "brushed", "teeth", "धो"]],
   ["drive", ["drive", "driving", "drove", "car", "gaadi", "gadi", "bike", "scooter", "travel", "गाड़ी"]],
 
   // ---- emotion ----------------------------------------------------------
@@ -98,16 +99,16 @@ const ACTION_RULES = [
   ["angry", ["angry", "gussa", "furious", "fraud", "scam", "cheat", "thagi", "dhokha", "गुस्सा", "धोखा", "ठगी"]],
   ["scared", ["scared", "afraid", "darr", "dar", "fear", "risk", "danger", "tension", "ghabra", "dara", "डर"]],
   ["confused", ["confused", "confusing", "samajh nahi", "doubt", "unclear", "puzzle", "uljhan", "उलझन"]],
-  ["think", ["think", "thinking", "thought", "idea", stem("soch"), stem("samajh"), "plan", "lagta", "सोच"]],
+  ["think", ["think", "thinking", "thought", "idea", stem("soch"), stem("samajh"), "plan", "lagta", "try", "tried", "trying", "attempt", "told himself", "said to himself", "khud se", "सोच"]],
   ["facepalm", ["facepalm", "mistake", "galti", "oops", "bhool", "stupid", "गलती"]],
   ["proud", ["proud", "kamaal", "shabash", "shabaash", "well done", "achievement", "garv", "गर्व"]],
-  ["sigh", ["sigh", "tired", stem("thak"), "frustration", "uff", "bore", "boring", "hmm"]],
+  ["sigh", ["sigh", "tired", stem("thak"), "frustration", "uff", "bore", "boring", "hmm", "wait", "waiting", "waited", "again", "nothing changed", "nothing changes", "same", "phir se", "wahi"]],
 
   // ---- interaction (only meaningful when a guest is on screen) ----------
   ["talk_to_guest", ["talk to", "baat kar", "bola", "said", "says", "kaha", "kehta", "कहा"]],
   ["listen", ["sunna", "suno", "sun raha", "सुनो"]],
   ["nod", ["nod", "nodded", "haan", "yes", "bilkul", "sahi", "agree", "हां"]],
-  ["explain_to_guest", ["explain", "samjhao", "samjhaya", "bataya", "batata", "बताया"]],
+  ["explain_to_guest", ["explain", "calls", "calling", "refers to", "refers", "names", "named", "samjhao", "samjhaya", "bataya", "batata", "बताया"]],
 ].map(([id, parts]) => ({ id, re: wordRe(parts) }));
 
 export const ACTION_IDS = ACTION_RULES.map((rule) => rule.id);
@@ -147,6 +148,7 @@ const PROP_RULES = [
   ["wallet", ["wallet", "purse", "batua"]],
   ["phone", ["phone", "mobile", "smartphone", "whatsapp", "instagram", "recharge", "फोन", "मोबाइल"]],
   ["laptop", ["laptop", "computer", "desktop", "keyboard", "screen"]],
+  ["book", ["book", "books", "page", "pages", "novel", "kitab", "reading", "read", "किताब"]],
   ["chart_up", ["profit", "growth", "grow", "increase", "double", "returns", "compounding", "बढ़"]],
   ["chart_down", ["loss", "decline", "crash", "nuksan", "गिरावट"]],
   ["clock", ["minute", "minutes", "hour", "hours", "second", "seconds", "ghanta", "time", "din", "day", "days", "week", "month", "saal", "year", "मिनट", "घंटा", "समय"]],
@@ -164,6 +166,7 @@ const PROP_RULES = [
   ["magnifier", ["search", "find", "dhoond", "khoj", "investigate"]],
   ["hammer", ["build", "create", "banao", "banaya", "construct", "fix"]],
   ["food", ["food", "khana", "eat", "lunch", "dinner", "breakfast", "recipe", "खाना"]],
+  ["tea", ["tea", "chai", "coffee", "cup", "mug", "kettle", "brewing", "चाय"]],
 ].map(([id, parts]) => ({ id, re: wordRe(parts) }));
 
 export const PROP_IDS = PROP_RULES.map((rule) => rule.id);
@@ -173,7 +176,7 @@ export const PROP_IDS = PROP_RULES.map((rule) => rule.id);
 /** Capitalised words that are never a person's name. */
 const NAME_STOPWORDS = new Set(
   (
-    "the this that these those a an and but or so if then when while after before because since as at in on of for to from with without by it its he she they we you i me him her them us my your his our their is are was were be been being not no yes do does did can could will would should must may might have has had there here what why how who which whose money paisa paise rupee rupaye india indian hindi english january february march april june july august september october november december monday tuesday wednesday thursday friday saturday sunday one two three four five six seven eight nine ten first second third last next now today tomorrow yesterday once also even only just very more most some any every all both each other another same new old good bad big small great real true false best worst scam fraud fund stock share market bank credit debit loan emi sip gst upi atm app video script scene example friend dost log people person aadmi ladka ladki bhai didi uncle aunty sir madam doctor teacher police government sarkar company business job salary note phone mobile laptop car gaadi ghar house home time minute hour day week month year life cash gold sona chai coffee food khana water lekin phir aur sab wo woh yeh ye hum tum aap koi kuch har ab tab jab kyunki isliye waise matlab bas bhi sirf pura poora saara sara dusra doosra naya purana aaj kal parso abhi pehle baad beech andar bahar upar neeche jaisa waisa itna utna kitna sach galat sahi raha rahi rahe karta karte karti hai hain tha theek bahut zyada kam agar toh fir warna jaise tabhi kaha kehta kehti kehte bola boli bole bataya batata batati samjhao samjhaya suno suna lagta lagti lage hua hui hue kiya kiye karo kar diya liya gaya gayi aaya aayi aaye jaata jaati jaate hota hoti hote pati patni doston key points point heading summary conclusion intro ending end start scene title chapter part lesson lessons tip tips note notes today tonight morning evening afternoon week weekend money-minded however finally during each many secret story point step way thing things part line case plan problem solution reason answer question idea rule number percent tax saving savings investment return risk growth startup office boss team client customer product service price cost value profit loss court law scheme policy news social media online offline website channel subscribe like share comment reel short episode bharat desh"
+    "the this that these those a an and but or so if then when while after before because since as at in on of for to from with without by it its he she they we you i me him her them us my your his our their is are was were be been being not no yes do does did can could will would should must may might have has had there here what why how who which whose money paisa paise rupee rupaye india indian hindi english january february march april june july august september october november december monday tuesday wednesday thursday friday saturday sunday one two three four five six seven eight nine ten first second third last next now today tomorrow yesterday once also even only just very more most some any every all both each other another same new old good bad big small great real true false best worst scam fraud fund stock share market bank credit debit loan emi sip gst upi atm app video script scene example friend dost log people person aadmi ladka ladki bhai didi uncle aunty sir madam doctor teacher police government sarkar company business job salary note phone mobile laptop car gaadi ghar house home time minute hour day week month year life cash gold sona chai coffee food khana water lekin phir aur sab wo woh yeh ye hum tum aap koi kuch har ab tab jab kyunki isliye waise matlab bas bhi sirf pura poora saara sara dusra doosra naya purana aaj kal parso abhi pehle baad beech andar bahar upar neeche jaisa waisa itna utna kitna sach galat sahi raha rahi rahe karta karte karti hai hain tha theek bahut zyada kam agar toh fir warna jaise tabhi kaha kehta kehti kehte bola boli bole bataya batata batati samjhao samjhaya suno suna lagta lagti lage hua hui hue kiya kiye karo kar diya liya gaya gayi aaya aayi aaye jaata jaati jaate hota hoti hote pati patni doston key points point heading summary conclusion intro ending end start scene title chapter part lesson lessons tip tips note notes today tonight morning evening afternoon week weekend money-minded however finally during each many secret story point step way thing things part line case plan problem solution reason answer question idea rule number percent tax saving savings investment return risk growth startup office boss team client customer product service price cost value profit loss court law scheme policy news social media online offline website channel subscribe like share comment reel short episode bharat desh khud apne apna apni aap swayam himself herself themselves itself "
   ).split(/\s+/),
 );
 
@@ -193,7 +196,10 @@ const capitalisedRe = /(?<![\p{L}\p{N}])([\p{Lu}][\p{L}]{2,})(?:\s+([\p{Lu}][\p{
 const listOf = (value) => (Array.isArray(value) ? value : value ? [value] : []);
 
 const titleCase = (word) =>
-  word.length === 0 ? word : word[0].toUpperCase() + word.slice(1);
+  word
+    .split(/\s+/)
+    .map((part) => (part.length === 0 ? part : part[0].toUpperCase() + part.slice(1)))
+    .join(" ");
 
 const isCommonWord = (word, capitalized = false) => {
   const lower = word.toLowerCase();
@@ -220,6 +226,18 @@ const isCommonWord = (word, capitalized = false) => {
  * `options.strongOnly` skips sentence-opening capitalised words entirely; it is
  * used for the first pass that builds `known`.
  */
+/** A capitalised phrase that follows one of these words is a title, not a person. */
+const TITLE_LEAD_RE =
+  /(?<![\p{L}\p{N}])(?:in|from|by|book|books|novel|film|movie|chapter|according\s+to|titled|called|named)\s+$/iu;
+
+/** True when the text before a word sits inside quotes (a quoted title). */
+const insideQuotes = (before) => {
+  const straight = (before.match(/"/g) ?? []).length;
+  const opens = (before.match(/[\u201c\u2018]/g) ?? []).length;
+  const closes = (before.match(/[\u201d\u2019]/g) ?? []).length;
+  return straight % 2 === 1 || opens > closes;
+};
+
 export const detectGuestNames = (text, options = {}) => {
   const source = String(text ?? "");
   const exclude = new Set(
@@ -236,7 +254,10 @@ export const detectGuestNames = (text, options = {}) => {
   const scores = new Map();
 
   const bump = (word, weight, capitalized = false) => {
-    const clean = String(word ?? "").replace(/[^\p{L}\p{N}]/gu, "");
+    const clean = String(word ?? "")
+      .replace(/[^\p{L}\p{N}\s]+/gu, " ")
+      .replace(/\s+/g, " ")
+      .trim();
     if (clean.length < 3) return;
     if (exclude.has(clean.toLowerCase())) return;
     if (isCommonWord(clean, capitalized)) return;
@@ -257,18 +278,29 @@ export const detectGuestNames = (text, options = {}) => {
 
   for (const match of source.matchAll(capitalisedRe)) {
     const words = [match[1], match[2]].filter(Boolean);
-    for (const word of words) {
-      const index = source.indexOf(word, match.index ?? 0);
-      const before = source.slice(0, index).trimEnd();
-      // A word that starts a sentence is capitalised by grammar, not because
-      // it is a name - accept it only if the rest of the script already used
-      // it as a name.
-      const opensSentence = before.length === 0 || /[.!?\n]$/.test(before);
-      if (opensSentence && (strongOnly || !known.has(word.toLowerCase()))) {
-        continue;
-      }
-      bump(word, 2, true);
+    const index = match.index ?? 0;
+    const before = source.slice(0, index);
+    // "In Atomic Habits", "the book Deep Work", «"Rich Dad Poor Dad"» -> titles.
+    if (TITLE_LEAD_RE.test(before.trimEnd() + " ") || insideQuotes(before)) {
+      continue;
     }
+
+    if (words.length === 2) {
+      // A full "James Clear" is a better name tag than "James" alone, and it
+      // stops a book title from stealing the cameo.
+      bump(words.join(" "), 4, true);
+      continue;
+    }
+
+    const word = words[0];
+    // A word that starts a sentence is capitalised by grammar, not because
+    // it is a name - accept it only if the rest of the script already used
+    // it as a name.
+    const opensSentence = before.length === 0 || /[.!?\n]$/.test(before.trimEnd());
+    if (opensSentence && (strongOnly || !known.has(word.toLowerCase()))) {
+      continue;
+    }
+    bump(word, 2, true);
   }
 
   return [...scores.values()]
@@ -287,17 +319,53 @@ const entranceFor = (text) => {
   return "walk";
 };
 
-/** Seconds into the line when the name is actually spoken. */
-const guestTiming = (text, name) => {
-  const needle = String(name ?? "").toLowerCase();
+/** Word index where the name appears, or -1. The renderer swaps this for the
+ * real narration timestamp so the guest walks in exactly on the name. */
+export const guestWordIndex = (text, name) => {
+  const needle = String(name ?? "")
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (needle.length === 0) return -1;
   const words = String(text ?? "").split(/\s+/).filter(Boolean);
-  for (let i = 0; i < words.length; i++) {
-    const clean = words[i].replace(/[^\p{L}\p{N}]/gu, "").toLowerCase();
-    if (clean === needle) {
-      return Math.round(Math.min(2.6, Math.max(0.2, i / WPS)) * 10) / 10;
+  for (let i = 0; i <= words.length - needle.length; i++) {
+    let hit = true;
+    for (let j = 0; j < needle.length; j++) {
+      const clean = words[i + j].replace(/[^\p{L}\p{N}]/gu, "").toLowerCase();
+      if (clean !== needle[j]) {
+        hit = false;
+        break;
+      }
     }
+    if (hit) return i;
   }
-  return 0.25;
+  return -1;
+};
+
+/**
+ * "Aman told himself" names the narrator, not a visitor: a second figure with
+ * the same name tag would be confusing. Reflexive self-talk is the giveaway.
+ */
+const SELF_TALK_RE = /\b(?:himself|herself|themselves|itself|khud|khud\s+ko|apne\s+aap)\b/i;
+
+const selfTalkAfter = (text, name) => {
+  const index = guestWordIndex(text, name);
+  if (index < 0) return false;
+  const words = String(text ?? "").split(/\s+/).filter(Boolean);
+  const width = String(name ?? "").split(/\s+/).filter(Boolean).length;
+  const after = words.slice(index + width, index + width + 3).join(" ");
+  return SELF_TALK_RE.test(after);
+};
+
+const cameoName = (source, names) =>
+  names.find((name) => !selfTalkAfter(source, name)) ?? null;
+
+/** Seconds into the line when the name is actually spoken (estimate only). */
+const guestTiming = (text, name) => {
+  const index = guestWordIndex(text, name);
+  return index < 0
+    ? 0.25
+    : Math.round(Math.min(2.6, Math.max(0.2, index / WPS)) * 10) / 10;
 };
 
 /* ---------------------------------------------------------------- fallbacks --- */
@@ -311,6 +379,17 @@ const NEGATIVE_RE =
  * Level 2/3: when no verb matched, infer something from the shape of the line
  * so a scene is never static.
  */
+const FALLBACK_BEATS = ["point_aside", "hands_hips", "shrug", "lean_in", "count", "point_up"];
+
+/** Stable per-line pick, so the same script always produces the same acting. */
+const hashText = (text) => {
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) {
+    hash = (hash * 31 + text.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
+};
+
 const fallbackAction = (text, props) => {
   if (/\?/.test(text) || /\b(kya|kaise|kyu|kyun|why|how|what)\b/i.test(text)) {
     return "think";
@@ -322,7 +401,8 @@ const fallbackAction = (text, props) => {
   if (props.length > 0) return "hold";
   if (POSITIVE_RE.test(text)) return "happy";
   if (NEGATIVE_RE.test(text)) return "sad";
-  return "point_aside";
+  // No signal at all: rotate the neutral gestures instead of using one forever.
+  return FALLBACK_BEATS[hashText(text) % FALLBACK_BEATS.length];
 };
 
 /* ------------------------------------------------------------------ public --- */
@@ -348,10 +428,25 @@ const firstHitWordIndex = (words, rule) => {
   for (let i = 0; i < words.length; i++) {
     if (rule.re.test(words[i])) return i;
   }
+  // Phrase rules ("told himself", "habit stacking") need a small n-gram scan.
+  for (let n = 2; n <= 4; n++) {
+    for (let i = 0; i + n <= words.length; i++) {
+      if (rule.re.test(words.slice(i, i + n).join(" "))) return i;
+    }
+  }
   return -1;
 };
 
 const WPS = 2.6;
+
+/** Verbs that only describe the shape of a sentence, not an on-screen action. */
+const WEAK_HIT_WORDS = new Set([
+  "start", "starts", "started", "begin", "begins", "shuru", "upar", "upward",
+  "growth", "increase", "high", "top", "result", "results",
+]);
+
+const cleanWord = (word) =>
+  String(word ?? "").replace(/[^\p{L}\p{N}]/gu, "").toLowerCase();
 
 /**
  * Full analysis of one narration line.
@@ -369,19 +464,58 @@ export const detectLine = (text, options = {}) => {
   const matched = detectActionIds(source).filter(
     (id) => hasGuest || !GUEST_ACTION_FALLBACK[id],
   );
-  const ids = matched.map((id) => (hasGuest ? id : GUEST_ACTION_FALLBACK[id] ?? id));
+  const ids = matched
+    .map((id) => (hasGuest ? id : GUEST_ACTION_FALLBACK[id] ?? id))
+    .filter((id, index, all) => all.indexOf(id) === index);
 
+  // Schedule every matched action on the word that triggered it, in the order
+  // the words are actually spoken. ("brewing ... read" -> cook then read.)
+  const scheduled = ids
+    .map((beatId) => {
+      const beatRule = ACTION_BY_ID.get(beatId);
+      const hit = beatRule ? firstHitWordIndex(words, beatRule) : -1;
+      const word = hit >= 0 ? hit : 0;
+      return { id: beatId, word, hitWord: words[word] ?? "" };
+    })
+    .sort((a, b) => a.word - b.word)
+    // one beat per action, on its first spoken word
+    .filter((beat, index, all) => all.findIndex((b) => b.id === beat.id) === index);
+
+  // "start reading" is one action (read), not point_up + read: helper verbs
+  // only lead when nothing stronger is in the line.
+  const strong = scheduled.filter(
+    (beat) => !(beat.id === "point_up" && WEAK_HIT_WORDS.has(cleanWord(beat.hitWord))),
+  );
+  let beats = strong.length > 0 ? strong : scheduled;
+
+  // The rule that wins decides the props/money inference; the beats themselves
+  // still play in the order the script says them.
   let id = ids[0];
   if (!id) {
-    if (options.guest) id = "explain_to_guest";
-    else id = fallbackAction(source, props);
+    id = options.guest ? "explain_to_guest" : fallbackAction(source, props);
   }
   if (!hasGuest && GUEST_ACTION_FALLBACK[id]) id = GUEST_ACTION_FALLBACK[id];
 
-  // Beat the action to the word that triggered it (approx. from the WPS rate).
-  const rule = ACTION_BY_ID.get(id);
-  const hitIndex = rule ? firstHitWordIndex(words, rule) : -1;
-  const at = hitIndex >= 0 ? Math.min(2.4, hitIndex / WPS) : 0;
+  if (!beats.some((beat) => beat.id === id)) {
+    const primaryRule = ACTION_BY_ID.get(id);
+    const hit = primaryRule ? firstHitWordIndex(words, primaryRule) : -1;
+    beats.push({ id, word: hit >= 0 ? hit : 0, hitWord: words[hit] ?? "" });
+    beats.sort((a, b) => a.word - b.word);
+  }
+
+  // Two beats less than two words apart read as a twitch: keep the primary.
+  const spaced = [];
+  for (const beat of beats) {
+    const previous = spaced[spaced.length - 1];
+    if (previous && beat.word - previous.word < 2) {
+      if (beat.id === id) spaced[spaced.length - 1] = beat;
+      continue;
+    }
+    spaced.push(beat);
+  }
+  beats = spaced;
+
+  const at = Math.min(2.4, beats[0].word / WPS);
 
   // Money props are inferred from the action and from amount patterns, so
   // "50,000 kamaye" shows notes even though it never says "paisa".
@@ -394,14 +528,22 @@ export const detectLine = (text, options = {}) => {
     else finalProps[1] = "money";
   }
 
+  const cameo = cameoName(source, guestNames);
+
   return {
-    actions: [{ at: Math.round(at * 10) / 10, id }],
-    alternate: ids[1] ?? null,
+    actions: beats.map((beat) => ({
+      at: Math.round(Math.min(2.4, beat.word / WPS) * 10) / 10,
+      word: beat.word,
+      id: beat.id,
+    })),
+    alternate: beats[1]?.id ?? null,
+    primary: id,
     props: [...new Set(finalProps)],
-    guest: guestNames.length > 0
+    guest: cameo
       ? {
-          name: guestNames[0],
-          at: guestTiming(source, guestNames[0]),
+          name: cameo,
+          word: guestWordIndex(source, cameo),
+          at: guestTiming(source, cameo),
           enter: entranceFor(source),
         }
       : null,
@@ -410,13 +552,22 @@ export const detectLine = (text, options = {}) => {
 
 /**
  * Auto beats: a long scene with one short gesture gets a second, safe gesture
- * halfway through, so nothing feels frozen.
+ * halfway through, so nothing feels frozen. Short scenes are skipped - with one
+ * sentence per scene a second beat would land on a random word and read as a
+ * twitch.
  */
 const AUTO_BEATS = ["count", "point_aside", "hands_hips", "shrug", "point_up", "wave"];
+
+/** Only scenes at least this long get a filler beat. */
+const AUTO_BEAT_MIN_SECONDS = 3.2;
+
+/** Used when two neighbouring scenes would otherwise use the same gesture. */
+const REPEAT_BREAKERS = ["point_aside", "hands_hips", "shrug", "lean_in", "explain_to_guest"];
 const BUSY_ACTIONS = new Set([
   "run", "walk", "dash", "spin", "jump", "hop", "fall", "crouch", "sleep",
-  "cook", "wash", "drive", "search", "type", "write", "laugh", "cry",
-  "scared", "talk_to_guest", "listen", "hold_money", "hold", "build",
+  "cook", "wash", "drive", "search", "type", "write", "read", "eat", "drink",
+  "laugh", "cry", "scared", "talk_to_guest", "listen", "hold_money", "hold",
+  "build",
 ]);
 
 /**
@@ -460,16 +611,18 @@ export const applyDetection = (scenes, options = {}) => {
       ? scene.props
       : detectProps(text);
 
-    const guest = scene.guest ?? detectGuestNames(text, {
-      exclude: [title],
-      known: [...knownNames],
-    })
-      .slice(0, 1)
-      .map((name) => ({
-        name,
-        at: guestTiming(text, name),
-        enter: entranceFor(text),
-      }))[0] ?? null;
+    const detectedGuest = cameoName(
+      text,
+      detectGuestNames(text, { exclude: [title], known: [...knownNames] }),
+    );
+    const guest = scene.guest ?? (detectedGuest
+      ? {
+          name: detectedGuest,
+          word: guestWordIndex(text, detectedGuest),
+          at: guestTiming(text, detectedGuest),
+          enter: entranceFor(text),
+        }
+      : null);
 
     if (!Array.isArray(scene.actions) || scene.actions.length === 0) {
       if (scene.scene_type === "points" && Array.isArray(scene.items) && scene.items.length > 0) {
@@ -490,37 +643,48 @@ export const applyDetection = (scenes, options = {}) => {
       } else {
         const line = detectLine(text, { props, guest });
         let id = line.actions[0].id;
+        const firstWord = line.actions[0].word ?? 0;
 
         // Avoid the exact same gesture two scenes in a row.
         if (id === previousAction && line.alternate) id = line.alternate;
         if (id === previousAction && props.length > 0) id = "hold";
-        if (id === previousAction) id = "point_aside";
-
-        const actions = [{ at: line.actions[0].at, id }];
-        const clipSeconds = scene.duration ?? 0;
-
-        // Two verbs in one line ("earn... then invest") deserve two beats.
-        const alternate = line.alternate;
-        if (alternate && alternate !== id && clipSeconds >= 3.4) {
-          const alternateId = guest
-            ? alternate
-            : GUEST_ACTION_FALLBACK[alternate] ?? alternate;
-          if (alternateId !== id) {
-            actions.push({
-              at:
-                Math.round(
-                  Math.max(line.actions[0].at + 1.1, clipSeconds * 0.56) * 10,
-                ) / 10,
-              id: alternateId,
-            });
-          }
+        if (id === previousAction) {
+          id = REPEAT_BREAKERS[hashText(text) % REPEAT_BREAKERS.length];
         }
 
+        const clipSeconds = scene.duration ?? 0;
+
+        // Every action the line mentions, in the order it is spoken. Short
+        // scenes keep only the first beat so the gesture can actually land.
+        let actions = (clipSeconds >= 2.2 ? line.actions : line.actions.slice(0, 1)).map(
+          (entry) => ({ ...entry }),
+        );
+        actions[0] = { ...actions[0], at: line.actions[0].at, word: firstWord, id };
+
+        // The repeat-breaker may have swapped the first beat: drop the other
+        // beats with that same action so it does not play twice in one line.
+        actions = actions.filter(
+          (entry, position) => position === 0 || entry.id !== id,
+        );
+
+        // Never stack two beats on the same word.
+        const seenWords = new Set();
+        actions = actions.filter((entry) => {
+          const key = entry.word ?? Math.round(entry.at * 100);
+          if (seenWords.has(key)) return false;
+          seenWords.add(key);
+          return true;
+        });
+
         const isBusy = BUSY_ACTIONS.has(id);
-        if (!isBusy && clipSeconds >= 5.5 && actions.length === 1) {
+        if (!isBusy && clipSeconds >= AUTO_BEAT_MIN_SECONDS && actions.length === 1) {
           const beat = AUTO_BEATS[index % AUTO_BEATS.length];
+          const word = Math.max(firstWord + 1, Math.round(
+            text.split(/\s+/).filter(Boolean).length * 0.58,
+          ));
           actions.push({
-            at: Math.round(clipSeconds * 0.58 * 10) / 10,
+            at: Math.round((word / WPS) * 10) / 10,
+            word,
             id: beat,
           });
         }

@@ -55,6 +55,7 @@ import {
   getItemRevealSeconds,
   getSpeechEndSeconds,
   getVoiceScene,
+  getWordStartSeconds,
   isWordActiveAt,
 } from "../voice/voiceover";
 import { Background } from "./Background";
@@ -299,7 +300,16 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
   // ---- Action ----------------------------------------------------------
   // An action clip is layered over the pose: it owns the joints it animates
   // and leaves the rest of the body to the pose + micro-motion.
-  const action = getActiveAction(scene.actions, localSeconds);
+  // `word` is resolved against the real narration, so a beat starts on the
+  // spoken verb instead of a seconds estimate.
+  const scheduledActions = (scene.actions ?? []).map((entry) => {
+    if (entry.word === undefined) return entry;
+    const start = getWordStartSeconds(sceneIndex, entry.word);
+    return start === undefined
+      ? entry
+      : { ...entry, at: Math.max(0, start - 0.02) };
+  });
+  const action = getActiveAction(scheduledActions, localSeconds);
   const actionWeight = action?.weight ?? 0;
   const sample = action ? sampleAction(action.id, action.elapsed) : null;
   const acted = sample
@@ -347,7 +357,14 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
 
   // ---- Guest -----------------------------------------------------------
   const guest = scene.guest;
-  const guestAt = guest?.at ?? 0.25;
+  const guestWordStart =
+    guest?.word !== undefined
+      ? getWordStartSeconds(sceneIndex, guest.word)
+      : undefined;
+  const guestAt =
+    guestWordStart !== undefined
+      ? Math.max(0, guestWordStart - 0.06)
+      : guest?.at ?? 0.25;
   const guestExit = guest
     ? Math.max(guestAt + 0.8, guest.exit ?? window.durationInFrames / fps - 0.4)
     : 0;
@@ -355,6 +372,10 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
   const guestOut = guest ? clamp01((guestExit - localSeconds) / 0.3) : 0;
   const guestPresence = guest ? Math.min(guestIn, guestOut) : 0;
   const hasGuest = Boolean(guest) && guestPresence > 0.001;
+  // The cameo draws its own entrance, so hand it the resolved start time.
+  const guestScene: Scene = guest
+    ? { ...scene, guest: { ...guest, at: guestAt } }
+    : scene;
 
   // ---- Face ------------------------------------------------------------
   const saccade = getGazeSaccade(frame, fps);
@@ -580,7 +601,7 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
 
         {/* Guest cameo (under the main character so he never covers him). */}
         <GuestCameo
-          scene={scene}
+          scene={guestScene}
           sceneSeconds={window.durationInFrames / fps}
           localSeconds={localSeconds}
           fps={fps}

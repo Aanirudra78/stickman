@@ -495,6 +495,20 @@ export const ACTION_CLIPS: Record<ActionId, ActionClip> = {
     ]),
   },
 
+  read: {
+    id: "read",
+    loop: true,
+    duration: 2.6,
+    prop: "book",
+    keys: loopClose([
+      K(0, { ...N, spine: 6, headTilt: 12, shoulderL: -46, elbowL: -112, shoulderR: 46, elbowR: 112, gazeX: 0, gazeY: 2.3, browLift: 0.15, mouthSmile: 0.3 }),
+      K(0.34, { ...N, spine: 7, headTilt: 14, shoulderL: -48, elbowL: -116, shoulderR: 48, elbowR: 116, gazeX: -0.4, gazeY: 2.5, mouthSmile: 0.35 }),
+      // Page turn: the right hand lifts the corner and settles back.
+      K(0.55, { ...N, spine: 6, headTilt: 10, shoulderL: -46, elbowL: -112, shoulderR: 62, elbowR: 132, gazeX: 0.6, gazeY: 2.1, browLift: 0.3 }),
+      K(0.74, { ...N, spine: 6, headTilt: 13, shoulderL: -47, elbowL: -114, shoulderR: 50, elbowR: 118, gazeX: 0.2, gazeY: 2.4 }),
+    ]),
+  },
+
   count: {
     id: "count",
     loop: true,

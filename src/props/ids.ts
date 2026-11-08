@@ -5,6 +5,8 @@ export const PROP_IDS = [
   "wallet",
   "phone",
   "laptop",
+  "book",
+  "tea",
   "chart_up",
   "chart_down",
   "clock",

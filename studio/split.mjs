@@ -14,12 +14,11 @@ import { fileURLToPath } from "node:url";
 import { applyDetection } from "../shared/detect.mjs";
 
 const WORD_RE = /[\p{L}\p{N}][\p{L}\p{N}'\u2019-]*/gu;
-const MAX_SCENES = 12;
-const TARGET_CHUNK_WORDS = 26;
-const MAX_CHUNK_WORDS = 38;
-const MAX_CHUNK_SECONDS = 9.5;
+const MAX_SCENES = 32;
 const WPS = 2.6;
 const MAX_ITEMS = 4;
+/** One scene per sentence: the caption, the voice and the acting share a line. */
+const CAPTION_MAX = 90;
 
 export const countWords = (text) => (text.match(WORD_RE) ?? []).length;
 
@@ -33,12 +32,37 @@ const stripBullet = (line) => line.replace(/^([-\u2013\u2014*\u2022]|\d{1,2}[.)]
 
 const isBullet = (line) => /^([-\u2013\u2014*\u2022]|\d{1,2}[.)])\s+/.test(line);
 
-const splitSentences = (text) =>
-  text
+const ELLIPSIS_MARK = "\u0001";
+
+/**
+ * Splits narration into one sentence per scene.
+ *
+ * - `...` and `…` are pauses, not boundaries ("Again... and again.").
+ * - A closing quote stays on its sentence, and `said: "..."` becomes two
+ *   scenes (the attribution and the spoken line).
+ * - A boundary only counts when the next character starts a new sentence, so
+ *   `2.5` and `Rs 50,000` stay intact.
+ */
+const splitSentences = (text) => {
+  const guarded = String(text)
     .replace(/\s+/g, " ")
-    .split(/(?<=[.!?\u2026])\s+/)
-    .map((sentence) => sentence.trim())
+    .replace(/\.{3,}|\u2026/g, ELLIPSIS_MARK)
+    .trim();
+  if (!guarded) return [];
+
+  return guarded
+    .split(
+      /(?<=[.!?][)"'\u201d\u2019]?)\s+(?=["'\u201c\u2018]?[\p{Lu}\p{N}])|(?<=[:;])\s+(?=["'\u201c\u2018])/u,
+    )
+    .map((part) =>
+      part
+        .replace(new RegExp(ELLIPSIS_MARK, "g"), "...")
+        .replace(/^["'\u201c\u2018\u201d\u2019]+/, "")
+        .replace(/["'\u201c\u2018\u201d\u2019]+$/, "")
+        .trim(),
+    )
     .filter(Boolean);
+};
 
 const POSE_RULES = [
   { test: /\b(why|how|what|kya|kaise|kyu|kyun|kab|kahan|which|who)\b/i, pose: "thinking" },
@@ -57,64 +81,35 @@ const poseFor = (text, { isTitle = false, isLast = false, sceneType = "text" } =
   return "talking";
 };
 
-/** Short on-screen caption for a scene (the full sentence goes to the voice). */
+/** On-screen caption for a scene (the full sentence goes to the voice). */
 const displayText = (narration) => {
   const first = splitSentences(narration)[0] ?? narration;
-  let text = first.replace(/[.!?\u2026]+$/, "").trim();
-  if (text.length > 62) {
-    const cut = text.slice(0, 62);
+  let text = first.replace(/[.!?\u2026:;,]+$/, "").trim();
+  if (text.length > CAPTION_MAX) {
+    const cut = text.slice(0, CAPTION_MAX);
     const space = cut.lastIndexOf(" ");
-    text = `${cut.slice(0, space > 30 ? space : 62).trim()}\u2026`;
+    text = `${cut.slice(0, space > 40 ? space : CAPTION_MAX).trim()}\u2026`;
   }
   return text;
 };
 
 const ensurePeriod = (text) => {
-  const trimmed = text.trim().replace(/[.!?\u2026]+$/, "");
+  const trimmed = text
+    .trim()
+    .replace(/[.!?\u2026]+$/, "")
+    .replace(/[,:;]+$/, "")
+    .trim();
   return trimmed.length > 0 ? `${trimmed}.` : "";
 };
 
-/** Groups sentences into ~6-9 second narration blocks. */
-const chunkSentences = (sentences) => {
-  const chunks = [];
-  let current = [];
-  let words = 0;
+/** A short first line with no sentence punctuation is treated as the title. */
+const isHeading = (line) =>
+  countWords(line) <= 8 &&
+  !/[.!?\u2026]$/.test(line) &&
+  !/[,:;]/.test(line) &&
+  !/^["'\u201c\u2018]/.test(line);
 
-  const flush = () => {
-    if (current.length > 0) {
-      chunks.push(current.join(" "));
-      current = [];
-      words = 0;
-    }
-  };
-
-  for (const sentence of sentences) {
-    const sentenceWords = countWords(sentence);
-    const wouldBeWords = words + sentenceWords;
-    const wouldBeSeconds = estimateSeconds([...current, sentence].join(" "));
-
-    if (current.length > 0 && (wouldBeWords > MAX_CHUNK_WORDS || wouldBeSeconds > MAX_CHUNK_SECONDS)) {
-      flush();
-    }
-    current.push(sentence);
-    words += sentenceWords;
-
-    if (words >= TARGET_CHUNK_WORDS) flush();
-  }
-  flush();
-
-  // Fold a tiny trailing chunk into the previous one.
-  if (chunks.length > 1) {
-    const last = chunks[chunks.length - 1];
-    const prev = chunks[chunks.length - 2];
-    if (countWords(last) < 4 && countWords(prev) + countWords(last) <= MAX_CHUNK_WORDS) {
-      chunks.splice(chunks.length - 2, 2, `${prev} ${last}`);
-    }
-  }
-
-  return chunks;
-};
-
+/** Guard for very long scripts: fold the smallest neighbouring scenes. */
 const mergeToLimit = (scenes) => {
   const output = scenes.slice();
   while (output.length > MAX_SCENES) {
@@ -163,18 +158,19 @@ export const splitScript = (rawText, options = {}) => {
   let title = options.title?.trim() || "";
   let blockIndex = 0;
 
-  // Title: a short first line without sentence punctuation.
+  // Title: a short first line without sentence punctuation. A line like
+  // "Every night, Aman told himself:" is narration (comma + colon), not a title.
   if (blocks.length > 0) {
     const firstLines = blocks[0];
     if (!title && firstLines.length === 1) {
       const line = firstLines[0];
-      if (countWords(line) <= 10 && !/[.!?]$/.test(line)) {
+      if (isHeading(line)) {
         title = line;
         blockIndex = 1;
       }
     } else if (!title && firstLines.length > 1) {
       const line = firstLines[0];
-      if (countWords(line) <= 10 && !/[.!?]$/.test(line)) {
+      if (isHeading(line)) {
         title = line;
         blocks[0] = firstLines.slice(1);
       }
@@ -217,28 +213,19 @@ export const splitScript = (rawText, options = {}) => {
       continue;
     }
 
-    const prose = lines.join(" ").replace(/\s+/g, " ").trim();
-    if (!prose) continue;
-
-    if (scenes.length === 0) {
-      scenes.push({
-        text: displayText(prose),
-        voiceover: ensurePeriod(prose),
-        pose: poseFor(prose),
-        scene_type: "text",
-        duration: round(estimateSeconds(prose)),
+    // One scene per line, and one scene per sentence inside that line: the
+    // writer's line breaks are scene breaks, and the caption always equals
+    // what the voice is saying.
+    for (const line of lines) {
+      for (const sentence of splitSentences(line)) {
+        scenes.push({
+          text: displayText(sentence),
+          voiceover: ensurePeriod(sentence),
+          pose: poseFor(sentence),
+          scene_type: "text",
+          duration: round(estimateSeconds(sentence)),
         });
-      continue;
-    }
-
-    for (const chunk of chunkSentences(splitSentences(prose))) {
-      scenes.push({
-        text: displayText(chunk),
-        voiceover: ensurePeriod(chunk),
-        pose: poseFor(chunk),
-        scene_type: "text",
-        duration: round(estimateSeconds(chunk)),
-        });
+      }
     }
   }
 

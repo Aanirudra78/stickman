@@ -58,6 +58,15 @@ export const getSpeechEndSeconds = (index: number): number | undefined => {
   return last ? last.end : scene.durationInSeconds;
 };
 
+/** Start of one spoken word in seconds, or undefined when it is out of range. */
+export const getWordStartSeconds = (
+  index: number,
+  wordIndex: number,
+): number | undefined => {
+  const word = BY_INDEX.get(index)?.words[wordIndex];
+  return word ? word.start : undefined;
+};
+
 /** True while a word is actually being spoken (pauses close the mouth). */
 export const isWordActiveAt = (index: number, secondsIntoScene: number): boolean => {
   const scene = BY_INDEX.get(index);

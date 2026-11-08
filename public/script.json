@@ -1,5 +1,5 @@
 {
-  "title": "The 2-Minute Rule",
+  "title": "Untitled",
   "voice": "nPczCjzI2devNBz1zQrb",
   "tts": {
     "provider": "elevenlabs",
@@ -15,69 +15,374 @@
   },
   "scenes": [
     {
-      "voiceover": "The 2-Minute Rule.",
-      "duration": 1.7,
-      "pose": "idle",
-      "scene_type": "text",
-      "text": "The 2-Minute Rule",
-      "actions": [],
-      "props": []
-    },
-    {
-      "voiceover": "Starting a new habit? Two minutes is enough.",
-      "duration": 3.6,
+      "text": "Every night, Aman told himself",
+      "voiceover": "Every night, Aman told himself.",
       "pose": "talking",
       "scene_type": "text",
-      "text": "Starting a new habit",
+      "duration": 2.4,
       "actions": [
         {
-          "at": 0,
+          "at": 1.2,
+          "word": 3,
           "id": "think"
         }
       ],
-      "props": [
-        "clock"
-      ]
+      "props": []
     },
     {
-      "items": [
-        "Start with 2 minutes",
-        "Keep it easy and small",
-        "Repeat it every day"
-      ],
-      "text": "Key points",
-      "pose": "pointing",
-      "duration": 6.3,
-      "voiceover": "Key points. Start with 2 minutes. Keep it easy and small. Repeat it every day.",
-      "scene_type": "points",
+      "text": "Tomorrow, I'll start reading",
+      "voiceover": "Tomorrow, I'll start reading.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2,
       "actions": [
         {
-          "at": 0.8,
-          "id": "point_up"
-        },
-        {
-          "at": 2.7,
-          "id": "happy"
-        },
-        {
-          "at": 5,
-          "id": "point_aside"
+          "at": 1.2,
+          "word": 3,
+          "id": "read"
         }
       ],
       "props": [
-        "clock"
+        "book"
       ]
     },
     {
-      "voiceover": "Tiny start, big results.",
-      "duration": 2,
-      "pose": "happy",
+      "text": "Tomorrow came",
+      "voiceover": "Tomorrow came.",
+      "pose": "talking",
       "scene_type": "text",
-      "text": "Tiny start, big results",
+      "duration": 1.6,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "point_up"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "Nothing changed",
+      "voiceover": "Nothing changed.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 1.6,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "sigh"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "Again... and again",
+      "voiceover": "Again... and again.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 1.7,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "lean_in"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "Then he tried something different",
+      "voiceover": "Then he tried something different.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2.4,
+      "actions": [
+        {
+          "at": 0.8,
+          "word": 2,
+          "id": "think"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "He didn't wait for motivation",
+      "voiceover": "He didn't wait for motivation.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2.4,
+      "actions": [
+        {
+          "at": 0.8,
+          "word": 2,
+          "id": "sigh"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "He didn't need a new routine",
+      "voiceover": "He didn't need a new routine.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2.8,
+      "actions": [
+        {
+          "at": 0.8,
+          "word": 2,
+          "id": "shrug"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "He just attached the new habit to an old one",
+      "voiceover": "He just attached the new habit to an old one.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 4.3,
+      "actions": [
+        {
+          "at": 0.8,
+          "word": 2,
+          "id": "close"
+        },
+        {
+          "at": 2.3,
+          "word": 6,
+          "id": "hands_hips"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "Every morning, he made his tea",
+      "voiceover": "Every morning, he made his tea.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2.8,
+      "actions": [
+        {
+          "at": 1.9,
+          "word": 5,
+          "id": "drink"
+        }
+      ],
+      "props": [
+        "tea"
+      ]
+    },
+    {
+      "text": "And while the tea was brewing",
+      "voiceover": "And while the tea was brewing.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2.8,
+      "actions": [
+        {
+          "at": 1.2,
+          "word": 3,
+          "id": "cook"
+        }
+      ],
+      "props": [
+        "tea"
+      ]
+    },
+    {
+      "text": "he read one page",
+      "voiceover": "he read one page.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2,
       "actions": [
         {
           "at": 0.4,
+          "word": 1,
+          "id": "read"
+        }
+      ],
+      "props": [
+        "book"
+      ]
+    },
+    {
+      "text": "Just one page",
+      "voiceover": "Just one page.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 1.7,
+      "actions": [
+        {
+          "at": 0.8,
+          "word": 2,
+          "id": "hold"
+        }
+      ],
+      "props": [
+        "book"
+      ]
+    },
+    {
+      "text": "In Atomic Habits, James Clear calls this habit stacking",
+      "voiceover": "In Atomic Habits, James Clear calls this habit stacking.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 4,
+      "actions": [
+        {
+          "at": 1.9,
+          "word": 5,
+          "id": "explain_to_guest"
+        },
+        {
+          "at": 2.4,
+          "word": 8,
+          "id": "close"
+        }
+      ],
+      "props": [],
+      "guest": {
+        "name": "James Clear",
+        "word": 3,
+        "at": 1.2,
+        "enter": "walk"
+      }
+    },
+    {
+      "text": "After I do this existing habit",
+      "voiceover": "After I do this existing habit.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2.8,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
           "id": "point_up"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "I will do this new one",
+      "voiceover": "I will do this new one.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2.8,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "point_aside"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "Your day already has habits you never skip",
+      "voiceover": "Your day already has habits you never skip.",
+      "pose": "surprised",
+      "scene_type": "text",
+      "duration": 3.6,
+      "actions": [
+        {
+          "at": 2.3,
+          "word": 6,
+          "id": "cross_arms"
+        },
+        {
+          "at": 2.7,
+          "word": 7,
+          "id": "point_up"
+        }
+      ],
+      "props": [
+        "clock",
+        "cross"
+      ]
+    },
+    {
+      "text": "Brushing",
+      "voiceover": "Brushing.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 1.6,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "wash"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "Tea",
+      "voiceover": "Tea.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 1.6,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "drink"
+        }
+      ],
+      "props": [
+        "tea"
+      ]
+    },
+    {
+      "text": "Charging your phone",
+      "voiceover": "Charging your phone.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 1.7,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "hold"
+        }
+      ],
+      "props": [
+        "phone"
+      ]
+    },
+    {
+      "text": "So which one will carry your new habit",
+      "voiceover": "So which one will carry your new habit.",
+      "pose": "thinking",
+      "scene_type": "text",
+      "duration": 3.6,
+      "actions": [
+        {
+          "at": 1.5,
+          "word": 4,
+          "id": "take"
+        },
+        {
+          "at": 1.9,
+          "word": 5,
+          "id": "hands_hips"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "Tell me in the comments",
+      "voiceover": "Tell me in the comments.",
+      "pose": "happy",
+      "scene_type": "text",
+      "duration": 2.4,
+      "actions": [
+        {
+          "at": 1.5,
+          "word": 4,
+          "id": "wave"
         }
       ],
       "props": []

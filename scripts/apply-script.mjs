@@ -62,8 +62,8 @@ const main = async () => {
   if (!Array.isArray(script.scenes) || script.scenes.length === 0) {
     fail("`scenes` must be a non-empty array");
   }
-  if (script.scenes.length > 12) {
-    fail("too many scenes (max 12) - keep videos under a minute");
+  if (script.scenes.length > 32) {
+    fail("too many scenes (max 32) - keep videos under a minute");
   }
 
   const problems = [];
@@ -106,6 +106,14 @@ const main = async () => {
           if (typeof action.at !== "number" || !(action.at >= 0)) {
             problems.push(`${actionAt}: "at" must be a non-negative number`);
           }
+          if (
+            action.word !== undefined &&
+            (!Number.isInteger(action.word) || action.word < 0)
+          ) {
+            problems.push(
+              `${actionAt}: "word" must be a non-negative integer word index`,
+            );
+          }
           if (!ACTIONS.includes(action.id)) {
             problems.push(
               `${actionAt}: "id" must be one of ${ACTIONS.join(", ")}`,
@@ -137,6 +145,14 @@ const main = async () => {
       } else {
         if (typeof scene.guest.name !== "string" || scene.guest.name.trim() === "") {
           problems.push(`${at}, guest: "name" must be a non-empty string`);
+        }
+        if (
+          scene.guest.word !== undefined &&
+          (!Number.isInteger(scene.guest.word) || scene.guest.word < 0)
+        ) {
+          problems.push(
+            `${at}, guest: "word" must be a non-negative integer word index`,
+          );
         }
         if (
           scene.guest.enter !== undefined &&

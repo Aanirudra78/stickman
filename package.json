@@ -11,6 +11,9 @@
     "test:detect": "node scripts/check-ids.mjs && node scripts/test-detect.mjs",
     "render": "remotion render StickmanExplainer out/stickman-test.mp4",
     "render:video": "remotion render StickmanExplainer out/video.mp4",
+    "storyboard": "node scripts/storyboard.mjs",
+    "probe": "node scripts/probe-draft.mjs",
+    "split": "node studio/split.mjs",
     "still": "remotion still",
     "voiceover": "node scripts/generate-voiceover.mjs",
     "typecheck": "tsc --noEmit"

@@ -43,6 +43,7 @@ export const ACTION_IDS = [
   "pull",
   "write",
   "type",
+  "read",
   "count",
   "build",
   "search",
