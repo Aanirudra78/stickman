@@ -83,19 +83,21 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # ffmpeg-static downloads its binary in a postinstall script, and that
-          # download occasionally fails on the runner (rate limit / transient
-          # 5xx). Retry the whole install, then the binary on its own.
-          for attempt in 1 2 3; do
-            npm ci && break
-            echo "npm ci failed (attempt $attempt) - retrying in 10s"
-            sleep 10
-          done
-          if [ ! -x node_modules/ffmpeg-static/ffmpeg ]; then
-            echo "ffmpeg binary missing - downloading it directly"
-            (cd node_modules/ffmpeg-static && node install.js) || true
+          # ffmpeg-static downloads its binary in a postinstall script from a
+          # GitHub release asset, which is unreliable (504s / rate limits).
+          # Fall back to a script-free install and the runner's own ffmpeg.
+          npm ci || {
+            echo "npm ci failed - retrying without install scripts"
+            npm ci --ignore-scripts
+          }
+          if [ ! -f node_modules/ffmpeg-static/ffmpeg ]; then
+            if ! command -v ffmpeg >/dev/null 2>&1; then
+              sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+            fi
+            echo "copying the runner's ffmpeg into ffmpeg-static"
+            cp "$(command -v ffmpeg)" node_modules/ffmpeg-static/ffmpeg
+            chmod +x node_modules/ffmpeg-static/ffmpeg
           fi
-          test -x node_modules/ffmpeg-static/ffmpeg
           node_modules/ffmpeg-static/ffmpeg -version | head -n 1
 
       - name: Prepare browser
