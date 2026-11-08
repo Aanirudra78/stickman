@@ -19,6 +19,8 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const FPS = 30;
 const TAIL_SECONDS = 0.45;
+/** Same cap as `VOICE_HOLD_SECONDS` in src/timeline/timeline.ts. */
+const HOLD_SECONDS = 0.6;
 const BLOCK_SECONDS = 0.1;
 const SAMPLE_RATE = 16000;
 const SILENCE_DBFS = -50;
@@ -98,15 +100,23 @@ const main = async () => {
     fs.readFileSync(path.join(ROOT, "src", "voice", "manifest.json"), "utf8"),
   );
 
-  // Scene windows: same rule as src/timeline/timeline.ts.
+  // Scene windows: same rule as src/timeline/timeline.ts. The pre-audio
+  // estimate may run long, so a narrated scene keeps at most HOLD_SECONDS of it.
   let cursor = 0;
   const windows = script.scenes.map((scene, index) => {
     const voice = manifest.scenes.find((entry) => entry.index === index);
     const words = voice?.words ?? [];
     const speechEnd = words.length > 0 ? words[words.length - 1].end : 0;
+    const minFrames = Math.round(scene.duration * FPS);
+    const cappedMinFrames = voice
+      ? Math.min(
+          minFrames,
+          Math.ceil((speechEnd + TAIL_SECONDS + HOLD_SECONDS) * FPS),
+        )
+      : minFrames;
     const durationInFrames = Math.max(
       1,
-      Math.round(scene.duration * FPS),
+      cappedMinFrames,
       voice ? Math.ceil((speechEnd + TAIL_SECONDS) * FPS) : 0,
     );
     const window = { index, start: cursor / FPS, end: (cursor + durationInFrames) / FPS };

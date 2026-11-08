@@ -14,6 +14,11 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const ffmpeg = require("ffmpeg-static");
+// Remotion ships an ffprobe; ffmpeg-static does not.
+const ffprobe = path.join(
+  path.dirname(require.resolve("@remotion/compositor-win32-x64-msvc/package.json")),
+  "ffprobe.exe",
+);
 
 const [, , videoArg, timingArg] = process.argv;
 if (!videoArg || !timingArg) {
@@ -24,8 +29,36 @@ if (!videoArg || !timingArg) {
 const VIDEO = path.resolve(videoArg);
 const TIMINGS = JSON.parse(fs.readFileSync(path.resolve(timingArg), "utf8"));
 
-const WIDTH = 540;
-const HEIGHT = 960;
+/** Read the real frame size, so the same probe works on draft and final. */
+const videoSize = () =>
+  new Promise((resolve, reject) => {
+    execFile(
+      ffprobe,
+      [
+        "-v",
+        "error",
+        "-select_streams",
+        "v:0",
+        "-show_entries",
+        "stream=width,height",
+        "-of",
+        "csv=p=0",
+        VIDEO,
+      ],
+      (error, stdout) => {
+        if (error) return reject(error);
+        const [width, height] = String(stdout)
+          .trim()
+          .split(",")
+          .map((value) => Number.parseInt(value, 10));
+        if (!width || !height) return reject(new Error("could not read video size"));
+        resolve({ width, height });
+      },
+    );
+  });
+
+let WIDTH = 540;
+let HEIGHT = 960;
 
 const frameAt = (seconds) =>
   new Promise((resolve, reject) => {
@@ -82,10 +115,13 @@ const diff = (a, b, box) => {
 const round = (value, digits = 2) => Number(value.toFixed(digits));
 
 const main = async () => {
+  const size = await videoSize();
+  WIDTH = size.width;
+  HEIGHT = size.height;
   // The guest stands on the right; the main character stays centre-left.
   const RIGHT = [Math.round(WIDTH * 0.55), Math.round(HEIGHT * 0.2), WIDTH, HEIGHT];
 
-  console.log(`video: ${path.basename(VIDEO)}  (${TIMINGS.total}s planned)`);
+  console.log(`video: ${path.basename(VIDEO)}  ${WIDTH}x${HEIGHT}  (${TIMINGS.total}s planned)`);
   console.log("");
   console.log("scene  motion  note");
   console.log("-".repeat(48));
