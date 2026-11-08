@@ -1,5 +1,5 @@
 /* Stickman Studio shell cache - API and videos always go to the network. */
-const CACHE = "stickman-studio-v2";
+const CACHE = "stickman-studio-v3";
 const SHELL = ["/", "/index.html", "/style.css", "/app.js", "/icon.svg", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {

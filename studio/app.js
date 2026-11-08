@@ -841,6 +841,7 @@ const boot = async () => {
   try {
     const health = await api("/api/health");
     state.health = health;
+    $("#pin-screen").hidden = true;
     setStateChip("ready", "ok");
     if (health.urls?.length) {
       const entry = health.urls.find((item) => /wi-?fi|wlan|ethernet/i.test(item.name)) ?? health.urls[0];
