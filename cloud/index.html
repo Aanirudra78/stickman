@@ -440,6 +440,8 @@ Starting a new habit? Two minutes is enough.
         }
       });
 
+      let lastBlobUrl = null;
+
       const finish = async (run) => {
         const tag = `render-${run.run_number}`;
         const release = await gh(`/repos/${config.repo}/releases/tags/${tag}`);
@@ -454,9 +456,25 @@ Starting a new habit? Two minutes is enough.
         ]);
         setBar(100);
 
-        // GitHub release assets cannot be fetched with CORS, so use the direct
-        // download URL: <video> plays it and the link downloads it natively.
-        const url = asset.browser_download_url;
+        // github.com/.../releases/download/... intermittently 504s, and a plain
+        // <a download> on the phone cannot send an auth header. Fetch through the
+        // API with the token and hand out a blob URL, with the direct link as a
+        // fallback for very large files.
+        let url = asset.browser_download_url;
+        let note = "";
+        if (!asset.size || asset.size < 80 * 1024 * 1024) {
+          try {
+            const blob = await gh(new URL(asset.url).pathname, {
+              headers: { accept: "application/octet-stream" }
+            });
+            if (lastBlobUrl) URL.revokeObjectURL(lastBlobUrl);
+            lastBlobUrl = URL.createObjectURL(blob);
+            url = lastBlobUrl;
+          } catch (error) {
+            note = "direct link fallback";
+            console.warn("api asset download failed", error);
+          }
+        }
         const size = asset.size ? `${(asset.size / 1024 / 1024).toFixed(1)} MB` : "";
 
         $("#result-card").hidden = false;
@@ -465,6 +483,7 @@ Starting a new habit? Two minutes is enough.
         $("#download").setAttribute("download", asset.name);
         $("#run-link").href = run.html_url;
         $("#result-meta").textContent = [asset.name, size, `#${run.run_number}`].filter(Boolean).join(" · ");
+        if (note) $("#result-meta").textContent += ` - ${note}`;
         $("#result-card").scrollIntoView({ behavior: "smooth", block: "start" });
         toast("Video ready");
         setLines([
