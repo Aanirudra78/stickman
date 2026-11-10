@@ -9,7 +9,9 @@
  *   node scripts/check-rendered-audio.mjs [out/stickman-test.mp4]
  *
  * Fails when a scene window is silent (< -50 dBFS) or when speech starts more
- * than 0.25s away from the scene start.
+ * than 0.25s away from the scene start. The mix now carries a quiet music bed,
+ * so "speech" is detected relative to that bed: the guide level is the 10th
+ * percentile of the file's block loudness plus SPEECH_ABOVE_FLOOR_DB.
  */
 import { spawn } from "node:child_process";
 import fs from "node:fs";
@@ -19,6 +21,8 @@ import { FPS, ROOT, readManifest, readScript, sceneWindows } from "./scene-windo
 const BLOCK_SECONDS = 0.1;
 const SAMPLE_RATE = 16000;
 const SILENCE_DBFS = -50;
+/** Speech must rise this far above the (music bed) guide floor to count. */
+const SPEECH_ABOVE_FLOOR_DB = 6;
 const MAX_START_OFFSET_SECONDS = 0.25;
 
 const videoFile = path.resolve(ROOT, process.argv[2] ?? "out/stickman-test.mp4");
@@ -123,18 +127,39 @@ const main = async () => {
 
   const failures = [];
 
+  // Guide floor for "is this speech or just the music bed": the bed plays at a
+  // constant low level under every scene window, so the quietest blocks of the
+  // file are bed-only blocks.
+  const sorted = [...blocks].sort((a, b) => a.dbfs - b.dbfs);
+  const floorDbfs =
+    sorted.length === 0
+      ? -Infinity
+      : sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * 0.1))].dbfs;
+  const speechDbfs = Math.max(
+    SILENCE_DBFS,
+    floorDbfs + SPEECH_ABOVE_FLOOR_DB,
+  );
+
   console.log(
     `file: ${path.relative(ROOT, videoFile)}   decoded ${(totalSamples / SAMPLE_RATE).toFixed(2)}s ` +
-      `mono @ ${SAMPLE_RATE} Hz   blocks: ${blocks.length}\n`,
+      `mono @ ${SAMPLE_RATE} Hz   blocks: ${blocks.length}   floor ${floorDbfs.toFixed(1)} dBFS, speech gate ${speechDbfs.toFixed(1)} dBFS\n`,
   );
 
   for (const window of windows) {
     const inside = blocks.filter((b) => b.start >= window.start && b.start < window.end);
-    const loud = inside.filter((b) => b.dbfs > SILENCE_DBFS);
+    // Absolute silence never counts, and neither does bed-shaped loudness.
+    const audible = inside.filter((b) => b.dbfs > SILENCE_DBFS);
+    const loud = inside.filter((b) => b.dbfs > speechDbfs);
 
-    if (loud.length === 0) {
+    if (audible.length === 0) {
       failures.push(`scene ${window.index + 1}: no audible narration in its window`);
       console.log(`FAIL  scene ${window.index + 1}  silent`);
+      continue;
+    }
+
+    if (loud.length === 0) {
+      failures.push(`scene ${window.index + 1}: only the music bed is audible, no narration`);
+      console.log(`FAIL  scene ${window.index + 1}  bed only`);
       continue;
     }
 
@@ -143,7 +168,6 @@ const main = async () => {
     const speechStart = loud[0].start - window.start;
     const speechSeconds = loud.length * BLOCK_SECONDS;
     const coverage = speechSeconds / (window.end - window.start);
-
     const startOk = Math.abs(speechStart) <= MAX_START_OFFSET_SECONDS;
     if (!startOk) {
       failures.push(

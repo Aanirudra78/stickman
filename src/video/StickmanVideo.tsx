@@ -24,8 +24,9 @@ import {
 } from "../animation/motion";
 import { blendAction, getActiveAction, sampleAction } from "../actions/sample";
 import type { ActionId } from "../actions/types";
-import { COLORS, type Scene, type VideoScript } from "../config";
-import { assertFontsLoaded, TEXT_FONT_FAMILY } from "../fonts";
+import { MusicBed } from "../audio/MusicBed";
+import { SceneSfx } from "../audio/SceneSfx";
+import { COLORS, type Scene, type VideoScript } from "../config";import { assertFontsLoaded, TEXT_FONT_FAMILY } from "../fonts";
 import { mixPose, POSES, type FaceParams, type JointAngles } from "../poses/poses";
 import type { PropId } from "../props/ids";
 import {
@@ -561,6 +562,11 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
           />
         </div>
 
+        {/* Music bed + scene SFX sit outside the scene Sequences so they run
+            on the master clock and duck from the full window list. */}
+        <MusicBed windows={windows} />
+        <SceneSfx script={script} windows={windows} />
+
         {/* Scene content + narration */}
         {windows.map((sceneWindow, index) => {
           const sceneData = script.scenes[index];
@@ -582,6 +588,7 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
                 <TextScene
                   text={sceneData.text}
                   durationInFrames={sceneWindow.durationInFrames}
+                  sceneIndex={index}
                   variant={sceneVariant}
                   reverse={index % 2 === 1}
                 />

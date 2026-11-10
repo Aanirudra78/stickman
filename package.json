@@ -18,7 +18,8 @@
     "split": "node studio/split.mjs",
     "still": "remotion still",
     "voiceover": "node scripts/generate-voiceover.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "audio:assets": "node scripts/build-audio-assets.mjs"
   },
   "dependencies": {
     "@remotion/cli": "4.0.540",
