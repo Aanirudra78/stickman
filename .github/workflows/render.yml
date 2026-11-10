@@ -138,6 +138,44 @@ jobs:
             npx remotion render StickmanExplainer out/video.mp4 --log=error
           fi
 
+      - name: Visual + audio QA
+        id: qa
+        env:
+          FROZEN_MOTION: "0.6"
+          GUEST_ENTER_MAB: "4"
+        run: |
+          if ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+          fi
+          node scripts/build-timings.mjs out/timings.json
+
+          probe_exit=0
+          node scripts/probe-draft.mjs out/video.mp4 out/timings.json --json > out/qa.json \
+            || probe_exit=$?
+          if [ -f out/qa.json ]; then
+            node -e "
+              let qa;
+              try { qa = require('./out/qa.json'); } catch { process.exit(0); }
+              const rows = qa.rows || [];
+              console.log('### QA: every scene must move, guests must appear');
+              console.log('scene | motion | state');
+              console.log('---|---|---');
+              rows.forEach((r) => console.log('| ' + r.scene + ' | ' + (r.motion ?? 'still') + ' | ' + r.state + ' |'));
+              (qa.guests || []).forEach((g) => console.log('guest scene ' + g.scene + ' ' + g.name +
+                ': enter ' + g.enterMab + (g.appeared ? '' : ' -> FAILED')));
+            " >> "$GITHUB_STEP_SUMMARY" || true
+          fi
+          cat out/qa.json
+
+          audio_exit=0
+          node scripts/check-rendered-audio.mjs out/video.mp4 2>&1 \
+            | tee out/audio-check.txt >> "$GITHUB_STEP_SUMMARY" || audio_exit=$?
+
+          if [ "$probe_exit" -ne 0 ] || [ "$audio_exit" -ne 0 ]; then
+            echo "QA failed: probe=$probe_exit audio=$audio_exit"
+            exit 1
+          fi
+
       - name: Fit upload limit
         id: fit
         run: node scripts/compress-if-needed.mjs out/video.mp4 --max-mb=45
@@ -158,6 +196,18 @@ jobs:
             --latest=false
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "asset=$ASSET" >> "$GITHUB_OUTPUT"
+
+      - name: Upload QA artifacts
+        if: failure() && hashFiles('out/qa.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-${{ github.run_number }}
+          path: |
+            out/qa.json
+            out/audio-check.txt
+            out/timings.json
+          if-no-files-found: ignore
+          retention-days: 30
 
       - name: Summary
         if: success()

@@ -14,13 +14,8 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { FPS, ROOT, readManifest, readScript, sceneWindows } from "./scene-windows.mjs";
 
-const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
-const FPS = 30;
-const TAIL_SECONDS = 0.45;
-/** Same cap as `VOICE_HOLD_SECONDS` in src/timeline/timeline.ts. */
-const HOLD_SECONDS = 0.6;
 const BLOCK_SECONDS = 0.1;
 const SAMPLE_RATE = 16000;
 const SILENCE_DBFS = -50;
@@ -29,14 +24,23 @@ const MAX_START_OFFSET_SECONDS = 0.25;
 const videoFile = path.resolve(ROOT, process.argv[2] ?? "out/stickman-test.mp4");
 
 const findFfmpeg = () => {
+  const base = path.join(ROOT, "node_modules");
   const candidates = [
-    path.join(ROOT, "node_modules", "@remotion", "compositor-win32-x64-msvc", "ffmpeg.exe"),
-    path.join(ROOT, "node_modules", "ffmpeg-static", "ffmpeg.exe"),
+    ...(process.platform === "win32"
+      ? [
+          path.join(base, "@remotion", "compositor-win32-x64-msvc", "ffmpeg.exe"),
+          path.join(base, "ffmpeg-static", "ffmpeg.exe"),
+        ]
+      : [
+          path.join(base, "ffmpeg-static", "ffmpeg"),
+          path.join(base, "@remotion", "compositor-linux-x64-gnu-msvc", "ffmpeg"),
+          path.join(base, "@remotion", "compositor-darwin-x64-msvc", "ffmpeg"),
+        ]),
   ];
   for (const candidate of candidates) {
     if (fs.existsSync(candidate)) return candidate;
   }
-  throw new Error("no ffmpeg found (looked in node_modules/@remotion/compositor-*)");
+  throw new Error("no ffmpeg found (looked in node_modules/ffmpeg-static and @remotion/compositor-*)");
 };
 
 const decodePcm = (ffmpeg, file) =>
@@ -95,34 +99,10 @@ const main = async () => {
     throw new Error(`not found: ${videoFile}`);
   }
 
-  const script = JSON.parse(fs.readFileSync(path.join(ROOT, "public", "script.json"), "utf8"));
-  const manifest = JSON.parse(
-    fs.readFileSync(path.join(ROOT, "src", "voice", "manifest.json"), "utf8"),
-  );
+  const script = readScript();
+  const manifest = readManifest();
 
-  // Scene windows: same rule as src/timeline/timeline.ts. The pre-audio
-  // estimate may run long, so a narrated scene keeps at most HOLD_SECONDS of it.
-  let cursor = 0;
-  const windows = script.scenes.map((scene, index) => {
-    const voice = manifest.scenes.find((entry) => entry.index === index);
-    const words = voice?.words ?? [];
-    const speechEnd = words.length > 0 ? words[words.length - 1].end : 0;
-    const minFrames = Math.round(scene.duration * FPS);
-    const cappedMinFrames = voice
-      ? Math.min(
-          minFrames,
-          Math.ceil((speechEnd + TAIL_SECONDS + HOLD_SECONDS) * FPS),
-        )
-      : minFrames;
-    const durationInFrames = Math.max(
-      1,
-      cappedMinFrames,
-      voice ? Math.ceil((speechEnd + TAIL_SECONDS) * FPS) : 0,
-    );
-    const window = { index, start: cursor / FPS, end: (cursor + durationInFrames) / FPS };
-    cursor += durationInFrames;
-    return window;
-  });
+  const windows = sceneWindows(script, manifest);
 
   const pcm = await decodePcm(findFfmpeg(), videoFile);
   const totalSamples = pcm.length / 2;
