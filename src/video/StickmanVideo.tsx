@@ -29,6 +29,7 @@ import { SceneSfx } from "../audio/SceneSfx";
 import { COLORS, type Scene, type VideoScript } from "../config";import { assertFontsLoaded, TEXT_FONT_FAMILY } from "../fonts";
 import { mixPose, POSES, type FaceParams, type JointAngles } from "../poses/poses";
 import type { PropId } from "../props/ids";
+import { DustPuffs, SpeedSmear } from "./ActionFx";
 import {
   STICKMAN_HEIGHT,
   STICKMAN_HIP_X,
@@ -38,6 +39,7 @@ import {
   type StickmanProp,
 } from "../rig/Stickman";
 import { solveSkeleton } from "../rig/skeleton";
+import { lookForName } from "../rig/looks";
 import { isSpeaking } from "../script/parseScript";
 import { PointsScene } from "../scenes/PointsScene";
 import type { SceneTransitionVariant } from "../scenes/SceneFrame";
@@ -130,14 +132,31 @@ const GuestCameo: React.FC<GuestState> = ({
   if (!guest) return null;
 
   const at = guest.at ?? 0.25;
-  const exit = Math.max(at + 0.8, guest.exit ?? duration - 0.35);
-  if (localSeconds < at || localSeconds > exit + 0.4) return null;
+  const exit = Math.max(at + 0.8, guest.exit ?? duration - 0.55);
+
+  /*
+   * Walk physics: the `walk` clip swings the hips about 20 degrees around a
+   * ~140px leg, so one step covers ~100px every 0.475s - roughly 210px/s, and
+   * one full 0.95s cycle covers ~225px. Moving the body at exactly that speed
+   * keeps each planted foot on the ground; the old code slid 210px in 0.45s
+   * (2x too fast = ice-skating) while showing less than half a stride.
+   */
+  const WALK_SPEED_PX = 225;
+  const WALK_ENTER_SECONDS = 1.05;
+  const WALK_EXIT_SECONDS = 0.7;
+
+  const walkVisibleWindow = WALK_EXIT_SECONDS + 0.1;
+  if (localSeconds < at || localSeconds > exit + walkVisibleWindow) return null;
 
   const enter = guest.enter ?? "walk";
+  // Short fades for jump/magic (they arrive from thin air); walk uses its own.
   const entry = clamp01((localSeconds - at) / 0.45);
   const leave = clamp01((exit - localSeconds) / 0.35);
-  const presence = Math.min(entry, leave);
   const eased = easeOutCubic(entry);
+
+  // Walk windows: linear in time = constant velocity (that is the point).
+  const walked = clamp01((localSeconds - at) / WALK_ENTER_SECONDS);
+  const leaving = clamp01((localSeconds - exit) / WALK_EXIT_SECONDS);
 
   let offsetX = 0;
   let offsetY = 0;
@@ -145,19 +164,21 @@ const GuestCameo: React.FC<GuestState> = ({
   let rot = 0;
 
   if (enter === "walk") {
-    offsetX = 210 * (1 - eased);
-    offsetY = -Math.abs(Math.sin(entry * Math.PI * 3)) * 14 * (1 - eased);
+    // No synthetic bob here: the walk clip's own bounce (y: 0/-5 keys) is the
+    // vertical motion, and the stride carries the horizontal one.
+    offsetX += WALK_SPEED_PX * (1 - walked);
+    offsetX += WALK_SPEED_PX * 0.66 * leaving;
   } else if (enter === "jump") {
     offsetY = -Math.sin(entry * Math.PI) * 128;
     scaleMul = 1 + Math.sin(entry * Math.PI) * 0.04;
+    offsetX += 150 * (1 - leave);
+    offsetY -= 8 * (1 - leave);
   } else {
     scaleMul = 0.2 + 0.8 * eased;
     rot = (1 - eased) * 24;
+    offsetX += 150 * (1 - leave);
+    offsetY -= 8 * (1 - leave);
   }
-
-  // Leaving: slide back out to the right and fade.
-  offsetX += 150 * (1 - leave);
-  offsetY -= 8 * (1 - leave);
 
   const poseName = guest.pose ?? "idle";
   const pose = POSES[poseName];
@@ -176,8 +197,15 @@ const GuestCameo: React.FC<GuestState> = ({
   // Walk in, leap in, or appear out of thin air - then settle into idle.
   const entranceClip: ActionId =
     enter === "walk" ? "walk" : enter === "jump" ? "jump" : "spin";
+  // Walk blends out 0.18s after arriving (a weight-shift "settle" beat), and
+  // back in when the walk-out starts, so the legs never freeze mid-step.
+  const settle = clamp01((localSeconds - at - WALK_ENTER_SECONDS) / 0.18);
   const entranceWeight =
-    enter === "magic" ? clamp01(1 - entry) : enter === "jump" ? 0.9 : 0.85;
+    enter === "magic"
+      ? clamp01(1 - entry)
+      : enter === "jump"
+        ? 0.9
+        : 0.9 * (leaving > 0 ? 1 : 1 - settle);
   const entranceSample = sampleAction(entranceClip, localSeconds);
   const guestActed = blendAction(
     baseAngles,
@@ -187,6 +215,16 @@ const GuestCameo: React.FC<GuestState> = ({
   );
 
   const scale = GUEST_SPOT.scale * scaleMul;
+
+  // Walk: quick fade at the start of the walk-in and at the very end of the
+  // walk-out, so the figure is never a half-transparent ghost mid-stride.
+  const visible =
+    enter === "walk"
+      ? Math.min(
+          clamp01((localSeconds - at) / 0.2),
+          clamp01((exit + walkVisibleWindow - localSeconds) / 0.22),
+        )
+      : Math.min(1, Math.min(entry, leave) * 2.2);
 
   const tagScale = 0.7 + 0.3 * eased;
 
@@ -205,7 +243,7 @@ const GuestCameo: React.FC<GuestState> = ({
           }px ${GUEST_SPOT.y - STICKMAN_HIP_Y + offsetY}px`,
           scale: `${scale}`,
           rotate: `${rot.toFixed(2)}deg`,
-          opacity: Math.min(1, presence * 2.2),
+          opacity: visible,
           filter: `drop-shadow(0px 16px 22px ${COLORS.characterShadow})`,
         }}
       >
@@ -213,6 +251,7 @@ const GuestCameo: React.FC<GuestState> = ({
           angles={guestActed.angles}
           face={guestActed.face}
           blink={getEyeOpenness(frame + 23, fps)}
+          look={lookForName(guest.name)}
         />
 
         {/* Name tag: just the name, as requested. */}
@@ -477,6 +516,19 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
   const shadowX = sway * 2.4 + weight * 2.2;
   const shadowY = 14 + poseEnergy * 8 + breath * 0.5;
 
+  // ---- Body FX -----------------------------------------------------------
+  // Motion streaks while sprinting/running/spinning.
+  const smearIntensity =
+    action &&
+    (action.id === "run" || action.id === "dash" || action.id === "spin")
+      ? actionWeight
+      : 0;
+  // Dust kicks up as the jump lands (landing key sits at ~0.9s of the clip).
+  const dustProgress =
+    action?.id === "jump"
+      ? clamp01((action.elapsed - 0.78) / 0.4)
+      : 0;
+
   const FOOT_LOCAL_Y = 165;
   const hookFootAnchor =
     sceneIndex === 0 ? FOOT_LOCAL_Y * (layout.scale - characterScale) : 0;
@@ -632,6 +684,9 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
             })`,
           }}
         >
+          {/* Motion streaks + landing dust sit behind the body. */}
+          <SpeedSmear intensity={smearIntensity} />
+          <DustPuffs progress={dustProgress} />
           <Stickman
             angles={motionAngles}
             face={face}

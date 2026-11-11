@@ -2,7 +2,7 @@
   "provider": "elevenlabs",
   "voice": "pqHfZKP75CvOlQylNhV4",
   "model": "eleven_multilingual_v2",
-  "rate": "speed 1",
+  "rate": "speed 0.99",
   "pitch": "",
   "outputFormat": "mp3_44100_128",
   "heavy": true,
@@ -10,57 +10,57 @@
     "targetPeakDbfs": -3,
     "maxGainDb": 12
   },
-  "generatedAt": "2026-11-08T08:57:22.728Z",
-  "totalSeconds": 40.517,
+  "generatedAt": "2026-11-11T05:08:28.978Z",
+  "totalSeconds": 40.046,
   "scenes": [
     {
       "index": 0,
       "file": "voice/scene-01.mp3",
       "text": "Riya sat down to study at 7 PM.",
-      "hash": "565f4e8e7f53",
-      "durationInSeconds": 2.691,
+      "hash": "afebf3d7da87",
+      "durationInSeconds": 2.769,
       "peakDbfs": -3,
-      "gainDb": 0.617,
+      "gainDb": 2.245,
       "words": [
         {
           "text": "Riya",
           "start": 0,
-          "end": 0.325
+          "end": 0.383
         },
         {
           "text": "sat",
-          "start": 0.406,
-          "end": 0.627
+          "start": 0.464,
+          "end": 0.697
         },
         {
           "text": "down",
-          "start": 0.685,
-          "end": 0.917
+          "start": 0.755,
+          "end": 0.94
         },
         {
           "text": "to",
-          "start": 0.975,
-          "end": 1.045
+          "start": 0.987,
+          "end": 1.057
         },
         {
           "text": "study",
-          "start": 1.103,
-          "end": 1.405
+          "start": 1.115,
+          "end": 1.416
         },
         {
           "text": "at",
-          "start": 1.463,
-          "end": 1.521
+          "start": 1.474,
+          "end": 1.533
         },
         {
           "text": "7",
-          "start": 1.591,
-          "end": 1.834
+          "start": 1.614,
+          "end": 1.858
         },
         {
           "text": "PM",
-          "start": 1.916,
-          "end": 2.299
+          "start": 1.939,
+          "end": 2.38
         }
       ]
     },
@@ -68,99 +68,10 @@
       "index": 1,
       "file": "voice/scene-02.mp3",
       "text": "7:02.",
-      "hash": "36277d359a92",
-      "durationInSeconds": 1.202,
+      "hash": "30cdd3f63254",
+      "durationInSeconds": 1.149,
       "peakDbfs": -3,
-      "gainDb": 4.145,
-      "words": [
-        {
-          "text": "7",
-          "start": 0,
-          "end": 0.255
-        },
-        {
-          "text": "02",
-          "start": 0.406,
-          "end": 0.766
-        }
-      ]
-    },
-    {
-      "index": 2,
-      "file": "voice/scene-03.mp3",
-      "text": "A notification.",
-      "hash": "26054ee40dce",
-      "durationInSeconds": 1.28,
-      "peakDbfs": -3,
-      "gainDb": 4.771,
-      "words": [
-        {
-          "text": "A",
-          "start": 0,
-          "end": 0.081
-        },
-        {
-          "text": "notification",
-          "start": 0.139,
-          "end": 0.906
-        }
-      ]
-    },
-    {
-      "index": 3,
-      "file": "voice/scene-04.mp3",
-      "text": "7:10.",
-      "hash": "06f801fe37a1",
-      "durationInSeconds": 1.019,
-      "peakDbfs": -3,
-      "gainDb": 3.415,
-      "words": [
-        {
-          "text": "7",
-          "start": 0,
-          "end": 0.29
-        },
-        {
-          "text": "10",
-          "start": 0.348,
-          "end": 0.708
-        }
-      ]
-    },
-    {
-      "index": 4,
-      "file": "voice/scene-05.mp3",
-      "text": "Just one reel.",
-      "hash": "9ce76f084d90",
-      "durationInSeconds": 1.28,
-      "peakDbfs": -2.331,
-      "gainDb": 0,
-      "words": [
-        {
-          "text": "Just",
-          "start": 0,
-          "end": 0.267
-        },
-        {
-          "text": "one",
-          "start": 0.337,
-          "end": 0.534
-        },
-        {
-          "text": "reel",
-          "start": 0.58,
-          "end": 0.871
-        }
-      ]
-    },
-    {
-      "index": 5,
-      "file": "voice/scene-06.mp3",
-      "text": "7:40.",
-      "hash": "d9080beb3834",
-      "durationInSeconds": 1.019,
-      "peakDbfs": -3,
-      "gainDb": 3.423,
+      "gainDb": 1.338,
       "words": [
         {
           "text": "7",
@@ -168,9 +79,98 @@
           "end": 0.279
         },
         {
+          "text": "02",
+          "start": 0.395,
+          "end": 0.743
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "file": "voice/scene-03.mp3",
+      "text": "A notification.",
+      "hash": "e35495db28e3",
+      "durationInSeconds": 1.28,
+      "peakDbfs": -3,
+      "gainDb": 5.599,
+      "words": [
+        {
+          "text": "A",
+          "start": 0,
+          "end": 0.093
+        },
+        {
+          "text": "notification",
+          "start": 0.163,
+          "end": 0.894
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "file": "voice/scene-04.mp3",
+      "text": "7:10.",
+      "hash": "bff7e55c9321",
+      "durationInSeconds": 0.967,
+      "peakDbfs": -3,
+      "gainDb": 3.148,
+      "words": [
+        {
+          "text": "7",
+          "start": 0,
+          "end": 0.267
+        },
+        {
+          "text": "10",
+          "start": 0.36,
+          "end": 0.569
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "file": "voice/scene-05.mp3",
+      "text": "Just one reel.",
+      "hash": "b8e95fb39723",
+      "durationInSeconds": 1.254,
+      "peakDbfs": -3,
+      "gainDb": 1.422,
+      "words": [
+        {
+          "text": "Just",
+          "start": 0,
+          "end": 0.279
+        },
+        {
+          "text": "one",
+          "start": 0.36,
+          "end": 0.546
+        },
+        {
+          "text": "reel",
+          "start": 0.604,
+          "end": 0.859
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "file": "voice/scene-06.mp3",
+      "text": "7:40.",
+      "hash": "943a6f45af7c",
+      "durationInSeconds": 1.097,
+      "peakDbfs": -3,
+      "gainDb": 4.216,
+      "words": [
+        {
+          "text": "7",
+          "start": 0,
+          "end": 0.255
+        },
+        {
           "text": "40",
-          "start": 0.406,
-          "end": 0.685
+          "start": 0.383,
+          "end": 0.708
         }
       ]
     },
@@ -178,35 +178,35 @@
       "index": 6,
       "file": "voice/scene-07.mp3",
       "text": "Where did the time go.",
-      "hash": "920b91327e3b",
-      "durationInSeconds": 1.437,
+      "hash": "f4440dd60509",
+      "durationInSeconds": 1.384,
       "peakDbfs": -3,
-      "gainDb": 1.884,
+      "gainDb": 3.222,
       "words": [
         {
           "text": "Where",
           "start": 0,
-          "end": 0.221
+          "end": 0.197
         },
         {
           "text": "did",
-          "start": 0.255,
-          "end": 0.372
+          "start": 0.221,
+          "end": 0.325
         },
         {
           "text": "the",
-          "start": 0.406,
-          "end": 0.476
+          "start": 0.36,
+          "end": 0.43
         },
         {
           "text": "time",
-          "start": 0.522,
-          "end": 0.801
+          "start": 0.476,
+          "end": 0.743
         },
         {
           "text": "go",
-          "start": 0.848,
-          "end": 1.068
+          "start": 0.789,
+          "end": 0.987
         }
       ]
     },
@@ -214,10 +214,10 @@
       "index": 7,
       "file": "voice/scene-08.mp3",
       "text": "She had studied for three hours.",
-      "hash": "4535d846b49b",
-      "durationInSeconds": 2.09,
+      "hash": "1965b294b4f3",
+      "durationInSeconds": 2.116,
       "peakDbfs": -3,
-      "gainDb": 4.327,
+      "gainDb": 3.562,
       "words": [
         {
           "text": "She",
@@ -226,28 +226,28 @@
         },
         {
           "text": "had",
-          "start": 0.244,
-          "end": 0.348
+          "start": 0.232,
+          "end": 0.337
         },
         {
           "text": "studied",
           "start": 0.395,
-          "end": 0.743
+          "end": 0.766
         },
         {
           "text": "for",
-          "start": 0.789,
-          "end": 0.894
+          "start": 0.813,
+          "end": 0.929
         },
         {
           "text": "three",
-          "start": 0.964,
-          "end": 1.219
+          "start": 0.987,
+          "end": 1.231
         },
         {
           "text": "hours",
-          "start": 1.265,
-          "end": 1.718
+          "start": 1.277,
+          "end": 1.788
         }
       ]
     },
@@ -255,10 +255,10 @@
       "index": 8,
       "file": "voice/scene-09.mp3",
       "text": "But only learned for twenty minutes.",
-      "hash": "84f739bd7a81",
+      "hash": "6671dfd0cd0c",
       "durationInSeconds": 2.116,
-      "peakDbfs": -2.99,
-      "gainDb": 0,
+      "peakDbfs": -3,
+      "gainDb": 0.405,
       "words": [
         {
           "text": "But",
@@ -268,27 +268,27 @@
         {
           "text": "only",
           "start": 0.244,
-          "end": 0.441
+          "end": 0.43
         },
         {
           "text": "learned",
-          "start": 0.499,
-          "end": 0.813
+          "start": 0.488,
+          "end": 0.801
         },
         {
           "text": "for",
-          "start": 0.871,
-          "end": 0.987
+          "start": 0.859,
+          "end": 0.998
         },
         {
           "text": "twenty",
-          "start": 1.033,
-          "end": 1.324
+          "start": 1.045,
+          "end": 1.347
         },
         {
           "text": "minutes",
-          "start": 1.37,
-          "end": 1.73
+          "start": 1.405,
+          "end": 1.765
         }
       ]
     },
@@ -296,10 +296,10 @@
       "index": 9,
       "file": "voice/scene-10.mp3",
       "text": "In his book Deep Work, Cal Newport explains why.",
-      "hash": "aa56031c469a",
-      "durationInSeconds": 3.657,
+      "hash": "6d14d4069ae3",
+      "durationInSeconds": 3.579,
       "peakDbfs": -3,
-      "gainDb": 2.304,
+      "gainDb": 0.43,
       "words": [
         {
           "text": "In",
@@ -314,37 +314,37 @@
         {
           "text": "book",
           "start": 0.36,
-          "end": 0.557
+          "end": 0.569
         },
         {
           "text": "Deep",
-          "start": 0.615,
-          "end": 0.824
+          "start": 0.639,
+          "end": 0.859
         },
         {
           "text": "Work",
-          "start": 0.894,
-          "end": 1.149
+          "start": 0.929,
+          "end": 1.173
         },
         {
           "text": "Cal",
-          "start": 1.44,
-          "end": 1.695
+          "start": 1.463,
+          "end": 1.765
         },
         {
           "text": "Newport",
-          "start": 1.765,
-          "end": 2.148
+          "start": 1.834,
+          "end": 2.229
         },
         {
           "text": "explains",
-          "start": 2.194,
-          "end": 2.717
+          "start": 2.276,
+          "end": 2.728
         },
         {
           "text": "why",
-          "start": 2.833,
-          "end": 3.309
+          "start": 2.786,
+          "end": 3.193
         }
       ]
     },
@@ -352,10 +352,10 @@
       "index": 10,
       "file": "voice/scene-11.mp3",
       "text": "Every time you switch your attention.",
-      "hash": "ec09e1d6f013",
+      "hash": "58c3db9248b9",
       "durationInSeconds": 2.116,
       "peakDbfs": -3,
-      "gainDb": 2.249,
+      "gainDb": 0.373,
       "words": [
         {
           "text": "Every",
@@ -365,27 +365,27 @@
         {
           "text": "time",
           "start": 0.325,
-          "end": 0.58
+          "end": 0.522
         },
         {
           "text": "you",
-          "start": 0.615,
-          "end": 0.708
+          "start": 0.557,
+          "end": 0.65
         },
         {
           "text": "switch",
-          "start": 0.789,
-          "end": 1.045
+          "start": 0.731,
+          "end": 1.01
         },
         {
           "text": "your",
-          "start": 1.08,
-          "end": 1.207
+          "start": 1.045,
+          "end": 1.173
         },
         {
           "text": "attention",
-          "start": 1.254,
-          "end": 1.788
+          "start": 1.219,
+          "end": 1.765
         }
       ]
     },
@@ -393,10 +393,10 @@
       "index": 11,
       "file": "voice/scene-12.mp3",
       "text": "your brain leaves a little of itself behind.",
-      "hash": "629b90320bb0",
-      "durationInSeconds": 2.873,
+      "hash": "191032556ac1",
+      "durationInSeconds": 2.769,
       "peakDbfs": -3,
-      "gainDb": 3.468,
+      "gainDb": 3.135,
       "words": [
         {
           "text": "your",
@@ -405,38 +405,38 @@
         },
         {
           "text": "brain",
-          "start": 0.255,
-          "end": 0.511
+          "start": 0.244,
+          "end": 0.499
         },
         {
           "text": "leaves",
-          "start": 0.592,
+          "start": 0.569,
           "end": 0.871
         },
         {
           "text": "a",
-          "start": 0.94,
-          "end": 0.975
+          "start": 0.929,
+          "end": 0.964
         },
         {
           "text": "little",
-          "start": 1.091,
-          "end": 1.393
+          "start": 1.033,
+          "end": 1.312
         },
         {
           "text": "of",
-          "start": 1.44,
-          "end": 1.498
+          "start": 1.347,
+          "end": 1.405
         },
         {
           "text": "itself",
-          "start": 1.556,
-          "end": 1.916
+          "start": 1.463,
+          "end": 1.823
         },
         {
           "text": "behind",
-          "start": 1.985,
-          "end": 2.519
+          "start": 1.892,
+          "end": 2.426
         }
       ]
     },
@@ -444,10 +444,10 @@
       "index": 12,
       "file": "voice/scene-13.mp3",
       "text": "He calls it attention residue.",
-      "hash": "e3ae8b745684",
-      "durationInSeconds": 2.09,
+      "hash": "d0a21353f389",
+      "durationInSeconds": 2.116,
       "peakDbfs": -3,
-      "gainDb": 3.152,
+      "gainDb": 0.464,
       "words": [
         {
           "text": "He",
@@ -457,22 +457,22 @@
         {
           "text": "calls",
           "start": 0.197,
-          "end": 0.43
+          "end": 0.441
         },
         {
           "text": "it",
-          "start": 0.488,
-          "end": 0.557
+          "start": 0.499,
+          "end": 0.58
         },
         {
           "text": "attention",
-          "start": 0.604,
-          "end": 1.091
+          "start": 0.627,
+          "end": 1.126
         },
         {
           "text": "residue",
-          "start": 1.161,
-          "end": 1.695
+          "start": 1.207,
+          "end": 1.788
         }
       ]
     },
@@ -480,40 +480,40 @@
       "index": 13,
       "file": "voice/scene-14.mp3",
       "text": "So Riya tried one simple rule.",
-      "hash": "a8151dfac7b6",
-      "durationInSeconds": 2.168,
+      "hash": "2ea8c8db7878",
+      "durationInSeconds": 2.22,
       "peakDbfs": -3,
-      "gainDb": 2.413,
+      "gainDb": 4.293,
       "words": [
         {
           "text": "So",
           "start": 0,
-          "end": 0.186
+          "end": 0.197
         },
         {
           "text": "Riya",
-          "start": 0.255,
+          "start": 0.267,
           "end": 0.488
         },
         {
           "text": "tried",
           "start": 0.534,
-          "end": 0.813
+          "end": 0.824
         },
         {
           "text": "one",
-          "start": 0.871,
-          "end": 1.068
+          "start": 0.894,
+          "end": 1.091
         },
         {
           "text": "simple",
-          "start": 1.126,
-          "end": 1.44
+          "start": 1.138,
+          "end": 1.451
         },
         {
           "text": "rule",
-          "start": 1.486,
-          "end": 1.846
+          "start": 1.498,
+          "end": 1.869
         }
       ]
     },
@@ -521,30 +521,30 @@
       "index": 14,
       "file": "voice/scene-15.mp3",
       "text": "Phone in another room.",
-      "hash": "52ddfd50ed42",
-      "durationInSeconds": 1.672,
+      "hash": "99faa9f3ed6b",
+      "durationInSeconds": 1.567,
       "peakDbfs": -3,
-      "gainDb": 0.746,
+      "gainDb": 0.958,
       "words": [
         {
           "text": "Phone",
           "start": 0,
-          "end": 0.395
+          "end": 0.372
         },
         {
           "text": "in",
-          "start": 0.441,
-          "end": 0.511
+          "start": 0.418,
+          "end": 0.522
         },
         {
           "text": "another",
-          "start": 0.569,
+          "start": 0.58,
           "end": 0.871
         },
         {
           "text": "room",
-          "start": 0.929,
-          "end": 1.231
+          "start": 0.917,
+          "end": 1.149
         }
       ]
     },
@@ -552,30 +552,30 @@
       "index": 15,
       "file": "voice/scene-16.mp3",
       "text": "Timer for 45 minutes.",
-      "hash": "5f9566e6fccc",
-      "durationInSeconds": 1.802,
+      "hash": "f6d03e5f952f",
+      "durationInSeconds": 1.62,
       "peakDbfs": -3,
-      "gainDb": 2.558,
+      "gainDb": 1.349,
       "words": [
         {
           "text": "Timer",
           "start": 0,
-          "end": 0.372
+          "end": 0.395
         },
         {
           "text": "for",
-          "start": 0.418,
-          "end": 0.522
+          "start": 0.453,
+          "end": 0.58
         },
         {
           "text": "45",
-          "start": 0.569,
-          "end": 0.998
+          "start": 0.639,
+          "end": 1.091
         },
         {
           "text": "minutes",
-          "start": 1.068,
-          "end": 1.382
+          "start": 1.161,
+          "end": 1.463
         }
       ]
     },
@@ -583,20 +583,20 @@
       "index": 16,
       "file": "voice/scene-17.mp3",
       "text": "Nothing else.",
-      "hash": "da82225946f9",
+      "hash": "989c47cbb648",
       "durationInSeconds": 1.071,
       "peakDbfs": -3,
-      "gainDb": 7.315,
+      "gainDb": 2.643,
       "words": [
         {
           "text": "Nothing",
           "start": 0,
-          "end": 0.348
+          "end": 0.36
         },
         {
           "text": "else",
-          "start": 0.406,
-          "end": 0.755
+          "start": 0.43,
+          "end": 0.789
         }
       ]
     },
@@ -604,45 +604,45 @@
       "index": 17,
       "file": "voice/scene-18.mp3",
       "text": "That night, she finished in one hour.",
-      "hash": "0b4d0b5b2571",
-      "durationInSeconds": 2.403,
-      "peakDbfs": -2.689,
-      "gainDb": 0,
+      "hash": "ac71086a0874",
+      "durationInSeconds": 2.534,
+      "peakDbfs": -3,
+      "gainDb": 2.29,
       "words": [
         {
           "text": "That",
           "start": 0,
-          "end": 0.244
+          "end": 0.255
         },
         {
           "text": "night",
           "start": 0.313,
-          "end": 0.557
+          "end": 0.592
         },
         {
           "text": "she",
-          "start": 0.801,
-          "end": 0.94
+          "start": 0.929,
+          "end": 1.045
         },
         {
           "text": "finished",
-          "start": 1.01,
-          "end": 1.37
+          "start": 1.115,
+          "end": 1.474
         },
         {
           "text": "in",
-          "start": 1.44,
-          "end": 1.544
+          "start": 1.544,
+          "end": 1.637
         },
         {
           "text": "one",
-          "start": 1.614,
-          "end": 1.753
+          "start": 1.718,
+          "end": 1.869
         },
         {
           "text": "hour",
-          "start": 1.788,
-          "end": 2.043
+          "start": 1.904,
+          "end": 2.171
         }
       ]
     },
@@ -650,24 +650,24 @@
       "index": 18,
       "file": "voice/scene-19.mp3",
       "text": "what used to take three.",
-      "hash": "ca8c2f47b307",
+      "hash": "35b841560647",
       "durationInSeconds": 1.515,
       "peakDbfs": -3,
-      "gainDb": 3.548,
+      "gainDb": 4.35,
       "words": [
         {
           "text": "what",
           "start": 0,
-          "end": 0.197
+          "end": 0.186
         },
         {
           "text": "used",
-          "start": 0.267,
+          "start": 0.255,
           "end": 0.441
         },
         {
           "text": "to",
-          "start": 0.464,
+          "start": 0.476,
           "end": 0.534
         },
         {
@@ -677,8 +677,8 @@
         },
         {
           "text": "three",
-          "start": 0.836,
-          "end": 1.161
+          "start": 0.848,
+          "end": 1.207
         }
       ]
     },
@@ -686,35 +686,35 @@
       "index": 19,
       "file": "voice/scene-20.mp3",
       "text": "Your focus is not weak.",
-      "hash": "b44c12c492be",
+      "hash": "396d7001e443",
       "durationInSeconds": 1.672,
       "peakDbfs": -3,
-      "gainDb": 2.744,
+      "gainDb": 1.817,
       "words": [
         {
           "text": "Your",
           "start": 0,
-          "end": 0.232
+          "end": 0.197
         },
         {
           "text": "focus",
-          "start": 0.29,
-          "end": 0.627
+          "start": 0.244,
+          "end": 0.58
         },
         {
           "text": "is",
-          "start": 0.685,
-          "end": 0.766
+          "start": 0.639,
+          "end": 0.72
         },
         {
           "text": "not",
-          "start": 0.836,
-          "end": 0.998
+          "start": 0.778,
+          "end": 0.94
         },
         {
           "text": "weak",
-          "start": 1.045,
-          "end": 1.289
+          "start": 1.01,
+          "end": 1.254
         }
       ]
     },
@@ -722,30 +722,30 @@
       "index": 20,
       "file": "voice/scene-21.mp3",
       "text": "It's just being interrupted.",
-      "hash": "54c19a847f6f",
-      "durationInSeconds": 1.672,
+      "hash": "411767eb76e3",
+      "durationInSeconds": 1.62,
       "peakDbfs": -3,
-      "gainDb": 2.875,
+      "gainDb": 3.448,
       "words": [
         {
           "text": "It's",
           "start": 0,
-          "end": 0.197
+          "end": 0.186
         },
         {
           "text": "just",
-          "start": 0.244,
-          "end": 0.464
+          "start": 0.221,
+          "end": 0.372
         },
         {
           "text": "being",
-          "start": 0.511,
-          "end": 0.708
+          "start": 0.418,
+          "end": 0.604
         },
         {
           "text": "interrupted",
-          "start": 0.755,
-          "end": 1.324
+          "start": 0.65,
+          "end": 1.219
         }
       ]
     },
@@ -753,35 +753,35 @@
       "index": 21,
       "file": "voice/scene-22.mp3",
       "text": "Where's your phone right now.",
-      "hash": "2df999b69e14",
-      "durationInSeconds": 1.672,
+      "hash": "96a9d7a4af4f",
+      "durationInSeconds": 1.515,
       "peakDbfs": -3,
-      "gainDb": 3.049,
+      "gainDb": 5.074,
       "words": [
         {
           "text": "Where's",
           "start": 0,
-          "end": 0.313
+          "end": 0.302
         },
         {
           "text": "your",
-          "start": 0.348,
-          "end": 0.464
+          "start": 0.337,
+          "end": 0.441
         },
         {
           "text": "phone",
-          "start": 0.511,
-          "end": 0.789
+          "start": 0.464,
+          "end": 0.708
         },
         {
           "text": "right",
-          "start": 0.824,
-          "end": 0.998
+          "start": 0.731,
+          "end": 0.906
         },
         {
           "text": "now",
-          "start": 1.045,
-          "end": 1.242
+          "start": 0.952,
+          "end": 1.161
         }
       ]
     }

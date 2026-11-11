@@ -329,6 +329,345 @@ const Shape: React.FC<ShapeProps> = ({ id }) => {
         </g>
       );
 
+    /* ------------------------------------------------------------- rewards --- */
+
+    case "trophy":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M -18 -28 h 36 v 14 a 18 18 0 0 1 -36 0 z"
+            fill={GOLD}
+            stroke={INK}
+            strokeWidth={5}
+          />
+          <path d="M -18 -24 a 10 12 0 0 0 -2 20" fill="none" stroke={INK} strokeWidth={5} strokeLinecap="round" />
+          <path d="M 18 -24 a 10 12 0 0 1 2 20" fill="none" stroke={INK} strokeWidth={5} strokeLinecap="round" />
+          <rect x={-4} y={4} width={8} height={12} fill={GOLD} stroke={INK} strokeWidth={4} />
+          <rect x={-14} y={16} width={28} height={10} rx={3} fill={ACCENT} stroke={INK} strokeWidth={4.5} />
+          <path d="M -6 -18 l 4 8 l 8 -12 l 3 6 l 5 -2" fill="none" stroke={INK} strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round" opacity={0.8} />
+        </g>
+      );
+
+    case "medal":
+      return (
+        <g strokeLinejoin="round">
+          <path d="M -14 -30 l 9 14 l 5 -8" fill="none" stroke={RED} strokeWidth={7} strokeLinecap="round" />
+          <path d="M 14 -30 l -9 14" fill="none" stroke={BLUE} strokeWidth={7} strokeLinecap="round" />
+          <circle cx={0} cy={4} r={20} fill={GOLD} stroke={INK} strokeWidth={5} />
+          <circle cx={0} cy={4} r={13} fill="none" stroke={INK} strokeWidth={3} opacity={0.6} />
+          <path d="M 0 -4 l 3.4 7 l 7.6 0.6 l -5.8 5 l 1.8 7.4 l -7 -4 l -7 4 l 1.8 -7.4 l -5.8 -5 l 7.6 -0.6 z" fill={INK} opacity={0.85} />
+        </g>
+      );
+
+    case "crown":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M -32 16 L -32 -14 L -16 -2 L 0 -22 L 16 -2 L 32 -14 L 32 16 Z"
+            fill={GOLD}
+            stroke={INK}
+            strokeWidth={5}
+          />
+          <circle cx={0} cy={-22} r={4} fill={ACCENT} stroke={INK} strokeWidth={3} />
+          <circle cx={0} cy={6} r={5} fill={RED} stroke={INK} strokeWidth={3} />
+          <circle cx={-16} cy={8} r={4} fill={BLUE} stroke={INK} strokeWidth={2.6} />
+          <circle cx={16} cy={8} r={4} fill={GREEN} stroke={INK} strokeWidth={2.6} />
+        </g>
+      );
+
+    case "star":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M 0 -30 L 8.8 -9.3 L 31 -7.6 L 14 6.3 L 19.6 28 L 0 16 L -19.6 28 L -14 6.3 L -31 -7.6 L -8.8 -9.3 Z"
+            fill={GOLD}
+            stroke={INK}
+            strokeWidth={5}
+          />
+        </g>
+      );
+
+    case "diamond":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M -22 -18 L -8 -30 L 8 -30 L 22 -18 L 0 26 Z"
+            fill={SOFT_BLUE}
+            stroke={BLUE}
+            strokeWidth={5}
+          />
+          <path d="M -22 -18 L 22 -18 M -8 -30 L -4 -18 L 0 26 M 8 -30 L 4 -18" fill="none" stroke={BLUE} strokeWidth={3.5} opacity={0.7} />
+          <path d="M -14 -14 L -6 -20" stroke={PAPER} strokeWidth={3.5} strokeLinecap="round" opacity={0.9} />
+        </g>
+      );
+
+    case "gift":
+      return (
+        <g strokeLinejoin="round">
+          <rect x={-26} y={-10} width={52} height={38} rx={4} fill={RED} stroke={INK} strokeWidth={5} />
+          <rect x={-30} y={-20} width={60} height={12} rx={4} fill={RED} stroke={INK} strokeWidth={5} />
+          <line x1={0} y1={-20} x2={0} y2={28} stroke={GOLD} strokeWidth={7} />
+          <path d="M 0 -22 c -14 -18 -26 -6 -12 2 z" fill={GOLD} stroke={INK} strokeWidth={3.5} />
+          <path d="M 0 -22 c 14 -18 26 -6 12 2 z" fill={GOLD} stroke={INK} strokeWidth={3.5} />
+        </g>
+      );
+
+    case "piggy_bank":
+      return (
+        <g strokeLinejoin="round">
+          <ellipse cx={0} cy={4} rx={28} ry={22} fill={ACCENT} stroke={INK} strokeWidth={5} />
+          <circle cx={22} cy={-8} r={7} fill={ACCENT} stroke={INK} strokeWidth={4.5} />
+          <path d="M 27 -10 l 6 -4 v 8 z" fill={INK} />
+          <rect x={-8} y={-20} width={16} height={6} rx={2} fill={INK} />
+          <circle cx={-14} cy={2} r={2.6} fill={INK} />
+          <path d="M -4 26 v 6 M 12 26 v 6" stroke={INK} strokeWidth={5} strokeLinecap="round" />
+          <path d="M -2 -22 a 12 12 0 0 1 8 0" fill="none" stroke={INK} strokeWidth={3} opacity={0.5} />
+        </g>
+      );
+
+    /* -------------------------------------------------------- ideas / mind --- */
+
+    case "brain":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M -6 -28 a 14 14 0 0 1 14 8 a 12 12 0 0 1 10 14 a 13 13 0 0 1 -8 20 a 12 12 0 0 1 -16 4 a 14 14 0 0 1 -16 -6 a 13 13 0 0 1 -8 -16 a 12 12 0 0 1 6 -16 a 13 13 0 0 1 18 -8 z"
+            fill="#F8C9B8"
+            stroke={INK}
+            strokeWidth={5}
+          />
+          <path d="M 2 -26 v 46" fill="none" stroke={INK} strokeWidth={4} opacity={0.75} />
+          <path d="M -16 -14 q 8 2 10 10 M 14 -16 q -8 4 -8 12 M -14 12 q 6 -2 12 2" fill="none" stroke={INK} strokeWidth={3.4} strokeLinecap="round" opacity={0.7} />
+        </g>
+      );
+
+    case "heart":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M 0 24 C -30 6 -30 -16 -14 -22 C -6 -25 0 -19 0 -13 C 0 -19 6 -25 14 -22 C 30 -16 30 6 0 24 Z"
+            fill={RED}
+            stroke={INK}
+            strokeWidth={5}
+          />
+          <path d="M -16 -12 a 8 8 0 0 1 6 -5" fill="none" stroke={PAPER} strokeWidth={3.5} strokeLinecap="round" opacity={0.85} />
+        </g>
+      );
+
+    case "target":
+      return (
+        <g>
+          <circle cx={0} cy={0} r={26} fill={PAPER} stroke={INK} strokeWidth={5} />
+          <circle cx={0} cy={0} r={17} fill={RED} stroke={INK} strokeWidth={3.5} />
+          <circle cx={0} cy={0} r={8} fill={PAPER} stroke={INK} strokeWidth={3.5} />
+          <circle cx={0} cy={0} r={2.6} fill={RED} />
+          <g stroke={RED} strokeWidth={4} strokeLinecap="round">
+            <line x1={-34} y1={0} x2={-26} y2={0} />
+            <line x1={26} y1={0} x2={34} y2={0} />
+            <line x1={0} y1={-34} x2={0} y2={-26} />
+            <line x1={0} y1={26} x2={0} y2={34} />
+          </g>
+        </g>
+      );
+
+    case "flag":
+      return (
+        <g strokeLinejoin="round">
+          <line x1={-22} y1={-32} x2={-22} y2={32} stroke={INK} strokeWidth={6} strokeLinecap="round" />
+          <path d="M -22 -30 h 44 v 18 h -44 z" fill={ACCENT} stroke={INK} strokeWidth={4.5} />
+          <path d="M -22 -12 l 10 4 l 10 -4 l 10 4 l 14 -4 v 8" fill="none" stroke={INK} strokeWidth={3.5} opacity={0.6} />
+          <circle cx={-22} cy={-34} r={4} fill={GOLD} stroke={INK} strokeWidth={3} />
+        </g>
+      );
+
+    case "lightning":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M 6 -32 L -16 2 L -2 2 L -8 30 L 18 -6 L 3 -6 Z"
+            fill={GOLD}
+            stroke={INK}
+            strokeWidth={5}
+          />
+        </g>
+      );
+
+    /* ----------------------------------------------------- plan / navigation --- */
+
+    case "map":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M -30 -24 L -10 -30 L 10 -24 L 30 -30 L 30 24 L 10 30 L -10 24 L -30 30 Z"
+            fill={PAPER}
+            stroke={INK}
+            strokeWidth={5}
+          />
+          <path d="M -22 -12 q 10 -10 22 -4 q 12 6 22 0" fill="none" stroke={RED} strokeWidth={4.5} strokeLinecap="round" strokeDasharray="7 5" />
+          <circle cx={-22} cy={-12} r={4} fill={GREEN} stroke={INK} strokeWidth={3} />
+          <circle cx={22} cy={-16} r={4.4} fill={RED} stroke={INK} strokeWidth={3} />
+        </g>
+      );
+
+    case "compass":
+      return (
+        <g>
+          <circle cx={0} cy={0} r={26} fill={SOFT_BLUE} stroke={INK} strokeWidth={5} />
+          <path d="M 0 -18 L 7 0 L 0 18 L -7 0 Z" fill={RED} stroke={INK} strokeWidth={3.5} strokeLinejoin="round" />
+          <path d="M -18 0 L 0 -7 L 18 0 L 0 7 Z" fill={PAPER} stroke={INK} strokeWidth={3.5} strokeLinejoin="round" opacity={0.9} />
+          <circle cx={0} cy={0} r={3} fill={INK} />
+        </g>
+      );
+
+    case "key":
+      return (
+        <g strokeLinejoin="round">
+          <circle cx={-14} cy={-12} r={13} fill={GOLD} stroke={INK} strokeWidth={5} />
+          <circle cx={-14} cy={-12} r={5} fill={PAPER} stroke={INK} strokeWidth={3.5} />
+          <line x1={-5} y1={-3} x2={22} y2={24} stroke={GOLD} strokeWidth={9} strokeLinecap="round" />
+          <line x1={-5} y1={-3} x2={22} y2={24} stroke={INK} strokeWidth={2} opacity={0.35} />
+          <line x1={14} y1={16} x2={20} y2={10} stroke={INK} strokeWidth={5} strokeLinecap="round" />
+          <line x1={20} y1={22} x2={26} y2={16} stroke={INK} strokeWidth={5} strokeLinecap="round" />
+        </g>
+      );
+
+    case "bell":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M -20 14 a 20 22 0 0 1 40 0 l 4 6 h -48 z"
+            fill={GOLD}
+            stroke={INK}
+            strokeWidth={5}
+          />
+          <circle cx={0} cy={-22} r={4.5} fill={INK} />
+          <circle cx={0} cy={26} r={5.5} fill={INK} />
+          <path d="M -10 -14 a 12 12 0 0 1 6 -5" fill="none" stroke={PAPER} strokeWidth={3} strokeLinecap="round" opacity={0.8} />
+        </g>
+      );
+
+    case "ladder":
+      return (
+        <g strokeLinejoin="round" strokeLinecap="round">
+          <line x1={-16} y1={-32} x2={-16} y2={32} stroke="#B9752B" strokeWidth={7} />
+          <line x1={16} y1={-32} x2={16} y2={32} stroke="#B9752B" strokeWidth={7} />
+          <g stroke={INK} strokeWidth={5.5}>
+            <line x1={-16} y1={-20} x2={16} y2={-20} />
+            <line x1={-16} y1={-4} x2={16} y2={-4} />
+            <line x1={-16} y1={12} x2={16} y2={12} />
+            <line x1={-16} y1={28} x2={16} y2={28} />
+          </g>
+        </g>
+      );
+
+    /* ---------------------------------------------------------- life / tech --- */
+
+    case "fire":
+      return (
+        <g strokeLinejoin="round">
+          <path
+            d="M 0 30 C -22 30 -28 16 -22 4 C -18 -4 -14 -6 -14 -14 C -6 -10 -4 -4 -6 2 C 0 -6 2 -16 0 -26 C 12 -14 16 -4 14 4 C 18 2 20 -2 20 -8 C 26 6 24 30 0 30 Z"
+            fill="#F97316"
+            stroke={INK}
+            strokeWidth={5}
+          />
+          <path
+            d="M 0 26 C -10 26 -14 18 -10 10 C -7 5 -4 3 -4 -2 C 2 2 4 8 2 12 C 6 8 8 2 8 -2 C 12 8 12 26 0 26 Z"
+            fill={GOLD}
+            stroke="none"
+          />
+        </g>
+      );
+
+    case "plant":
+      return (
+        <g strokeLinejoin="round">
+          <path d="M -18 6 h 36 l -5 22 h -26 z" fill="#D97757" stroke={INK} strokeWidth={5} />
+          <rect x={-21} y={0} width={42} height={9} rx={3} fill="#C25E3F" stroke={INK} strokeWidth={4.5} />
+          <path d="M 0 0 v -18" fill="none" stroke={GREEN} strokeWidth={5} strokeLinecap="round" />
+          <path d="M 0 -10 C -6 -12 -12 -18 -12 -26 C -4 -26 2 -20 0 -10 Z" fill={GREEN} stroke={INK} strokeWidth={4} />
+          <path d="M 0 -14 C 6 -16 12 -22 12 -30 C 4 -30 -2 -24 0 -14 Z" fill={GREEN} stroke={INK} strokeWidth={4} />
+        </g>
+      );
+
+    case "mic":
+      return (
+        <g strokeLinejoin="round">
+          <rect x={-10} y={-30} width={20} height={32} rx={10} fill={INK} />
+          <path d="M -18 -6 a 18 18 0 0 0 36 0" fill="none" stroke={INK} strokeWidth={5} strokeLinecap="round" />
+          <line x1={0} y1={12} x2={0} y2={22} stroke={INK} strokeWidth={5.5} strokeLinecap="round" />
+          <path d="M -14 26 h 28" stroke={ACCENT} strokeWidth={7} strokeLinecap="round" />
+          <path d="M -4 -24 q 4 4 0 8 M 4 -24 q -4 4 0 8" fill="none" stroke={PAPER} strokeWidth={2.6} strokeLinecap="round" opacity={0.7} />
+        </g>
+      );
+
+    case "camera":
+      return (
+        <g strokeLinejoin="round">
+          <rect x={-32} y={-20} width={64} height={42} rx={8} fill={INK} />
+          <circle cx={0} cy={1} r={14} fill={SOFT_BLUE} stroke={PAPER} strokeWidth={4} />
+          <circle cx={0} cy={1} r={7} fill={INK} opacity={0.6} />
+          <rect x={-12} y={-26} width={16} height={8} rx={2} fill={INK} />
+          <circle cx={22} cy={-13} r={3} fill={ACCENT} />
+          <path d="M -26 -12 a 7 7 0 0 1 6 -5" stroke={PAPER} strokeWidth={3} fill="none" strokeLinecap="round" opacity={0.7} />
+        </g>
+      );
+
+    case "globe":
+      return (
+        <g>
+          <circle cx={0} cy={0} r={26} fill={SOFT_BLUE} stroke={BLUE} strokeWidth={5} />
+          <path d="M 0 -26 a 13 26 0 0 1 0 52 a 13 26 0 0 1 0 -52 M -26 0 h 52" fill="none" stroke={BLUE} strokeWidth={3.5} opacity={0.8} />
+          <path d="M -18 -10 q 8 6 16 0 q 8 -6 16 2" fill="none" stroke={GREEN} strokeWidth={4} strokeLinecap="round" opacity={0.85} />
+          <path d="M -14 12 q 10 -6 20 2" fill="none" stroke={GREEN} strokeWidth={4} strokeLinecap="round" opacity={0.85} />
+        </g>
+      );
+
+    case "battery":
+      return (
+        <g strokeLinejoin="round">
+          <rect x={-24} y={-16} width={44} height={34} rx={5} fill={PAPER} stroke={INK} strokeWidth={5} />
+          <rect x={20} y={-6} width={8} height={14} rx={2} fill={INK} />
+          <rect x={-19} y={-11} width={12} height={24} rx={2} fill={GREEN} stroke="none" />
+          <rect x={-4} y={-11} width={9} height={24} rx={2} fill={GOLD} stroke="none" />
+          <path d="M -8 -24 l 6 -8 v 5 h 6 l -6 8" fill="none" stroke={GOLD} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+      );
+
+    case "dice":
+      return (
+        <g strokeLinejoin="round">
+          <rect x={-24} y={-24} width={48} height={48} rx={9} fill={PAPER} stroke={INK} strokeWidth={5} />
+          <g fill={INK}>
+            <circle cx={-11} cy={-11} r={4} />
+            <circle cx={11} cy={-11} r={4} />
+            <circle cx={0} cy={0} r={4} />
+            <circle cx={-11} cy={11} r={4} />
+            <circle cx={11} cy={11} r={4} />
+          </g>
+        </g>
+      );
+
+    case "scale":
+      return (
+        <g strokeLinejoin="round">
+          <line x1={0} y1={-26} x2={0} y2={22} stroke={INK} strokeWidth={5.5} strokeLinecap="round" />
+          <line x1={-26} y1={-20} x2={26} y2={-20} stroke={INK} strokeWidth={5} strokeLinecap="round" />
+          <path d="M -26 -20 l -9 14 a 10 10 0 0 0 18 0 z" fill={SOFT_BLUE} stroke={INK} strokeWidth={4} />
+          <path d="M 26 -20 l -9 14 a 10 10 0 0 0 18 0 z" fill={SOFT_GREEN} stroke={INK} strokeWidth={4} />
+          <path d="M -16 26 h 32" stroke={INK} strokeWidth={6} strokeLinecap="round" />
+        </g>
+      );
+
+    case "chain":
+      return (
+        <g fill="none" strokeLinecap="round">
+          <ellipse cx={-13} cy={0} rx={11} ry={16} stroke={INK} strokeWidth={6} />
+          <ellipse cx={8} cy={-3} rx={11} ry={16} stroke={ACCENT} strokeWidth={6} />
+          <ellipse cx={24} cy={2} rx={11} ry={16} stroke={INK} strokeWidth={6} />
+        </g>
+      );
+
     default:
       return <circle cx={0} cy={0} r={18} fill={ACCENT} stroke={INK} strokeWidth={4} />;
   }

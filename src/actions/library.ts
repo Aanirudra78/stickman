@@ -95,6 +95,30 @@ const FACE = {
   confused: { eyeOpen: 1, browLift: 0.35, browTilt: -1, mouthWidth: 0.85, mouthSmile: -0.2 },
   scared: { eyeOpen: 1.4, browLift: 0.9, browTilt: -0.5, mouthWidth: 0.8, mouthSmile: -0.4 },
   laugh: { eyeOpen: 1, happyEyes: 1, browLift: 0.7, mouthWidth: 1.1, mouthSmile: 1, mouthOpen: 0.8 },
+
+  /* ------------------------------------------------- new face presets --- */
+  /** Half-lidded + heavy brows: about to fall asleep. */
+  sleepy: { eyeOpen: 0.3, happyEyes: 0, browLift: -0.45, browTilt: -0.3, mouthWidth: 0.7, mouthSmile: -0.2, mouthOpen: 0.25, gazeY: 1.2 },
+  /** Chin-up satisfaction, eyes nearly shut from smiling. */
+  proud: { eyeOpen: 0.8, happyEyes: 0.5, browLift: 0.35, browTilt: 0, mouthWidth: 1.1, mouthSmile: 0.9, mouthOpen: 0, gazeY: -0.8 },
+  /** Smirk: one-sided feeling via a wide small smile and lowered brow. */
+  smug: { eyeOpen: 0.65, happyEyes: 0.2, browLift: -0.2, browTilt: 0.4, mouthWidth: 1.05, mouthSmile: 0.7, mouthOpen: 0, gazeX: 1.2 },
+  /** Flat mouth, brows down but level: locked in. */
+  determined: { eyeOpen: 1.05, happyEyes: 0, browLift: -0.5, browTilt: 0.55, mouthWidth: 0.85, mouthSmile: -0.3, mouthOpen: 0, gazeY: -0.6 },
+  /** Half lid + sideways glance: "hmm, really?". */
+  suspicious: { eyeOpen: 0.55, happyEyes: 0, browLift: -0.25, browTilt: -0.35, mouthWidth: 0.8, mouthSmile: -0.25, mouthOpen: 0, gazeX: -2.2 },
+  /** Small everything + eyes glancing away. */
+  shy: { eyeOpen: 0.55, happyEyes: 0.35, browLift: 0.2, browTilt: -0.4, mouthWidth: 0.65, mouthSmile: 0.35, mouthOpen: 0, gazeX: -1.6, gazeY: 0.9 },
+  /** Wide eyes + tiny open mouth: awe / "wow". */
+  awe: { eyeOpen: 1.45, happyEyes: 0, browLift: 0.85, browTilt: 0, mouthWidth: 0.7, mouthSmile: 0.3, mouthOpen: 0.55, gazeY: -1.2 },
+  /** Droopy lids, flat wide mouth. */
+  bored: { eyeOpen: 0.42, happyEyes: 0, browLift: -0.35, browTilt: -0.2, mouthWidth: 0.85, mouthSmile: -0.35, mouthOpen: 0, gazeX: -1.4, gazeY: 0.6 },
+  /** Everything bigger than `laugh`: head-shaking belly laugh. */
+  big_laugh: { eyeOpen: 0.5, happyEyes: 1, browLift: 0.8, browTilt: 0, mouthWidth: 1.3, mouthSmile: 1, mouthOpen: 1, gazeX: 0, gazeY: -1 },
+  /** Sad with heavier tear-ready face: used by the `cry` clip. */
+  tears: { eyeOpen: 0.5, happyEyes: 0, browLift: -0.2, browTilt: -1, mouthWidth: 0.9, mouthSmile: -1, mouthOpen: 0.4, gazeY: 1 },
+  /** Excited beyond happy: mouth open in a wide grin. */
+  excited: { eyeOpen: 1.2, happyEyes: 0.35, browLift: 0.7, browTilt: 0, mouthWidth: 1.3, mouthSmile: 1, mouthOpen: 0.55, gazeY: -0.8 },
 } satisfies Record<string, Partial<FaceParams>>;
 
 export const ACTION_CLIPS: Record<ActionId, ActionClip> = {
@@ -681,8 +705,8 @@ export const ACTION_CLIPS: Record<ActionId, ActionClip> = {
     loop: true,
     duration: 2.6,
     keys: loopClose([
-      K(0, { ...N, spine: 8, headTilt: 22, shoulderL: -30, elbowL: 54, shoulderR: 30, elbowR: -54, eyeOpen: 0.04, browLift: -0.3, mouthSmile: 0.1 } as Partial<JointAngles>, { y: 2 }),
-      K(0.5, { ...N, spine: 9, headTilt: 24, shoulderL: -28, elbowL: 58, shoulderR: 28, elbowR: -58, eyeOpen: 0.03, browLift: -0.35, mouthSmile: 0.1 }, { y: 5 }),
+      K(0, { ...N, spine: 8, headTilt: 22, shoulderL: -30, elbowL: 54, shoulderR: 30, elbowR: -54, ...FACE.sleepy, eyeOpen: 0.04 } as Partial<JointAngles>, { y: 2 }),
+      K(0.5, { ...N, spine: 9, headTilt: 24, shoulderL: -28, elbowL: 58, shoulderR: 28, elbowR: -58, ...FACE.sleepy, eyeOpen: 0.03 }, { y: 5 }),
     ]),
   },
 
@@ -766,8 +790,8 @@ export const ACTION_CLIPS: Record<ActionId, ActionClip> = {
     loop: true,
     duration: 1.2,
     keys: loopClose([
-      K(0, { ...N, spine: 8, headTilt: 10, shoulderL: -44, elbowL: 150, shoulderR: 44, elbowR: -150, eyeOpen: 0.55, browTilt: -1, mouthSmile: -1, mouthOpen: 0.3 } as Partial<JointAngles>, { x: -2 }),
-      K(0.5, { ...N, spine: 10, headTilt: 13, shoulderL: -42, elbowL: 156, shoulderR: 42, elbowR: -156, eyeOpen: 0.45, browTilt: -1, mouthSmile: -1, mouthOpen: 0.5 }, { x: 2 }),
+      K(0, { ...N, spine: 8, headTilt: 10, shoulderL: -44, elbowL: 150, shoulderR: 44, elbowR: -150, ...FACE.tears, eyeOpen: 0.55 } as Partial<JointAngles>, { x: -2 }),
+      K(0.5, { ...N, spine: 10, headTilt: 13, shoulderL: -42, elbowL: 156, shoulderR: 42, elbowR: -156, ...FACE.tears, eyeOpen: 0.45 }, { x: 2 }),
     ]),
   },
 
@@ -776,8 +800,8 @@ export const ACTION_CLIPS: Record<ActionId, ActionClip> = {
     loop: true,
     duration: 1,
     keys: loopClose([
-      K(0, { ...N, spine: -8, headTilt: -12, shoulderL: -46, elbowL: 58, shoulderR: 46, elbowR: -58, ...FACE.laugh }, { y: 0 }),
-      K(0.5, { ...N, spine: -12, headTilt: -16, shoulderL: -44, elbowL: 62, shoulderR: 44, elbowR: -62, ...FACE.laugh }, { y: -6 }),
+      K(0, { ...N, spine: -8, headTilt: -12, shoulderL: -46, elbowL: 58, shoulderR: 46, elbowR: -58, ...FACE.big_laugh }, { y: 0 }),
+      K(0.5, { ...N, spine: -12, headTilt: -16, shoulderL: -44, elbowL: 62, shoulderR: 44, elbowR: -62, ...FACE.big_laugh }, { y: -6 }),
     ]),
   },
 
@@ -845,8 +869,8 @@ export const ACTION_CLIPS: Record<ActionId, ActionClip> = {
     duration: 1,
     keys: [
       K(0, N),
-      K(0.65, { ...N, spine: -6, headTilt: -4, shoulderL: -44, elbowL: 10, shoulderR: 96, elbowR: 150, browLift: 0.7, mouthSmile: 0.9 } as Partial<JointAngles>),
-      K(1, { ...N, spine: -7, headTilt: -5, shoulderL: -44, elbowL: 12, shoulderR: 98, elbowR: 152, browLift: 0.7, mouthSmile: 0.95 }),
+      K(0.65, { ...N, spine: -6, headTilt: -4, shoulderL: -44, elbowL: 10, shoulderR: 96, elbowR: 150, ...FACE.proud } as Partial<JointAngles>),
+      K(1, { ...N, spine: -7, headTilt: -5, shoulderL: -44, elbowL: 12, shoulderR: 98, elbowR: 152, ...FACE.proud }),
     ],
   },
 
@@ -857,7 +881,7 @@ export const ACTION_CLIPS: Record<ActionId, ActionClip> = {
     keys: [
       K(0, N),
       K(0.3, { ...N, spine: -2, headTilt: -2, shoulderL: -34, elbowL: -38, shoulderR: 34, elbowR: 38, browLift: 0.5 }, { y: -6 }),
-      K(0.75, { ...N, spine: 8, headTilt: 10, shoulderL: -5, elbowL: -2, shoulderR: 5, elbowR: 2, browLift: -0.3, mouthSmile: -0.5 }, { y: 4 }),
+      K(0.75, { ...N, spine: 8, headTilt: 10, shoulderL: -5, elbowL: -2, shoulderR: 5, elbowR: 2, ...FACE.bored, mouthSmile: -0.5 }, { y: 4 }),
       K(1, N, { y: 0 }),
     ],
   },

@@ -1,6 +1,11 @@
 const $ = (selector) => document.querySelector(selector);
 
-const POSES = ["idle", "talking", "pointing", "thinking", "surprised", "happy"];
+const POSES = [
+  "idle", "talking", "pointing", "thinking", "surprised", "happy",
+  "sad_slouch", "angry_fists", "confused_scratch", "scared_back", "proud_chest",
+  "excited_bounce", "listening_tilt", "nodding", "tired_sigh", "facepalm",
+  "explaining_up", "counting_fingers", "leaning_back", "victory_arms",
+];
 const WPS = 2.6;
 
 const state = {

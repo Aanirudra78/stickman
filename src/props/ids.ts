@@ -24,6 +24,36 @@ export const PROP_IDS = [
   "magnifier",
   "hammer",
   "food",
+  // rewards
+  "trophy",
+  "medal",
+  "crown",
+  "star",
+  "diamond",
+  "gift",
+  "piggy_bank",
+  // ideas / mind
+  "brain",
+  "heart",
+  "target",
+  "flag",
+  "lightning",
+  // plan / navigation
+  "map",
+  "compass",
+  "key",
+  "bell",
+  "ladder",
+  // life / tech
+  "fire",
+  "plant",
+  "mic",
+  "camera",
+  "globe",
+  "battery",
+  "dice",
+  "scale",
+  "chain",
 ] as const;
 
 export type PropId = (typeof PROP_IDS)[number];

@@ -167,6 +167,36 @@ const PROP_RULES = [
   ["hammer", ["build", "create", "banao", "banaya", "construct", "fix"]],
   ["food", ["food", "khana", "eat", "lunch", "dinner", "breakfast", "recipe", "खाना"]],
   ["tea", ["tea", "chai", "coffee", "cup", "mug", "kettle", "brewing", "चाय"]],
+  // ---- rewards -------------------------------------------------------------
+  ["trophy", ["trophy", "prize", "award", "win", "wins", "won", "winning", "victory", "jeet", "jeeta", "jita", "champion", "जीत"]],
+  ["medal", ["medal", "honour", "honor", "samman", "achieved", "achievement", "topper"]],
+  ["crown", ["king", "raja", "boss", "champion", "number one", "no. 1", "best in", "leader", "raja"]],
+  ["star", ["star", "famous", "celebrity", "rating", "ratings", "5-star", "superstar", "sitara"]],
+  ["diamond", ["diamond", "heera", "precious", "luxury", "rare"]],
+  ["gift", ["gift", "gifts", "bonus", "reward", "tohfa", "inam", "free", "muft"]],
+  ["piggy_bank", ["saving", "savings", "save", "bachat", "bachao", "piggy", "deposit", "jitana", "accumulate"]],
+  // ---- ideas / mind ----------------------------------------------------------
+  ["brain", ["brain", "dimag", "dimaag", "mind", "focus", "concentrate", "concentration", "memory", "yaad", "mental"]],
+  ["heart", ["heart", "dil", "love", "pyaar", "care", "health", "sehat", "happy", "khush", "passion"]],
+  ["target", ["target", "goal", "goals", "lakshya", "aim", "mission", "plan", "maqsad"]],
+  ["flag", ["finish", "milestone", "summit", "peak", "shikhar", "complete", "pura", "jhandam"]],
+  ["lightning", ["fast", "quick", "turant", "speed", "instant", "flash", "electric", "bijli", "energy"]],
+  // ---- plan / navigation ------------------------------------------------------
+  ["map", ["map", "route", "path", "raasta", "rasta", "journey", "safar", "navigate", "directions"]],
+  ["compass", ["compass", "guide", "guidance", "dishaa", "disa", "direction"]],
+  ["key", ["key", "keys", "chaabi", "unlock", "secret", "rahasya", "formula", "sutre"]],
+  ["bell", ["bell", "alarm", "reminder", "notification", "ghanti", "remind", "yaad dilana"]],
+  ["ladder", ["ladder", "step by step", "steps", "climb", "level", "charhna", "progress", "sehi"]],
+  // ---- life / tech ------------------------------------------------------------
+  ["fire", ["fire", "aag", "burn", "hot", "trending", "viral", "dedication", "passion", "josh"]],
+  ["plant", ["plant", "seed", "beej", "sapling", "consistency", "daily", "nurture", "bada"]],
+  ["mic", ["mic", "microphone", "podcast", "sing", "gaana", "stage", "speech", "bhashan"]],
+  ["camera", ["camera", "video", "record", "shoot", "vlog", "photo", "selfie", "content", "reel", "youtube"]],
+  ["globe", ["world", "global", "duniya", "country", "desh", "earth", "international", "countries"]],
+  ["battery", ["battery", "charge", "recharge", "energy", "power", "drained", "exhausted", "tired"]],
+  ["dice", ["dice", "lucky", "luck", "kismat", "chance", "gamble", "satta", "bet", "risk"]],
+  ["scale", ["balance", "compare", "comparison", "tulna", "versus", "vs", "weight", "wazan", "difference"]],
+  ["chain", ["chain", "streak", "connect", "link", "queue", "rassi", "series", "sequence"]],
 ].map(([id, parts]) => ({ id, re: wordRe(parts) }));
 
 export const PROP_IDS = PROP_RULES.map((rule) => rule.id);

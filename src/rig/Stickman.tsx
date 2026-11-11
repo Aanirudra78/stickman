@@ -3,6 +3,7 @@ import { COLORS } from "../config";
 import type { FaceParams, JointAngles } from "../poses/poses";
 import type { PropId } from "../props/ids";
 import { PropShape } from "../props/Props";
+import type { CharacterLook } from "./looks";
 import {
   RIG,
   STICKMAN_HEIGHT,
@@ -67,6 +68,123 @@ export type StickmanProps = {
    * stay on the ground. Defaults to the resting floor line.
    */
   groundY?: number;
+  /** Hair / hat / glasses. Guests get one derived from their name. */
+  look?: CharacterLook;
+};
+
+/**
+ * Hair + hats are drawn as a small overlay group on the head. Head-local
+ * coordinates: the head disc has radius ~37, so hair sits between -37 and -14.
+ * Hats replace hair (drawn over it), glasses sit at eye level.
+ */
+const LookOverlay: React.FC<{ look: CharacterLook }> = ({ look }) => {
+  if (look.hat === "none" && look.hair === "none" && !look.glasses) {
+    return null;
+  }
+
+  const hairPath: Record<CharacterLook["hair"], React.ReactNode> = {
+    none: null,
+    // A filled cap with a fringe dipping onto the forehead.
+    short: (
+      <path
+        d="M -36 -10 Q -36 -38 0 -38 Q 36 -38 36 -10 Q 22 -24 0 -26 Q -22 -24 -36 -10 Z"
+        fill={INK}
+        stroke="none"
+      />
+    ),
+    // Zig-zag spikes bursting from the top.
+    spiky: (
+      <path
+        d="M -32 -14 L -24 -36 L -15 -22 L -4 -40 L 6 -23 L 15 -37 L 24 -21 L 32 -32 L 36 -12 Q 20 -24 0 -25 Q -20 -24 -32 -14 Z"
+        fill={INK}
+        stroke="none"
+      />
+    ),
+    // A dome plus a bun knob at the top-back.
+    bun: (
+      <g>
+        <path
+          d="M -35 -8 Q -35 -36 0 -36 Q 35 -36 35 -8 Q 20 -22 0 -24 Q -20 -22 -35 -8 Z"
+          fill={INK}
+          stroke="none"
+        />
+        <circle cx={0} cy={-44} r={10} fill={INK} />
+      </g>
+    ),
+    // Clouds of curls along the crown.
+    curly: (
+      <g fill={INK}>
+        <circle cx={-26} cy={-24} r={10} />
+        <circle cx={-9} cy={-32} r={11} />
+        <circle cx={9} cy={-32} r={11} />
+        <circle cx={26} cy={-24} r={10} />
+        <path d="M -34 -14 Q -34 -34 0 -34 Q 34 -34 34 -14 Q 18 -22 0 -23 Q -18 -22 -34 -14 Z" />
+      </g>
+    ),
+  };
+
+  return (
+    <g>
+      {hairPath[look.hair]}
+
+      {look.hat === "cap" ? (
+        <g strokeLinejoin="round">
+          <path
+            d="M -34 -12 A 34 34 0 0 1 34 -12 L 34 -8 Q 0 -22 -34 -8 Z"
+            fill={COLORS.accent}
+            stroke={INK}
+            strokeWidth={4.5}
+          />
+          <path
+            d="M 30 -14 L 48 -14 Q 52 -14 52 -10 Q 52 -6 48 -6 L 30 -8 Z"
+            fill={COLORS.accent}
+            stroke={INK}
+            strokeWidth={4.5}
+          />
+          <circle cx={0} cy={-40} r={4.5} fill={INK} />
+        </g>
+      ) : look.hat === "turban" ? (
+        <g strokeLinejoin="round">
+          <path
+            d="M -36 -6 Q -38 -34 0 -44 Q 38 -34 36 -6 Q 18 -16 0 -17 Q -18 -16 -36 -6 Z"
+            fill={COLORS.accent}
+            stroke={INK}
+            strokeWidth={4.5}
+          />
+          <path
+            d="M -34 -18 Q -12 -34 14 -30 M -30 -10 Q -2 -24 30 -16"
+            fill="none"
+            stroke={INK}
+            strokeWidth={3.6}
+            opacity={0.75}
+          />
+        </g>
+      ) : null}
+
+      {look.glasses ? (
+        <g fill="none" strokeLinecap="round">
+          <circle
+            cx={-EYE_X}
+            cy={EYE_Y}
+            r={12}
+            fill={COLORS.accentTint}
+            stroke={INK}
+            strokeWidth={4}
+          />
+          <circle
+            cx={EYE_X}
+            cy={EYE_Y}
+            r={12}
+            fill={COLORS.accentTint}
+            stroke={INK}
+            strokeWidth={4}
+          />
+          <path d={`M ${-EYE_X + 12} ${EYE_Y} h ${2 * (EYE_X - 12)}`} stroke={INK} strokeWidth={4} />
+          <path d="M -29 -6 L -37 -9 M 29 -6 L 37 -9" stroke={INK} strokeWidth={4} />
+        </g>
+      ) : null}
+    </g>
+  );
 };
 
 export const Stickman: React.FC<StickmanProps> = ({
@@ -75,6 +193,7 @@ export const Stickman: React.FC<StickmanProps> = ({
   blink = 1,
   props = [],
   groundY = 158,
+  look,
 }) => {
   const s = solveSkeleton(angles);
 
@@ -230,6 +349,9 @@ export const Stickman: React.FC<StickmanProps> = ({
           <path d="M -24 -4 Q -17 -15 -10 -4" />
           <path d="M 10 -4 Q 17 -15 24 -4" />
         </g>
+
+        {/* Hair / hat / glasses (guests get a look from their name). */}
+        {look ? <LookOverlay look={look} /> : null}
 
         {/* Mouth: smile curve cross-fades into an open ellipse.
             The head is filled white, so the mouth only has to stay inside the
