@@ -140,13 +140,13 @@ jobs:
 
       - name: Visual + audio QA
         id: qa
+        timeout-minutes: 12
         env:
           FROZEN_MOTION: "0.6"
           GUEST_ENTER_MAB: "4"
         run: |
-          if ! command -v ffprobe >/dev/null 2>&1; then
-            sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
-          fi
+          # No system ffmpeg needed: the probe and the audio check both use the
+          # ffmpeg-static binary from node_modules.
           node scripts/build-timings.mjs out/timings.json
 
           probe_exit=0

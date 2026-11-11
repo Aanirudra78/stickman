@@ -5,13 +5,14 @@
  *   node scripts/probe-draft.mjs out/draft.mp4 out/timings.json
  *   FROZEN_MOTION=0.6 GUEST_ENTER_MAB=4 node scripts/probe-draft.mjs ...
  *
- * Uses ffmpeg-static to pull single frames as raw RGB and compares regions.
+ * Uses ffmpeg-static for everything (frames AND the size probe), so CI never
+ * needs a system ffmpeg/ffprobe install.
  * No image viewing involved: everything is mean absolute difference.
  *
  * Exit code 1 when a scene is frozen or a guest fails to appear/leave, and a
  * `--json` flag prints the per-scene summary for CI step summaries.
  */
-import { execFile, execFileSync } from "node:child_process";
+import { execFile } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
@@ -19,49 +20,6 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const ffmpeg = require("ffmpeg-static");
 
-/**
- * ffprobe ships with the Windows-only Remotion compositor; on other platforms
- * fall back to the system one (CI: `sudo apt-get install -y ffmpeg`).
- */
-const resolveFfprobe = () => {
-  const candidates = [];
-  try {
-    const compositorDir = path.dirname(
-      require.resolve("@remotion/compositor-win32-x64-msvc/package.json", { paths: [process.cwd()] }),
-    );
-    for (const name of ["ffprobe.exe", "ffprobe", "fpxd"]) {
-      candidates.push(path.join(compositorDir, name));
-    }
-  } catch {
-    /* not installed */
-  }
-  try {
-    for (const dir of fs.readdirSync(path.join(process.cwd(), "node_modules", "@remotion"))) {
-      if (dir.startsWith("compositor-")) {
-        for (const name of ["ffprobe.exe", "ffprobe", "fpxd"]) {
-          candidates.push(path.join(process.cwd(), "node_modules", "@remotion", dir, name));
-        }
-      }
-    }
-  } catch {
-    /* no @remotion dir */
-  }
-  for (const candidate of candidates) {
-    if (fs.existsSync(candidate)) return candidate;
-  }
-  const onPath = ["ffprobe", "ffprobe.exe"].find((name) => {
-    try {
-      execFileSync(name, ["-version"], { timeout: 5000, stdio: "ignore" });
-      return true;
-    } catch {
-      return false;
-    }
-  });
-  if (onPath) return onPath;
-  return null;
-};
-
-const FFPROBE = resolveFfprobe();
 const FROZEN_MOTION = Number(process.env.FROZEN_MOTION ?? 0.6);
 const GUEST_ENTER_MAB = Number(process.env.GUEST_ENTER_MAB ?? 4);
 const JSON_OUT = process.argv.includes("--json");
@@ -77,33 +35,27 @@ if (!videoArg || !timingArg) {
 const VIDEO = path.resolve(videoArg);
 const TIMINGS = JSON.parse(fs.readFileSync(path.resolve(timingArg), "utf8"));
 
-/** Read the real frame size, so the same probe works on draft and final. */
+/** Read the real frame size, so the same probe works on draft and final.
+ *  `ffmpeg -i` prints stream info (including WxH) to stderr and exits 1 —
+ *  parse it instead of depending on ffprobe being installed. */
 const videoSize = () =>
   new Promise((resolve, reject) => {
-    if (!FFPROBE) {
-      return reject(new Error("no ffprobe (npm ci on this platform or `sudo apt-get install -y ffmpeg`)"));
-    }
     execFile(
-      FFPROBE,
-      [
-        "-v",
-        "error",
-        "-select_streams",
-        "v:0",
-        "-show_entries",
-        "stream=width,height",
-        "-of",
-        "csv=p=0",
-        VIDEO,
-      ],
-      (error, stdout) => {
-        if (error) return reject(error);
-        const [width, height] = String(stdout)
-          .trim()
-          .split(",")
-          .map((value) => Number.parseInt(value, 10));
-        if (!width || !height) return reject(new Error("could not read video size"));
-        resolve({ width, height });
+      ffmpeg,
+      ["-hide_banner", "-i", VIDEO],
+      { encoding: "utf8", maxBuffer: 1024 * 1024 },
+      (_error, _stdout, stderr) => {
+        const matches = [...String(stderr).matchAll(/(\d{2,5})x(\d{2,5})/g)];
+        for (const match of matches) {
+          const width = Number.parseInt(match[1], 10);
+          const height = Number.parseInt(match[2], 10);
+          // Skip codec detail like "h264 profile 578x..." — a real frame is
+          // even-sized and at least ~64px.
+          if (width >= 64 && height >= 64 && width % 2 === 0 && height % 2 === 0) {
+            return resolve({ width, height });
+          }
+        }
+        reject(new Error("could not read video size from ffmpeg -i"));
       },
     );
   });
