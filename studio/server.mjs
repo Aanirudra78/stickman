@@ -563,8 +563,273 @@ const authorized = (req) => {
   return parseCookies(req.headers.cookie).studio_pin === PIN;
 };
 
-const getElevenInfo = async ({ force = false } = {}) => {
-  if (!settings.apiKey) return { ok: false, error: "no_api_key" };
+/* ------------------------------------------------- scene overrides (API) --- */
+
+const SCRIPT_JSON_PATH = path.join(ROOT, "public", "script.json");
+const MANIFEST_JSON_PATH = path.join(ROOT, "src", "voice", "manifest.json");
+const VOICE_DIR = path.join(ROOT, "public", "voice");
+/** Same target as scripts/generate-voiceover.mjs, so regen stays cache-true. */
+const TARGET_PEAK_DBFS = -3;
+const MAX_GAIN_DB = 12;
+
+const readCommittedScript = async () => {
+  const script = JSON.parse(await fs.readFile(SCRIPT_JSON_PATH, "utf8"));
+  if (!Array.isArray(script.scenes)) throw new Error("public/script.json has no scenes");
+  return script;
+};
+
+/** Same-folder tmp + rename, so a crashed write never loses script.json. */
+const writeCommittedScript = async (script) => {
+  const tmp = `${SCRIPT_JSON_PATH}.tmp`;
+  await fs.writeFile(tmp, `${JSON.stringify(script, null, 2)}\n`);
+  await fs.rename(tmp, SCRIPT_JSON_PATH);
+};
+
+/** Fallback lip-sync timings when a provider returns audio without words. */
+const estimateWords = (text, duration) => {
+  const tokens = text.split(/\s+/).filter(Boolean);
+  if (tokens.length === 0 || !duration) return [];
+  const step = duration / tokens.length;
+  return tokens.map((token, index) => ({
+    text: token,
+    start: Math.round(index * step * 1000) / 1000,
+    end: Math.round((index + 1) * step * 0.92 * 1000) / 1000,
+  }));
+};
+
+let regenBusy = false;
+
+const handleScenePatch = async (req, res, url) => {
+  const sceneMatch = url.pathname.match(/^\/api\/scene\/(\d+)$/);
+  if (!sceneMatch) return false;
+
+  const index = Number(sceneMatch[1]);
+  const script = await readCommittedScript();
+  const scene = script.scenes[index];
+  if (!scene) return json(res, 404, { error: `scene ${index + 1} not found` });
+
+  if (req.method === "GET") {
+    return json(res, 200, { ok: true, index, scene });
+  }
+
+  if (req.method !== "PATCH") {
+    return json(res, 405, { error: "method not allowed" });
+  }
+
+  const shared = await import("../shared/detect.mjs");
+  const body = JSON.parse((await readBody(req)) || "{}");
+
+  // --- captions -----------------------------------------------------------
+  if (body.text !== undefined) {
+    const text = String(body.text).replace(/\r/g, "").trim();
+    if (!text) return json(res, 400, { error: "caption text cannot be empty" });
+    scene.text = text;
+  }
+  if (body.voiceover !== undefined) {
+    const voiceover = String(body.voiceover).replace(/\r/g, "").trim();
+    if (!voiceover) return json(res, 400, { error: "voiceover cannot be empty" });
+    scene.voiceover = voiceover;
+  }
+
+  const wordCount = String(scene.voiceover).split(/\s+/).filter(Boolean).length;
+
+  // --- primary action + its word ------------------------------------------
+  if (body.action !== undefined || body.word !== undefined) {
+    const actionId = body.action !== undefined ? String(body.action).trim() : scene.actions?.[0]?.id;
+    if (!shared.ACTION_IDS.includes(actionId)) {
+      return json(res, 400, { error: `unknown action "${actionId}"` });
+    }
+    const rawWord = body.word !== undefined ? Number(body.word) : scene.actions?.[0]?.word ?? 1;
+    const word = Math.max(0, Math.min(Math.floor(rawWord || 0), Math.max(0, wordCount - 1)));
+    // `at` is only the pre-audio estimate: the resolution prefers the word's
+    // real timestamp from the voice manifest when one exists.
+    const beat = {
+      id: actionId,
+      word,
+      at: Math.round(Math.min(2.4, word / shared.WPS) * 10) / 10,
+    };
+    if (!Array.isArray(scene.actions) || scene.actions.length === 0) {
+      scene.actions = [beat];
+    } else {
+      scene.actions[0] = beat;
+    }
+  }
+
+  // --- props up to two slots ----------------------------------------------
+  if (body.prop !== undefined || body.prop2 !== undefined) {
+    const slots = [...(scene.props ?? []), null, null].slice(0, 2);
+    for (const [field, slot] of [
+      ["prop", 0],
+      ["prop2", 1],
+    ]) {
+      if (body[field] === undefined) continue;
+      const value = String(body[field]).trim();
+      if (!value) {
+        slots[slot] = null;
+        continue;
+      }
+      if (!shared.PROP_IDS.includes(value)) {
+        return json(res, 400, { error: `unknown prop "${value}"` });
+      }
+      slots[slot] = value;
+    }
+    scene.props = slots.filter(Boolean);
+  }
+
+  // --- guest cameo ---------------------------------------------------------
+  if (body.guest !== undefined) {
+    const name = String(body.guest).trim();
+    if (name === "") {
+      delete scene.guest;
+    } else {
+      const word = shared.guestWordIndex(scene.voiceover, name);
+      scene.guest = {
+        name,
+        word: Math.max(0, word),
+        at: 0.2,
+        enter: "walk",
+      };
+    }
+  }
+
+  await writeCommittedScript(script);
+  log(`scene ${index + 1} overridden`);
+  return json(res, 200, { ok: true, index, scene });
+};
+
+const handleSceneVoiceRegen = async (req, res, url) => {
+  const match = url.pathname.match(/^\/api\/scene\/(\d+)\/regen-voice$/);
+  if (!match || req.method !== "POST") return false;
+
+  if (regenBusy) return json(res, 429, { error: "another line is being generated, try again in a bit" });
+  const index = Number(match[1]);
+  const script = await readCommittedScript();
+  const scene = script.scenes[index];
+  if (!scene) return json(res, 404, { error: `scene ${index + 1} not found` });
+
+  const text = String(scene.voiceover ?? scene.text ?? "").trim();
+  if (!text) return json(res, 400, { error: "scene has no voiceover to generate" });
+  if (script.voice && script.voice !== settings.voice && script.tts?.provider === "elevenlabs" && !settings.apiKey) {
+    return json(res, 400, { error: "ElevenLabs key missing in Settings" });
+  }
+
+  regenBusy = true;
+  try {
+    const { createProvider } = await import("../scripts/tts/index.mjs");
+    const { HEAVY_CHAIN, processClip } = await import("../scripts/audio.mjs");
+    const { createHash } = await import("node:crypto");
+
+    const ttsConfig = script.tts ?? {};
+    const provider = createProvider({
+      provider: ttsConfig.provider,
+      voice: ttsConfig.voice ?? script.voice,
+      model: ttsConfig.model,
+      voiceSettings: ttsConfig.voiceSettings,
+      heavy: ttsConfig.heavy,
+      rate: ttsConfig.rate,
+    });
+    const chain = provider.heavy ? HEAVY_CHAIN : "";
+    const file = path.join(VOICE_DIR, `scene-${String(index + 1).padStart(2, "0")}.mp3`);
+    await fs.mkdir(VOICE_DIR, { recursive: true });
+
+    const hash = createHash("sha1")
+      .update(
+        `${provider.cacheKey}|${chain}|${TARGET_PEAK_DBFS}|${provider.sampleRate}|${provider.bitrate}|${text}`,
+      )
+      .digest("hex")
+      .slice(0, 12);
+
+    const manifestCurrent = await fs
+      .readFile(MANIFEST_JSON_PATH, "utf8")
+      .then((raw) => JSON.parse(raw))
+      .catch(() => null);
+    const cachedEntry = manifestCurrent?.scenes?.find((entry) => entry.index === index);
+    const onDisk = await fs
+      .stat(file)
+      .then((stat) => stat.size)
+      .catch(() => 0);
+
+    // Same text, voice and settings as the committed audio: pay no credits and
+    // stream the file that already exists.
+    if (cachedEntry?.hash === hash && cachedEntry.text === text && onDisk > 0) {
+      log(`scene ${index + 1} regen: cache hit, streaming existing audio`);
+      res.writeHead(200, {
+        "content-type": "audio/mpeg",
+        "content-length": onDisk,
+        "x-cached": "1",
+      });
+      res.end(await fs.readFile(file));
+      return;
+    }
+
+    const result = await provider.synthesize(text);
+    await fs.writeFile(file, result.audio);
+    const processing = await processClip(file, {
+      targetPeakDbfs: TARGET_PEAK_DBFS,
+      maxGainDb: MAX_GAIN_DB,
+      chain,
+      sampleRate: provider.sampleRate,
+      bitrate: provider.bitrate,
+    });
+    const measured = await probeDuration(file);
+    const duration = measured ?? (result.duration > 0 ? result.duration : 0);
+
+    let words = result.words ?? [];
+    if (words.length > 0 && words[0].start > 0.4) {
+      const shift = words[0].start - 0.08;
+      words = words.map((word) => ({
+        ...word,
+        start: Math.max(0, Math.round((word.start - shift) * 1000) / 1000),
+        end: Math.max(0.02, Math.round((word.end - shift) * 1000) / 1000),
+      }));
+    }
+    if (words.length === 0) words = estimateWords(text, duration);
+
+    const current = await fs
+      .readFile(MANIFEST_JSON_PATH, "utf8")
+      .then((raw) => JSON.parse(raw))
+      .catch(() => null);
+    if (Array.isArray(current?.scenes)) {
+      const lastWordEnd = words[words.length - 1]?.end ?? 0;
+      const entry = {
+        index,
+        file: `voice/${path.basename(file)}`,
+        text,
+        hash,
+        durationInSeconds: duration || lastWordEnd + 0.15,
+        peakDbfs: processing.peakDbfs,
+        gainDb: processing.gainDb,
+        words,
+      };
+      current.scenes = current.scenes.filter((s) => s.index !== index);
+      current.scenes.push(entry);
+      current.scenes.sort((a, b) => a.index - b.index);
+      if (current.generatedAt) current.generatedAt = new Date().toISOString();
+      current.totalSeconds = current.scenes.reduce(
+        (sum, entry) => sum + (entry.durationInSeconds ?? 0),
+        0,
+      );
+      await fs.writeFile(MANIFEST_JSON_PATH, `${JSON.stringify(current, null, 2)}\n`);
+    } else {
+      log("no voice manifest found - audio written but not indexed");
+    }
+
+    log(`scene ${index + 1} voice regenerated (${provider.name}, ${duration?.toFixed?.(2) ?? "?"}s)`);
+    res.writeHead(200, {
+      "content-type": "audio/mpeg",
+      "content-length": result.audio.length,
+      "x-duration-seconds": String(duration ?? 0),
+    });
+    return res.end(result.audio);
+  } catch (error) {
+    log("voice regen failed", error?.message ?? error);
+    return json(res, 500, { error: error?.message ?? "voice generation failed" });
+  } finally {
+    regenBusy = false;
+  }
+};
+
+const getElevenInfo = async ({ force = false } = {}) => {  if (!settings.apiKey) return { ok: false, error: "no_api_key" };
   if (!force && elevenCache.at && Date.now() - elevenCache.at < 90_000) return elevenCache.data;
   try {
     const { getSubscription, listVoices } = await import("../scripts/tts/elevenlabs.mjs");
@@ -829,8 +1094,40 @@ const handleApi = async (req, res, url) => {
     }
   }
 
-  if (route === "/api/voice-test" && req.method === "POST") {
-    const body = JSON.parse((await readBody(req)) || "{}");
+  if (route === "/api/scenes") {
+    // The committed script plus the catalogs the override UI fills dropdowns
+    // from. Voice entries tell the UI which lines already have audio.
+    const script = await readCommittedScript();
+    const shared = await import("../shared/detect.mjs");
+    const manifest = await fs
+      .readFile(MANIFEST_JSON_PATH, "utf8")
+      .then((raw) => JSON.parse(raw))
+      .catch(() => null);
+    const voices = {};
+    for (const entry of manifest?.scenes ?? []) {
+      voices[entry.index] = {
+        durationInSeconds: entry.durationInSeconds,
+        hash: entry.hash,
+        words: entry.words?.length ?? 0,
+      };
+    }
+    return json(res, 200, {
+      title: script.title,
+      tts: script.tts ?? null,
+      voice: script.voice ?? null,
+      scenes: script.scenes,
+      actionIds: shared.ACTION_IDS,
+      propIds: shared.PROP_IDS,
+      voices,
+    });
+  }
+
+  const scenePatched = await handleScenePatch(req, res, url);
+  if (scenePatched !== false) return scenePatched;
+  const voiceRegen = await handleSceneVoiceRegen(req, res, url);
+  if (voiceRegen !== false) return voiceRegen;
+
+  if (route === "/api/voice-test" && req.method === "POST") {    const body = JSON.parse((await readBody(req)) || "{}");
     const text = String(body.text ?? "").trim().slice(0, 220);
     if (!text) return json(res, 400, { error: "text required" });
     if (!settings.apiKey) return json(res, 400, { error: "ElevenLabs key missing" });

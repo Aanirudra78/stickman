@@ -835,6 +835,157 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/sw.js").catch(() => {});
 }
 
+/* ------------------------------------------------------ scene overrides --- */
+
+const overridesState = {
+  loaded: false,
+  busy: false,
+  data: null, // GET /api/scenes response
+};
+
+const overrideRow = (scene, index) => {
+  const catalog = overridesState.data;
+  const voice = catalog.voices[index];
+  const action = scene.actions?.[0];
+  const propOptions = (selected) =>
+    `<option value=""${selected ? "" : " selected"}>(no prop)</option>` +
+    catalog.propIds
+      .map(
+        (id) => `<option value="${escapeAttr(id)}"${selected === id ? " selected" : ""}>${escapeHtml(id)}</option>`,
+      )
+      .join("");
+  const actionOptions =
+    '<option value="">(hold only)</option>' +
+    catalog.actionIds
+      .map(
+        (id) => `<option value="${escapeAttr(id)}"${action?.id === id ? " selected" : ""}>${escapeHtml(id)}</option>`,
+      )
+      .join("");
+
+  return `
+  <div class="override-row" data-index="${index}">
+    <span class="ov-index">${index + 1}</span>
+    <div class="ov-main">
+      <label class="ov-label"><span>Script pe caption</span>
+        <input data-apply="text" value="${escapeAttr(scene.text)}" />
+      </label>
+      <label class="ov-label"><span>Narration (bolne wali line)</span>
+        <textarea data-apply="voiceover" rows="1">${escapeHtml(scene.voiceover)}</textarea>
+      </label>
+    </div>
+    <div class="ov-acts">
+      <label class="ov-label"><span>Action</span>
+        <select data-apply="action">${actionOptions}</select>
+      </label>
+      <label class="ov-label"><span>Word #</span>
+        <input data-apply="word" type="number" min="0" step="1" value="${action?.word ?? 1}" />
+      </label>
+      <label class="ov-label"><span>Prop</span>
+        <select data-apply="prop">${propOptions(scene.props?.[0])}</select>
+      </label>
+      <label class="ov-label"><span>2nd prop</span>
+        <select data-apply="prop2">${propOptions(scene.props?.[1])}</select>
+      </label>
+      <label class="ov-label"><span>Guest</span>
+        <input data-apply="guest" placeholder="(no guest)" value="${escapeAttr(scene.guest?.name ?? "")}" />
+      </label>
+    </div>
+    <div class="ov-side">
+      <button type="button" class="ghost tiny" data-ov="regen" title="Generate this line's voice and play it">♪ <span>${escapeHtml(voice ? `${voice.durationInSeconds?.toFixed?.(1) ?? "?"}s` : "gen + play")}</span></button>
+    </div>
+  </div>`;
+};
+
+const renderOverrides = () => {
+  const catalog = overridesState.data;
+  $("#overrides").innerHTML = catalog.scenes
+    .map((scene, index) => overrideRow(scene, index))
+    .join("");
+  $("#overrides-summary").textContent = `${catalog.scenes.length} scenes · voice: ${catalog.tts?.voice ?? catalog.voice ?? "?"}`;
+};
+
+const loadOverrides = async () => {
+  try {
+    overridesState.data = await api("/api/scenes");
+    overridesState.loaded = true;
+    $("#overrides-card").hidden = false;
+    renderOverrides();
+  } catch (error) {
+    toast(`Overrides load failed: ${error.message}`, true);
+  }
+};
+
+$("#overrides-btn").addEventListener("click", () => {
+  if (!overridesState.loaded) loadOverrides();
+  $("#overrides-card").hidden = !overridesState.loaded;
+  if (overridesState.loaded) {
+    $("#overrides-card").scrollIntoView({ behavior: "smooth" });
+  }
+});
+
+$("#overrides-refresh").addEventListener("click", async () => {
+  if (overridesState.busy) return;
+  await loadOverrides();
+});
+
+$("#overrides").addEventListener("change", async (event) => {
+  const field = event.target.dataset.apply;
+  if (!field) return;
+  const row = event.target.closest(".override-row");
+  const index = Number(row.dataset.index);
+  const patch = {};
+  if (field === "action" || field === "prop" || field === "prop2" || field === "guest") {
+    patch[field] = event.target.value;
+  } else if (field === "word") {
+    patch.word = Number(event.target.value) || 0;
+  } else if (field === "text" || field === "voiceover") {
+    patch[field] = event.target.value;
+  }
+  try {
+    const result = await api(`/api/scene/${index}`, { method: "PATCH", body: JSON.stringify(patch) });
+    // Re-render just this row's data (the server normalises word/at/guest).
+    overridesState.data.scenes[index] = result.scene;
+    row.outerHTML = overrideRow(result.scene, index);
+    toast(`Scene ${index + 1} saved`, false);
+  } catch (error) {
+    toast(`Save failed: ${error.message}`, true);
+    loadOverrides();
+  }
+});
+
+$("#overrides").addEventListener("click", async (event) => {
+  const button = event.target.closest("button[data-ov='regen']");
+  if (!button) return;
+  if (overridesState.busy) {
+    toast("Ek line pehle generate ho rahi hai...", true);
+    return;
+  }
+  const row = button.closest(".override-row");
+  const index = Number(row.dataset.index);
+  overridesState.busy = true;
+  button.disabled = true;
+  button.textContent = "…generating";
+  try {
+    const response = await fetch(`/api/scene/${index}/regen-voice`, { method: "POST" });
+    if (!response.ok) {
+      const payload = await response.json().catch(() => null);
+      throw new Error(payload?.error ?? `HTTP ${response.status}`);
+    }
+    const blob = await response.blob();
+    const audioPlayer = new Audio(URL.createObjectURL(blob));
+    await audioPlayer.play().catch(() => {});
+    const refreshed = await api("/api/scenes");
+    overridesState.data = refreshed;
+    row.outerHTML = overrideRow(refreshed.scenes[index], index);
+    toast(`Scene ${index + 1} voice regenerated`);
+  } catch (error) {
+    toast(`Regen failed: ${error.message}`, true);
+  } finally {
+    overridesState.busy = false;
+    button.disabled = false;
+  }
+});
+
 /* --------------------------------------------------------------- bootup --- */
 
 const boot = async () => {

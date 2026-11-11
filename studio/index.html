@@ -34,6 +34,7 @@
         <span id="state-chip" class="chip"><i class="dot"></i><span id="state-text">connecting</span></span>
         <button id="install-btn" class="icon-btn" hidden title="Install app">⤓</button>
         <button id="settings-btn" class="icon-btn" title="Settings">⚙</button>
+        <button id="overrides-btn" class="icon-btn" title="Committed script overrides">✎</button>
       </div>
     </header>
 
@@ -78,6 +79,18 @@ Tiny start, big results."
         </div>
         <div id="scenes" class="scenes"></div>
         <button id="add-scene" class="ghost small">+ Add scene</button>
+      </section>
+
+      <section class="card" id="overrides-card" hidden>
+        <div class="card-head">
+          <h2><span class="step-num">✎</span> Committed script overrides</h2>
+          <span id="overrides-summary" class="muted"></span>
+        </div>
+        <p class="hint">
+          Yeh <code>public/script.json</code> ke scenes hain — cloud render bina script paste kiye chalé toh yahin ka script + voice use hota hai. Dropdown badalte hi <b>save (PATCH)</b> ho jata hai; <b>♪</b> usi line ko dubara generate karta hai ( ElevenLabs credits ek line ke), phir turant bajata hai. Main render wali script paste flow se juda hai.
+        </p>
+        <div id="overrides" class="overrides"></div>
+        <button id="overrides-refresh" class="ghost small">↻ Refresh</button>
       </section>
 
       <section class="card" id="render-card" hidden>
