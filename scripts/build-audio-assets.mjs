@@ -1,9 +1,11 @@
 /**
- * Builds the royalty-free audio assets the picture would otherwise download:
- * four short UI-style SFX and a warm pad that sits under the narration.
+ * Builds the royalty-free audio assets: a warm pad that sits under the
+ * narration, plus synthesized FALLBACKS for the SFX.
  *
- * Everything is synthesized with ffmpeg-static, so there is no download, no
- * licence and no mismatch between local runs and CI.
+ * Since Phase 2 the SFX actually used by the film are real CC0 recordings
+ * from kenney.nl (see LICENSES.md) - this script only fills any file that is
+ * MISSING (fresh checkout safety net), it never overwrites committed assets
+ * unless --force.
  *
  *   node scripts/build-audio-assets.mjs        # fills public/sfx + public/music
  *   --force                                     # overwrite existing files
@@ -56,6 +58,10 @@ const SFX = [
   { file: "coin.wav", seconds: 0.36, coin: true },
   // Tiny clock tick: hard attack, 40 ms tail.
   { file: "tick.wav", seconds: 0.10, expr: "0.34*sin(2*PI*2200*t)*exp(-60*t)+0.18*sin(2*PI*1400*t)*exp(-42*t)" },
+  // Fallbacks for the Phase 2 CC0 clips (real ones are committed): a soft
+  // arrival chime and a low landing thump.
+  { file: "ding.wav", seconds: 0.30, expr: "0.30*sin(2*PI*1318*t)*exp(-14*t)+0.18*sin(2*PI*1760*t)*exp(-9*t)" },
+  { file: "thud.wav", seconds: 0.50, expr: "0.55*sin(2*PI*(70+36*t)*t)*exp(-9*t)" },
 ];
 
 const DING_1 = "0.40*sin(2*PI*1250*t)*exp(-20*t)";

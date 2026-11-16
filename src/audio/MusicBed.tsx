@@ -3,12 +3,14 @@ import { Audio, staticFile, useVideoConfig } from "remotion";
 import type { SceneWindow } from "../timeline/timeline";
 
 /**
- * Warm pad that sits under the narration for the whole video. It ducks during
- * every scene window (computed right here from the timeline, no plan file) and
- * swells back up in the gaps, so the voice always wins.
+ * Warm music bed under the narration. It ducks during every scene window
+ * (computed right here from the timeline, no plan file) and swells back up
+ * in the gaps, so the voice always wins.
  *
- * The bed itself is a seamless 16s loop synthesized in
- * scripts/build-audio-assets.mjs - royalty-free by construction.
+ * The bed is a real CC0 recording since Phase 2: a 55s excerpt of
+ * "Calm Piano 1 (Vaporware)" (opengameart.org, CC0), normalized to sit under
+ * the voice. Synthesized pad backup lives in out/cc0/bed-synth-backup.mp3.
+ * The `loop` prop only matters for scripts longer than the excerpt.
  */
 
 /** Fade in/out around each scene window, in seconds. */
