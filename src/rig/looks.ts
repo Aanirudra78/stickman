@@ -1,16 +1,21 @@
 /**
- * Character looks: hair, hats and glasses drawn on the head by `Stickman`.
+ * Character looks: hair, hats, glasses AND clothing colour drawn on the
+ * character by `Stickman`.
  *
- * The main character stays clean (he is the brand), but every guest gets a
+ * The main character keeps his brand shirt, but every guest gets a
  * deterministic look derived from their name, so "Meera" always arrives with
- * the same bun and "Rahul" with the same cap - they read as different people
- * instead of clones of the hero.
+ * the same bun and blue shirt and "Rahul" with the same cap - they read as
+ * different people instead of clones of the hero.
  */
+
+import { SHIRT_COLORS } from "./Stickman";
 
 export type CharacterLook = {
   hair: "none" | "short" | "spiky" | "bun" | "curly";
   hat: "none" | "cap" | "turban";
   glasses: boolean;
+  /** Filled-shirt colour - part of the look so a guest never changes clothes. */
+  shirt: string;
 };
 
 const HAIRS: readonly CharacterLook["hair"][] = [
@@ -40,5 +45,6 @@ export const lookForName = (name: string): CharacterLook => {
     hair: HAIRS[hash % HAIRS.length],
     hat: hash % 5 === 0 ? "turban" : hash % 7 === 1 ? "cap" : "none",
     glasses: hash % 3 === 0,
+    shirt: SHIRT_COLORS[hash % SHIRT_COLORS.length],
   };
 };

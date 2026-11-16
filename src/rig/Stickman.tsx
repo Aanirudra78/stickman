@@ -27,6 +27,14 @@ const INK = COLORS.ink;
 const HAND_RADIUS = 10.5;
 /** Shoes are a chunkier pass over the last leg segment. */
 const SHOE_STROKE = STROKE + 7;
+/** Guest shirt palette - picked deterministically from the name. */
+export const SHIRT_COLORS = [
+  "#2563EB",
+  "#15803D",
+  "#DC2626",
+  "#7C3AED",
+  "#0D9488",
+] as const;
 
 /**
  * Face sizing. The character is often scaled down, so the features are drawn
@@ -70,6 +78,8 @@ export type StickmanProps = {
   groundY?: number;
   /** Hair / hat / glasses. Guests get one derived from their name. */
   look?: CharacterLook;
+  /** Filled-body clothing. Given = filled character; omitted = pure ink figure. */
+  clothes?: { shirt: string; shorts: string };
 };
 
 /**
@@ -194,6 +204,7 @@ export const Stickman: React.FC<StickmanProps> = ({
   props = [],
   groundY = 158,
   look,
+  clothes,
 }) => {
   const s = solveSkeleton(angles);
 
@@ -252,15 +263,120 @@ export const Stickman: React.FC<StickmanProps> = ({
           y2={s.footR.y}
           strokeWidth={SHOE_STROKE}
         />
+      </g>
 
-        {/* Torso */}
-        <line
-          x1={s.hip.x}
-          y1={s.hip.y}
-          x2={s.neck.x}
-          y2={s.neck.y}
-          strokeWidth={STROKE + 2}
-        />
+      {/* Filled clothing: shirt spans the shoulders/hips quad (so it tilts with
+          the spine), shorts sit on the pelvis. Drawn UNDER the arms so the
+          limbs stay ink and the body reads as dressed. The quad is widened
+          perpendicular to the spine, otherwise it reads as a stripe. */}
+      {clothes ? (() => {
+        const shoulderMidX = (s.shoulderL.x + s.shoulderR.x) / 2;
+        const shoulderMidY = (s.shoulderL.y + s.shoulderR.y) / 2;
+        const hipMidX = (s.hipL.x + s.hipR.x) / 2;
+        const hipMidY = (s.hipL.y + s.hipR.y) / 2;
+        const axisX = hipMidX - shoulderMidX;
+        const axisY = hipMidY - shoulderMidY;
+        const axisLen = Math.hypot(axisX, axisY) || 1;
+        // Expand each corner directly AWAY from the spine axis, so the quad
+        // widens symmetrically no matter how the skeleton is posed.
+        const wide = (point: { x: number; y: number }, amount: number) => {
+          const along = (point.x - shoulderMidX) * axisX + (point.y - shoulderMidY) * axisY;
+          const projX = shoulderMidX + (axisX / axisLen) * along;
+          const projY = shoulderMidY + (axisY / axisLen) * along;
+          let dirX = point.x - projX;
+          let dirY = point.y - projY;
+          const dirLen = Math.hypot(dirX, dirY);
+          if (dirLen < 0.001) {
+            // Degenerate (point on the spine): fall back to the spine normal.
+            dirX = axisY / axisLen;
+            dirY = -axisX / axisLen;
+          } else {
+            dirX /= dirLen;
+            dirY /= dirLen;
+          }
+          return { x: point.x + dirX * amount, y: point.y + dirY * amount };
+        };
+        const shoulderLw = wide(s.shoulderL, 34);
+        const shoulderRw = wide(s.shoulderR, 34);
+        const hipLw = wide(s.hipL, 20);
+        const hipRw = wide(s.hipR, 20);
+        return (
+        <g
+          fill="none"
+          stroke={INK}
+          strokeWidth={5}
+          strokeLinejoin="round"
+        >
+          <path
+            d={`
+              M ${shoulderLw.x} ${shoulderLw.y}
+              L ${shoulderRw.x} ${shoulderRw.y}
+              L ${hipRw.x} ${hipRw.y}
+              L ${hipLw.x} ${hipLw.y}
+              Z
+            `}
+            fill={clothes.shirt}
+          />
+          <path
+            d={`
+              M ${hipLw.x} ${hipLw.y}
+              L ${hipRw.x} ${hipRw.y}
+              L ${hipRw.x} ${hipRw.y + 58}
+              L ${hipLw.x} ${hipLw.y + 58}
+              Z
+            `}
+            fill={clothes.shorts}
+          />
+          {/* Sleeves: a shirt-coloured band around each upper arm, so the
+              arms read as emerging from the shirt instead of cutting it. */}
+          <g strokeLinecap="round">
+            <line
+              x1={s.shoulderL.x}
+              y1={s.shoulderL.y}
+              x2={s.elbowL.x}
+              y2={s.elbowL.y}
+              stroke={clothes.shirt}
+              strokeWidth={STROKE + 9}
+            />
+            <line
+              x1={s.shoulderR.x}
+              y1={s.shoulderR.y}
+              x2={s.elbowR.x}
+              y2={s.elbowR.y}
+              stroke={clothes.shirt}
+              strokeWidth={STROKE + 9}
+            />
+          </g>
+        </g>
+        );
+      })() : null}
+
+      <g
+        fill="none"
+        stroke={INK}
+        strokeWidth={STROKE}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* Torso: with clothes the shirt covers it, so a thin neck stub is
+            enough - a full-stroke line swallows the shirt colour. */}
+        {clothes ? (
+          <line
+            x1={(s.shoulderL.x + s.shoulderR.x) / 2}
+            y1={(s.shoulderL.y + s.shoulderR.y) / 2}
+            x2={s.neck.x}
+            y2={s.neck.y}
+            strokeWidth={10}
+          />
+        ) : (
+          <line
+            x1={s.hip.x}
+            y1={s.hip.y}
+            x2={s.neck.x}
+            y2={s.neck.y}
+            strokeWidth={STROKE + 2}
+          />
+        )}
 
         {/* Arms */}
         <polyline points={toPolyline([s.shoulderL, s.elbowL, s.handL])} />

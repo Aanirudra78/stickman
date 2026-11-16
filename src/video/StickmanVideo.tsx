@@ -62,6 +62,7 @@ import {
   isWordActiveAt,
 } from "../voice/voiceover";
 import { Background } from "./Background";
+import { pickEnvironment, withAlpha, ENV_PALETTES, type EnvId } from "./environments";
 import { Overlays } from "./Overlays";
 import { PoseFx } from "./PoseFx";
 
@@ -214,6 +215,8 @@ const GuestCameo: React.FC<GuestState> = ({
     entranceWeight,
   );
 
+  const guestLook = lookForName(guest.name);
+
   const scale = GUEST_SPOT.scale * scaleMul;
 
   // Walk: quick fade at the start of the walk-in and at the very end of the
@@ -251,7 +254,8 @@ const GuestCameo: React.FC<GuestState> = ({
           angles={guestActed.angles}
           face={guestActed.face}
           blink={getEyeOpenness(frame + 23, fps)}
-          look={lookForName(guest.name)}
+          look={guestLook}
+          clothes={{ shirt: guestLook.shirt, shorts: COLORS.ink }}
         />
 
         {/* Name tag: just the name, as requested. */}
@@ -324,6 +328,19 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
   const window = windows[sceneIndex];
   const localSeconds = Math.max(0, (frame - window.start) / fps);
 
+  // ---- Environment -------------------------------------------------------
+  // Each scene plays somewhere: the world is picked from the scene's own
+  // words (memo-stable, deterministic), and cross-fades on scene changes.
+  const environments = useMemo(() => {
+    const list: EnvId[] = [];
+    script.scenes.forEach((entry, index) => {
+      list.push(pickEnvironment(entry.text, entry.items, index, list[index - 1]));
+    });
+    return list;
+  }, [script.scenes]);
+  const environment = environments[sceneIndex];
+  const previousEnvironment = environments[Math.max(0, sceneIndex - 1)];
+
   // ---- Pose ------------------------------------------------------------
   const activePose = getActivePose(poseKeyframes, frame);
   const poseBlend = getPoseBlend(
@@ -380,7 +397,13 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
   const motionAngles: JointAngles = {
     ...acted.angles,
     spine: acted.angles.spine + sway * 0.6 + weight * 0.35,
-    headTilt: acted.angles.headTilt - sway * 0.35 + (speaking ? lilt * 1.1 : 0),
+    // Head-lag follow-through: the head keeps tilting a beat after the pose
+    // change peaks, then settles - classic secondary-action overshoot.
+    headTilt:
+      acted.angles.headTilt -
+      sway * 0.35 +
+      (speaking ? lilt * 1.1 : 0) +
+      follow * 2.4,
     shoulderL:
       acted.angles.shoulderL -
       (speaking ? lilt * 0.8 : 0) * gestureWeight +
@@ -529,6 +552,27 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
       ? clamp01((action.elapsed - 0.78) / 0.4)
       : 0;
 
+  // ---- Camera impact shake ------------------------------------------------
+  // A short, decaying jolt of the WORLD + CHARACTER when a big action lands,
+  // plus a soft bump on every scene cut. Captions deliberately stay still:
+  // the bump reads as a camera, not an edit. Deterministic (frame-driven).
+  const impactHitAt =
+    action?.id === "jump" ? 0.78 : action?.id === "dash" ? 0.12 : undefined;
+  let shakeAmp = 0;
+  if (action && impactHitAt !== undefined) {
+    const since = action.elapsed - impactHitAt;
+    if (since >= 0 && since < 0.38) shakeAmp = (1 - since / 0.38) * 6.5;
+  }
+  const sceneLocal = frame - window.start;
+  const cutBump = sceneLocal < 10 ? (1 - sceneLocal / 10) * 2.2 : 0;
+  const shakeAmpTotal = shakeAmp + cutBump;
+  const shakeX =
+    shakeAmpTotal === 0 ? 0 : Math.sin(frame * 2.6) * shakeAmpTotal;
+  const shakeY =
+    shakeAmpTotal === 0
+      ? 0
+      : Math.abs(Math.cos(frame * 2.1)) * shakeAmpTotal * 0.55;
+
   const FOOT_LOCAL_Y = 165;
   const hookFootAnchor =
     sceneIndex === 0 ? FOOT_LOCAL_Y * (layout.scale - characterScale) : 0;
@@ -536,13 +580,19 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
   const characterTransform = {
     transformOrigin: `${STICKMAN_HIP_X}px ${STICKMAN_HIP_Y}px`,
     translate: `${
-      layout.x - STICKMAN_HIP_X + sway * 3.5 + weight * 2.5 + actionX * characterScale
+      layout.x -
+      STICKMAN_HIP_X +
+      sway * 3.5 +
+      weight * 2.5 +
+      actionX * characterScale +
+      shakeX
     }px ${
       layout.y -
       STICKMAN_HIP_Y +
       breath +
       hookFootAnchor +
-      actionY * characterScale
+      actionY * characterScale +
+      shakeY
     }px`,
     scale: `${(characterScale * (2 - squash)).toFixed(4)} ${(
       characterScale * squash
@@ -559,9 +609,22 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
   ];
   const sceneVariant = SCENE_TRANSITIONS[sceneIndex % SCENE_TRANSITIONS.length];
 
+  // ---- Environment lighting ----------------------------------------------
+  // The character is lit by his world: the halo behind him and a soft rim
+  // glow around his ink both take the environment's accent colour, so a park
+  // scene glows green-gold while a night dream glows violet.
+  const envLight = ENV_PALETTES[environment].accent;
+
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.background, overflow: "hidden" }}>
-      <Background sceneIndex={sceneIndex} sceneStart={window.start} />
+      <Background
+        sceneIndex={sceneIndex}
+        sceneStart={window.start}
+        environment={environment}
+        previousEnvironment={previousEnvironment}
+        shakeX={shakeX}
+        shakeY={shakeY}
+      />
 
       <div
         style={{
@@ -590,8 +653,7 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
               width: 600,
               height: 600,
               borderRadius: "50%",
-              background:
-                "radial-gradient(circle, rgba(217, 119, 6, 0.09) 0%, rgba(217, 119, 6, 0.04) 42%, rgba(217, 119, 6, 0) 70%)",
+              background: `radial-gradient(circle, ${withAlpha(envLight, 0.1)} 0%, ${withAlpha(envLight, 0.045)} 42%, ${withAlpha(envLight, 0)} 70%)`,
             }}
           />
         </div>
@@ -681,7 +743,7 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
               2,
             )}px ${(26 + poseEnergy * 10).toFixed(1)}px ${
               COLORS.characterShadow
-            })`,
+            }) drop-shadow(0 0 ${(20 + breath * 3).toFixed(1)}px ${withAlpha(envLight, 0.32)})`,
           }}
         >
           {/* Motion streaks + landing dust sit behind the body. */}
@@ -693,6 +755,7 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
             blink={blink}
             props={stickmanProps}
             groundY={158 - actionY}
+            clothes={{ shirt: COLORS.accent, shorts: COLORS.ink }}
           />
         </div>
       </div>
