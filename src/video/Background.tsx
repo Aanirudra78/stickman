@@ -10,9 +10,13 @@ import {
 import { COLORS } from "../config";
 import { TEXT_FONT_FAMILY } from "../fonts";
 import {
+  ENV_MOODS,
   ENV_PALETTES,
   type EnvId,
+  type EnvMood,
   type EnvPalette,
+  type MoodLight,
+  withAlpha,
 } from "./environments";
 import { ENV_PLATES } from "./env-plates";
 
@@ -40,6 +44,62 @@ import { ENV_PLATES } from "./env-plates";
 
 const FRAME_W = 1080;
 const FRAME_H = 1920;
+
+/**
+ * Deterministic flicker for neon/lamp moods: two incommensurate sines; the
+ * light dips only when their sum crosses a threshold, so it buzzes briefly
+ * every few seconds and sits steady otherwise.
+ */
+const flickerDip = (t: number, phase: number, depth: number): number => {
+  const buzz = Math.sin(t * 6.4 + phase) + Math.sin(t * 13.9 + phase * 2.3);
+  return buzz > 1.25 ? depth * (buzz - 1.25) : 0;
+};
+
+/** Soft light pool drawn on the plate - lamp glow, sun spill, neon. */
+const MoodPool: React.FC<{ light: MoodLight; t: number }> = ({ light, t }) => {
+  const breath = Math.sin(t * light.breath + light.phase) * 0.22 * light.alpha;
+  const dip = flickerDip(t, light.phase, light.flicker ?? 0) * light.alpha;
+  const alpha = Math.max(0.02, light.alpha + breath - dip);
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: light.x - light.r,
+        top: light.y - light.r,
+        width: light.r * 2,
+        height: light.r * 2,
+        borderRadius: "50%",
+        background: `radial-gradient(circle, ${withAlpha(light.color, alpha)} 0%, ${withAlpha(
+          light.color,
+          alpha * 0.4,
+        )} 45%, transparent 72%)`,
+      }}
+    />
+  );
+};
+
+/** Rotated window-light shaft over the plate. */
+const MoodShaft: React.FC<{ shaft: NonNullable<EnvMood["shaft"]>; t: number }> = ({
+  shaft,
+  t,
+}) => (
+  <div
+    style={{
+      position: "absolute",
+      left: shaft.x,
+      top: shaft.y,
+      width: shaft.w,
+      height: shaft.h,
+      transform: `rotate(${shaft.angle}deg)`,
+      transformOrigin: "top left",
+      background: `linear-gradient(180deg, ${withAlpha(shaft.color, shaft.alpha)} 0%, ${withAlpha(
+        shaft.color,
+        shaft.alpha * 0.35,
+      )} 55%, transparent 100%)`,
+      opacity: 1 + Math.sin(t * 0.4) * 0.08,
+    }}
+  />
+);
 
 /** Per-layer drift + base parallax so closer layers move more. */
 const layerDrift = (
@@ -544,7 +604,9 @@ const EnvironmentStack: React.FC<{
   opacity: number;
   drift: { x: number; y: number };
   push: number;
-}> = ({ env, opacity, drift, push }) => {
+  /** Global seconds - drives the mood light breathing/flicker. */
+  t: number;
+}> = ({ env, opacity, drift, push, t }) => {
   const palette = ENV_PALETTES[env];
   const plate = ENV_PLATES[env];
   if (opacity <= 0.005) return null;
@@ -554,6 +616,7 @@ const EnvironmentStack: React.FC<{
     // plate is scaled ~4.5% past the frame so the drift and camera push never
     // reveal its edges, and a caption scrim guarantees the CONTRAST CONTRACT
     // (y 250..810 stays light) whatever the illustration does.
+    const mood = ENV_MOODS[env];
     return (
       <AbsoluteFill style={{ opacity }}>
         <AbsoluteFill style={{ overflow: "hidden" }}>
@@ -573,6 +636,13 @@ const EnvironmentStack: React.FC<{
             }}
           />
         </AbsoluteFill>
+
+        {/* Phase 4 mood: living light on the plate - pools + window shaft.
+            Breathes and flickers deterministically, never wall-clock. */}
+        {mood.pools.map((light, index) => (
+          <MoodPool key={`pool-${index}`} light={light} t={t} />
+        ))}
+        {mood.shaft ? <MoodShaft shaft={mood.shaft} t={t} /> : null}
 
         {/* Caption scrim: keeps the text band light over any plate. */}
         <AbsoluteFill
@@ -686,7 +756,17 @@ export const Background: React.FC<{
   /** Camera impact shake - moves the world, never the captions. */
   shakeX?: number;
   shakeY?: number;
-}> = ({ sceneIndex, sceneStart, environment, previousEnvironment, shakeX = 0, shakeY = 0 }) => {
+  /** Seconds into the scene when a guest walks in - blooms a warm entry glow. */
+  guestAt?: number;
+}> = ({
+  sceneIndex,
+  sceneStart,
+  environment,
+  previousEnvironment,
+  shakeX = 0,
+  shakeY = 0,
+  guestAt,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
@@ -724,6 +804,7 @@ export const Background: React.FC<{
         opacity={sameEnv ? 0 : 1 - cross}
         drift={layerDrift(t, sceneStart, fps, 9, 0.7 + sceneIndex)}
         push={push}
+        t={t}
       />
       <EnvironmentStack
         key={`curr-${environment}`}
@@ -731,7 +812,40 @@ export const Background: React.FC<{
         opacity={sameEnv ? 1 : cross}
         drift={layerDrift(t, sceneStart, fps, 9, 1.9 + sceneIndex * 1.3)}
         push={push}
+        t={t}
       />
+
+      {/* Guest entrance glow: a warm pool blooms at the guest's spot as they
+          walk in, so the world notices the newcomer (not just the figure). */}
+      {guestAt !== undefined
+        ? (() => {
+            const localSeconds = (frame - sceneStart) / fps;
+            const raw = interpolate(
+              localSeconds - (guestAt - 0.12),
+              [0, 0.55],
+              [0, 1],
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+            );
+            const bloom = 1 - Math.pow(1 - raw, 3); // easeOutCubic
+            if (bloom <= 0.001) return null;
+            return (
+              <div
+                style={{
+                  position: "absolute",
+                  left: 844 - 330,
+                  top: 1279 - 330,
+                  width: 660,
+                  height: 660,
+                  borderRadius: "50%",
+                  background: `radial-gradient(circle, ${withAlpha("#FFE2B8", 0.3 * bloom)} 0%, ${withAlpha(
+                    "#FFE2B8",
+                    0.12 * bloom,
+                  )} 48%, transparent 72%)`,
+                }}
+              />
+            );
+          })()
+        : null}
 
       {/* Ghost chapter numeral - gives each scene a place in the film. */}
       <div

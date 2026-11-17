@@ -624,6 +624,7 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
         previousEnvironment={previousEnvironment}
         shakeX={shakeX}
         shakeY={shakeY}
+        guestAt={guest ? guestAt : undefined}
       />
 
       <div

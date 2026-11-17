@@ -183,6 +183,92 @@ export const withAlpha = (hex: string, alpha: number): string => {
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 };
 
+/* ------------------------------------------------------------------ mood --- */
+
+/**
+ * Phase 4: light that lives ON the AI plate - lamp pools, window shafts and
+ * neon accents, all deterministic (animated from t, never wall-clock).
+ * Everything sits below y ~1500 around the stage: the caption band keeps the
+ * CONTRAST CONTRACT, and the caption scrim in Background sits on top anyway.
+ */
+export type MoodLight = {
+  /** Centre in full-res 1080x1920 coords. */
+  x: number;
+  y: number;
+  /** Radius in px. */
+  r: number;
+  /** Base colour as "#RRGGBB". */
+  color: string;
+  /** Peak alpha of the pool (breathes around this). */
+  alpha: number;
+  /** Breathing rate in rad/s - incommensurate per light so they never sync. */
+  breath: number;
+  phase: number;
+  /** Deterministic flicker depth 0..1 (neon buzz, cheap lamp). 0 = steady. */
+  flicker?: number;
+};
+
+export type EnvMood = {
+  pools: readonly MoodLight[];
+  /** A window light shaft: a soft rotated gradient. */
+  shaft?: {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    angle: number;
+    color: string;
+    alpha: number;
+  };
+};
+
+export const ENV_MOODS: Record<EnvId, EnvMood> = {
+  study: {
+    pools: [
+      // Warm desk-lamp pool over the desk (lower-left).
+      { x: 300, y: 1280, r: 340, color: "#FFD9A0", alpha: 0.3, breath: 0.9, phase: 0.4, flicker: 0.05 },
+      // Soft window daylight on the right wall.
+      { x: 940, y: 1180, r: 300, color: "#FFF6E0", alpha: 0.22, breath: 0.7, phase: 2.1 },
+    ],
+    shaft: { x: 900, y: 980, w: 240, h: 760, angle: 24, color: "#FFF3D6", alpha: 0.14 },
+  },
+  office: {
+    pools: [
+      // Cool daylight wash over the centre of the room.
+      { x: 560, y: 1320, r: 460, color: "#EAF4FF", alpha: 0.26, breath: 0.5, phase: 1.2 },
+      // Subtle cobalt accent from the whiteboard side.
+      { x: 850, y: 1420, r: 300, color: "#9DBFFF", alpha: 0.16, breath: 0.8, phase: 3.4 },
+    ],
+    shaft: { x: 200, y: 1000, w: 300, h: 800, angle: -18, color: "#F2F9FF", alpha: 0.12 },
+  },
+  duskCity: {
+    pools: [
+      // The low sun's warm spill over the skyline.
+      { x: 800, y: 1160, r: 420, color: "#FFC77D", alpha: 0.3, breath: 0.6, phase: 0.9 },
+      // Neon sign buzz, left side, deterministic dip.
+      { x: 220, y: 1320, r: 280, color: "#C9B4FF", alpha: 0.2, breath: 1.1, phase: 2.6, flicker: 0.45 },
+    ],
+  },
+  park: {
+    pools: [
+      // Morning sun warmth pooling on the path.
+      { x: 560, y: 1400, r: 420, color: "#FFE9B0", alpha: 0.26, breath: 0.55, phase: 1.6 },
+      // Sun's own glow, upper right (below the caption band edge).
+      { x: 880, y: 950, r: 320, color: "#FFDD8A", alpha: 0.2, breath: 0.7, phase: 0.2 },
+    ],
+    shaft: { x: 820, y: 900, w: 260, h: 820, angle: -26, color: "#FFF6D8", alpha: 0.13 },
+  },
+  dreamNight: {
+    pools: [
+      // Moonbeam landing low-left, cream.
+      { x: 300, y: 1360, r: 360, color: "#FFF4D8", alpha: 0.24, breath: 0.45, phase: 2.8 },
+      // Violet dream-glow low-right.
+      { x: 800, y: 1420, r: 340, color: "#B9A4F4", alpha: 0.18, breath: 0.65, phase: 1.1 },
+    ],
+    shaft: { x: 480, y: 0, w: 200, h: 940, angle: 8, color: "#F4F0FF", alpha: 0.1 },
+  },
+};
+
 /** Palette the Background painter uses. Everything stays probe-safe. */export type EnvPalette = {
   /** Full-frame wall/sky gradient, top -> bottom. Light in the caption zone. */
   sky: readonly [string, string, string];
