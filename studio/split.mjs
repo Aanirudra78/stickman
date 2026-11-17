@@ -35,6 +35,20 @@ const isBullet = (line) => /^([-\u2013\u2014*\u2022]|\d{1,2}[.)])\s+/.test(line)
 const ELLIPSIS_MARK = "\u0001";
 
 /**
+ * Repair mangled smart punctuation that reaches the server from phone
+ * paste/copy chains ("That?Ts it" for "That’s it", "?oWhat??" for
+ * "“What”"). Mojibake breaks word matching (guest names, beat indices) and
+ * looks broken on captions, so every script goes through this first.
+ */
+const repairMojibake = (text) =>
+  String(text)
+    // "?T" + contraction tail -> right single quote (apostrophe)
+    .replace(/\?T(?=s\b|t\b|re\b|ll\b|ve\b|m\b|d\b)/g, "\u2019")
+    // "?o" before a word -> left double quote; "??" after punctuation -> right
+    .replace(/\?o(?=[\p{L}\p{N}])/gu, "\u201C")
+    .replace(/\?\?/g, "\u201D");
+
+/**
  * Splits narration into one sentence per scene.
  *
  * - `...` and `…` are pauses, not boundaries ("Again... and again.").
@@ -144,7 +158,9 @@ const mergeToLimit = (scenes) => {
  * @param {{ title?: string }} [options]
  */
 export const splitScript = (rawText, options = {}) => {
-  const text = String(rawText ?? "").replace(/\r\n?/g, "\n").trim();
+  const text = repairMojibake(String(rawText ?? ""))
+    .replace(/\r\n?/g, "\n")
+    .trim();
   if (text.length === 0) {
     throw new Error("script is empty");
   }

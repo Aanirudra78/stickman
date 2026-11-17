@@ -572,7 +572,11 @@ export const detectLine = (text, options = {}) => {
     guest: cameo
       ? {
           name: cameo,
-          word: guestWordIndex(source, cameo),
+          // -1 (name not literally in the text, e.g. encoded weirdly) would
+          // fail script validation - drop the beat word and let `at` time it.
+          ...(guestWordIndex(source, cameo) >= 0
+            ? { word: guestWordIndex(source, cameo) }
+            : {}),
           at: guestTiming(source, cameo),
           enter: entranceFor(source),
         }
