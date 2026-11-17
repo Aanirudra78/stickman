@@ -1,53 +1,57 @@
 {
-  "title": "Untitled",
-  "voice": "pqHfZKP75CvOlQylNhV4",
+  "title": "100 Points of Care",
+  "voice": "en-US-GuyNeural",
   "tts": {
-    "provider": "elevenlabs",
+    "provider": "edge",
     "model": "eleven_multilingual_v2",
-    "heavy": true,
+    "heavy": false,
     "voiceSettings": {
       "stability": 0.45,
       "similarity_boost": 0.8,
       "style": 0.3,
       "use_speaker_boost": true,
-      "speed": 1
-    }
+      "speed": 0.92
+    },
+    "rate": "-4%"
   },
   "scenes": [
     {
-      "text": "Riya sat down to study at 7 PM",
-      "voiceover": "Riya sat down to study at 7 PM.",
+      "text": "100 Points of Care",
+      "voiceover": "100 Points of Care.",
+      "pose": "idle",
+      "scene_type": "text",
+      "duration": 2,
+      "actions": [],
+      "props": []
+    },
+    {
+      "text": "You only wake up with 100 points of care",
+      "voiceover": "You only wake up with 100 points of care.",
       "pose": "pointing",
       "scene_type": "text",
-      "duration": 3.6,
-      "speaking": false,
+      "duration": 4,
       "actions": [
         {
-          "at": 0.4,
-          "word": 1,
-          "id": "sit"
+          "at": 0,
+          "word": 0,
+          "id": "count"
         },
         {
           "at": 1.9,
           "word": 5,
-          "id": "count"
+          "id": "point_aside"
         }
       ],
-      "guest": {
-        "name": "Riya",
-        "word": 0,
-        "at": 0.2,
-        "enter": "walk"
-      },
-      "props": []
+      "props": [
+        "heart"
+      ]
     },
     {
-      "text": "7:02",
-      "voiceover": "7:02.",
-      "pose": "pointing",
+      "text": "That’s it",
+      "voiceover": "That’s it.",
+      "pose": "talking",
       "scene_type": "text",
       "duration": 1.6,
-      "speaking": false,
       "actions": [
         {
           "at": 0,
@@ -58,12 +62,67 @@
       "props": []
     },
     {
-      "text": "A notification",
-      "voiceover": "A notification.",
+      "text": "Every single day",
+      "voiceover": "Every single day.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 1.7,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "hold"
+        }
+      ],
+      "props": [
+        "clock"
+      ]
+    },
+    {
+      "text": "The question is: where are you spending them",
+      "voiceover": "The question is: where are you spending them.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 3.6,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "point_aside"
+        },
+        {
+          "at": 1.9,
+          "word": 5,
+          "id": "point_up"
+        }
+      ],
+      "props": [
+        "question"
+      ]
+    },
+    {
+      "text": "What will people think",
+      "voiceover": "What will people think.",
+      "pose": "thinking",
+      "scene_type": "text",
+      "duration": 2,
+      "actions": [
+        {
+          "at": 1.2,
+          "word": 3,
+          "id": "think"
+        }
+      ],
+      "props": [
+        "question"
+      ]
+    },
+    {
+      "text": "Minus twenty",
+      "voiceover": "Minus twenty.",
       "pose": "talking",
       "scene_type": "text",
       "duration": 1.6,
-      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -74,28 +133,28 @@
       "props": []
     },
     {
-      "text": "7:10",
-      "voiceover": "7:10.",
-      "pose": "pointing",
-      "scene_type": "text",
-      "duration": 1.6,
-      "speaking": false,
-      "actions": [
-        {
-          "at": 0,
-          "word": 0,
-          "id": "count"
-        }
-      ],
-      "props": []
-    },
-    {
-      "text": "Just one reel",
-      "voiceover": "Just one reel.",
+      "text": "They left me on read",
+      "voiceover": "They left me on read.",
       "pose": "talking",
       "scene_type": "text",
-      "duration": 1.7,
-      "speaking": true,
+      "duration": 2.4,
+      "actions": [
+        {
+          "at": 1.5,
+          "word": 4,
+          "id": "read"
+        }
+      ],
+      "props": [
+        "book"
+      ]
+    },
+    {
+      "text": "Minus twenty-five",
+      "voiceover": "Minus twenty-five.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 1.6,
       "actions": [
         {
           "at": 0,
@@ -106,28 +165,41 @@
       "props": []
     },
     {
-      "text": "7:40",
-      "voiceover": "7:40.",
-      "pose": "pointing",
+      "text": "Someone my age earns more",
+      "voiceover": "Someone my age earns more.",
+      "pose": "talking",
       "scene_type": "text",
-      "duration": 1.6,
-      "speaking": false,
+      "duration": 2.4,
       "actions": [
         {
           "at": 0,
           "word": 0,
-          "id": "count"
+          "id": "point_up"
         }
       ],
       "props": []
     },
     {
-      "text": "Where did the time go",
-      "voiceover": "Where did the time go.",
+      "text": "Minus twenty-five",
+      "voiceover": "Minus twenty-five.",
       "pose": "talking",
       "scene_type": "text",
-      "duration": 2.4,
-      "speaking": true,
+      "duration": 1.6,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "point_aside"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "My last reel flopped",
+      "voiceover": "My last reel flopped.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 2,
       "actions": [
         {
           "at": 0,
@@ -136,16 +208,15 @@
         }
       ],
       "props": [
-        "clock"
+        "camera"
       ]
     },
     {
-      "text": "She had studied for three hours",
-      "voiceover": "She had studied for three hours.",
+      "text": "Minus twenty",
+      "voiceover": "Minus twenty.",
       "pose": "talking",
       "scene_type": "text",
-      "duration": 2.8,
-      "speaking": true,
+      "duration": 1.6,
       "actions": [
         {
           "at": 0,
@@ -153,83 +224,89 @@
           "id": "hands_hips"
         }
       ],
-      "props": [
-        "clock"
-      ]
+      "props": []
     },
     {
-      "text": "But only learned for twenty minutes",
-      "voiceover": "But only learned for twenty minutes.",
+      "text": "By evening, you’re empty",
+      "voiceover": "By evening, you’re empty.",
       "pose": "talking",
       "scene_type": "text",
-      "duration": 2.8,
-      "speaking": true,
+      "duration": 2,
       "actions": [
         {
           "at": 0,
           "word": 0,
-          "id": "hold"
+          "id": "lean_in"
         }
       ],
-      "props": [
-        "clock"
-      ]
+      "props": []
     },
     {
-      "text": "In his book Deep Work, Cal Newport explains why",
-      "voiceover": "In his book Deep Work, Cal Newport explains why.",
-      "pose": "thinking",
-      "scene_type": "text",
-      "duration": 4,
-      "speaking": false,
-      "actions": [
-        {
-          "at": 0.8,
-          "word": 2,
-          "id": "read"
-        }
-      ],
-      "props": [
-        "book",
-        "question"
-      ],
-      "guest": {
-        "name": "Cal Newport",
-        "word": 5,
-        "at": 1.9,
-        "enter": "walk"
-      }
-    },
-    {
-      "text": "Every time you switch your attention",
-      "voiceover": "Every time you switch your attention.",
+      "text": "And the things that actually matter get whatever is left",
+      "voiceover": "And the things that actually matter get whatever is left.",
       "pose": "talking",
       "scene_type": "text",
-      "duration": 2.8,
-      "speaking": true,
+      "duration": 4.3,
       "actions": [
         {
           "at": 0,
           "word": 0,
-          "id": "hold"
+          "id": "point_aside"
+        },
+        {
+          "at": 2.3,
+          "word": 6,
+          "id": "hands_hips"
         }
       ],
-      "props": [
-        "clock"
-      ]
+      "props": []
     },
     {
-      "text": "your brain leaves a little of itself behind",
-      "voiceover": "your brain leaves a little of itself behind.",
+      "text": "Almost nothing",
+      "voiceover": "Almost nothing.",
       "pose": "talking",
       "scene_type": "text",
-      "duration": 3.6,
-      "speaking": true,
+      "duration": 1.6,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "lean_in"
+        }
+      ],
+      "props": []
+    },
+    {
+      "text": "Mark Manson’s point is simple",
+      "voiceover": "Mark Manson’s point is simple.",
+      "pose": "happy",
+      "scene_type": "text",
+      "duration": 2.4,
       "actions": [
         {
           "at": 0,
           "word": 0,
           "id": "explain_to_guest"
+        }
+      ],
+      "props": [],
+      "guest": {
+        "name": "Mark Manson",
+        "at": 0.25,
+        "enter": "walk"
+      }
+    },
+    {
+      "text": "Not giving a f*ck doesn’t mean caring about nothing",
+      "voiceover": "Not giving a f*ck doesn’t mean caring about nothing.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 4.3,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "point_up"
         },
         {
           "at": 1.9,
@@ -237,55 +314,14 @@
           "id": "wave"
         }
       ],
-      "props": [
-        "bulb"
-      ]
-    },
-    {
-      "text": "He calls it attention residue",
-      "voiceover": "He calls it attention residue.",
-      "pose": "talking",
-      "scene_type": "text",
-      "duration": 2.4,
-      "speaking": true,
-      "actions": [
-        {
-          "at": 0,
-          "word": 0,
-          "id": "count"
-        }
-      ],
       "props": []
     },
     {
-      "text": "So Riya tried one simple rule",
-      "voiceover": "So Riya tried one simple rule.",
-      "pose": "happy",
-      "scene_type": "text",
-      "duration": 2.8,
-      "speaking": false,
-      "actions": [
-        {
-          "at": 0.8,
-          "word": 2,
-          "id": "think"
-        }
-      ],
-      "guest": {
-        "name": "Riya",
-        "word": 1,
-        "at": 0.4,
-        "enter": "walk"
-      },
-      "props": []
-    },
-    {
-      "text": "Phone in another room",
-      "voiceover": "Phone in another room.",
+      "text": "It means refusing to care about things that don’t deserve it",
+      "voiceover": "It means refusing to care about things that don’t deserve it.",
       "pose": "talking",
       "scene_type": "text",
-      "duration": 2,
-      "speaking": true,
+      "duration": 4.7,
       "actions": [
         {
           "at": 0,
@@ -294,102 +330,71 @@
         }
       ],
       "props": [
-        "phone"
+        "heart"
       ]
     },
     {
-      "text": "Timer for 45 minutes",
-      "voiceover": "Timer for 45 minutes.",
-      "pose": "pointing",
+      "text": "So change the question",
+      "voiceover": "So change the question.",
+      "pose": "talking",
       "scene_type": "text",
       "duration": 2,
-      "speaking": false,
       "actions": [
         {
           "at": 0,
           "word": 0,
-          "id": "count"
+          "id": "point_aside"
         }
       ],
       "props": [
-        "clock"
-      ]
-    },
-    {
-      "text": "Nothing else",
-      "voiceover": "Nothing else.",
-      "pose": "talking",
-      "scene_type": "text",
-      "duration": 1.6,
-      "speaking": true,
-      "actions": [
-        {
-          "at": 0,
-          "word": 0,
-          "id": "shrug"
-        }
-      ],
-      "props": []
-    },
-    {
-      "text": "That night, she finished in one hour",
-      "voiceover": "That night, she finished in one hour.",
-      "pose": "talking",
-      "scene_type": "text",
-      "duration": 3.2,
-      "speaking": true,
-      "actions": [
-        {
-          "at": 0,
-          "word": 0,
-          "id": "hold"
-        }
-      ],
-      "props": [
-        "clock"
-      ]
-    },
-    {
-      "text": "what used to take three",
-      "voiceover": "what used to take three.",
-      "pose": "thinking",
-      "scene_type": "text",
-      "duration": 2.4,
-      "speaking": false,
-      "actions": [
-        {
-          "at": 1.2,
-          "word": 3,
-          "id": "take"
-        }
-      ],
-      "props": [
+        "coin",
         "question"
       ]
     },
     {
-      "text": "Your focus is not weak",
-      "voiceover": "Your focus is not weak.",
-      "pose": "talking",
+      "text": "Not “should I care?” but “what am I choosing to care about",
+      "voiceover": "Not “should I care?” but “what am I choosing to care about.",
+      "pose": "thinking",
       "scene_type": "text",
-      "duration": 2.4,
-      "speaking": true,
+      "duration": 5.1,
       "actions": [
         {
           "at": 0,
           "word": 0,
-          "id": "count"
+          "id": "think"
+        },
+        {
+          "at": 2.7,
+          "word": 7,
+          "id": "hands_hips"
+        }
+      ],
+      "props": [
+        "question",
+        "heart"
+      ]
+    },
+    {
+      "text": "Pick three things",
+      "voiceover": "Pick three things.",
+      "pose": "talking",
+      "scene_type": "text",
+      "duration": 1.7,
+      "actions": [
+        {
+          "at": 0,
+          "word": 0,
+          "id": "point_aside"
         }
       ],
       "props": []
     },
     {
-      "text": "It's just being interrupted",
-      "voiceover": "It's just being interrupted.",
+      "text": "Let the rest go",
+      "voiceover": "Let the rest go.",
       "pose": "talking",
       "scene_type": "text",
       "duration": 2,
-      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -400,12 +405,11 @@
       "props": []
     },
     {
-      "text": "Where's your phone right now",
-      "voiceover": "Where's your phone right now.",
+      "text": "Follow for the next lesson",
+      "voiceover": "Follow for the next lesson.",
       "pose": "happy",
       "scene_type": "text",
       "duration": 2.4,
-      "speaking": false,
       "actions": [
         {
           "at": 0,
@@ -414,7 +418,7 @@
         }
       ],
       "props": [
-        "phone"
+        "arrow"
       ]
     }
   ]
