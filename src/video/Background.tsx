@@ -1,6 +1,7 @@
 import React from "react";
 import {
   AbsoluteFill,
+  Img,
   interpolate,
   staticFile,
   useCurrentFrame,
@@ -13,6 +14,7 @@ import {
   type EnvId,
   type EnvPalette,
 } from "./environments";
+import { ENV_PLATES } from "./env-plates";
 
 /**
  * Persistent background system - now a directed ENVIRONMENT, not a wash.
@@ -533,9 +535,9 @@ const ENV_ART: Record<EnvId, (palette: EnvPalette) => EnvArt> = {
 };
 
 /**
- * One environment stack: sky + three parallax layers + stage glow.
- * `opacity` drives the cross-fade between the previous and current scene's
- * environment during a scene change.
+ * One environment stack: AI plate (Phase 3) or painted sky + parallax layers,
+ * plus the stage glow. `opacity` drives the cross-fade between the previous
+ * and current scene's environment during a scene change.
  */
 const EnvironmentStack: React.FC<{
   env: EnvId;
@@ -544,8 +546,59 @@ const EnvironmentStack: React.FC<{
   push: number;
 }> = ({ env, opacity, drift, push }) => {
   const palette = ENV_PALETTES[env];
-  const art = ENV_ART[env](palette);
+  const plate = ENV_PLATES[env];
   if (opacity <= 0.005) return null;
+
+  if (plate) {
+    // AI-illustrated plate: one full-frame image does the world's work. The
+    // plate is scaled ~4.5% past the frame so the drift and camera push never
+    // reveal its edges, and a caption scrim guarantees the CONTRAST CONTRACT
+    // (y 250..810 stays light) whatever the illustration does.
+    return (
+      <AbsoluteFill style={{ opacity }}>
+        <AbsoluteFill style={{ overflow: "hidden" }}>
+          <Img
+            src={staticFile(plate)}
+            width={FRAME_W}
+            height={FRAME_H}
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: FRAME_W,
+              height: FRAME_H,
+              translate: `${drift.x * 0.35}px ${drift.y * 0.35}px`,
+              scale: `${push * 1.045}`,
+              transformOrigin: "50% 62%",
+            }}
+          />
+        </AbsoluteFill>
+
+        {/* Caption scrim: keeps the text band light over any plate. */}
+        <AbsoluteFill
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0) 11%, rgba(255,255,255,0.5) 14.5%, rgba(255,255,255,0.5) 40%, rgba(255,255,255,0) 44%)",
+          }}
+        />
+
+        {/* Light stage glow so the ink figure always reads. */}
+        <div
+          style={{
+            position: "absolute",
+            left: 540 - 520,
+            top: 1500 - 260,
+            width: 1040,
+            height: 520,
+            borderRadius: "50%",
+            background: `radial-gradient(ellipse, ${palette.stageGlow} 0%, transparent 68%)`,
+          }}
+        />
+      </AbsoluteFill>
+    );
+  }
+
+  const art = ENV_ART[env](palette);
 
   return (
     <AbsoluteFill style={{ opacity }}>

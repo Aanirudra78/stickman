@@ -39,6 +39,17 @@ checkouts. It **never overwrites committed files** unless `--force` is passed.
 Synth content is generated with ffmpeg-static (`aevalsrc`/`anoisesrc`), so it is
 royalty-free by construction.
 
+## Background plates (`public/env/plates/`)
+
+Since Phase 3 the five environment backdrops are AI-generated illustrations
+(flat pastel storybook style, one plate per environment: study, office,
+dusk-city, park, dream-night). They were generated with the Recraft flash
+image model via OpenRouter's free tier, from hand-written prompts in this
+repo's session history — no third-party artwork was copied or used as source.
+Generated images carry no third-party rights claims; they are treated as
+original project assets. Pixel-probed for the caption-band lightness contract
+(`out/probe-plates.ps1`).
+
 ## Voiceover
 
 Narration is generated with ElevenLabs under its commercial license for the
