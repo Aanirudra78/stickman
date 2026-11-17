@@ -1,6 +1,6 @@
 {
   "title": "100 Points of Care",
-  "voice": "en-US-GuyNeural",
+  "voice": "en-GB-RyanNeural",
   "tts": {
     "provider": "edge",
     "model": "eleven_multilingual_v2",
@@ -10,7 +10,7 @@
       "similarity_boost": 0.8,
       "style": 0.3,
       "use_speaker_boost": true,
-      "speed": 0.92
+      "speed": 1.01
     },
     "rate": "-4%"
   },
@@ -20,7 +20,8 @@
       "voiceover": "100 Points of Care.",
       "pose": "idle",
       "scene_type": "text",
-      "duration": 2,
+      "duration": 1.6,
+      "speaking": false,
       "actions": [],
       "props": []
     },
@@ -30,6 +31,7 @@
       "pose": "pointing",
       "scene_type": "text",
       "duration": 4,
+      "speaking": false,
       "actions": [
         {
           "at": 0,
@@ -52,6 +54,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 1.6,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -67,6 +70,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 1.7,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -84,6 +88,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 3.6,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -106,6 +111,7 @@
       "pose": "thinking",
       "scene_type": "text",
       "duration": 2,
+      "speaking": false,
       "actions": [
         {
           "at": 1.2,
@@ -123,6 +129,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 1.6,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -138,6 +145,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 2.4,
+      "speaking": true,
       "actions": [
         {
           "at": 1.5,
@@ -155,6 +163,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 1.6,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -170,6 +179,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 2.4,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -185,6 +195,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 1.6,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -200,6 +211,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 2,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -217,6 +229,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 1.6,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -232,6 +245,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 2,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -247,6 +261,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 4.3,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -267,6 +282,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 1.6,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -282,6 +298,7 @@
       "pose": "happy",
       "scene_type": "text",
       "duration": 2.4,
+      "speaking": false,
       "actions": [
         {
           "at": 0,
@@ -289,12 +306,12 @@
           "id": "explain_to_guest"
         }
       ],
-      "props": [],
       "guest": {
         "name": "Mark Manson",
         "at": 0.25,
         "enter": "walk"
-      }
+      },
+      "props": []
     },
     {
       "text": "Not giving a f*ck doesn’t mean caring about nothing",
@@ -302,6 +319,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 4.3,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -322,6 +340,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 4.7,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -339,6 +358,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 2,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -357,6 +377,7 @@
       "pose": "thinking",
       "scene_type": "text",
       "duration": 5.1,
+      "speaking": false,
       "actions": [
         {
           "at": 0,
@@ -380,6 +401,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 1.7,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -395,6 +417,7 @@
       "pose": "talking",
       "scene_type": "text",
       "duration": 2,
+      "speaking": true,
       "actions": [
         {
           "at": 0,
@@ -410,6 +433,7 @@
       "pose": "happy",
       "scene_type": "text",
       "duration": 2.4,
+      "speaking": false,
       "actions": [
         {
           "at": 0,

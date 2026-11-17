@@ -1,6 +1,6 @@
 {
   "provider": "edge",
-  "voice": "en-US-GuyNeural",
+  "voice": "en-GB-RyanNeural",
   "rate": "-4%",
   "pitch": "+0Hz",
   "outputFormat": "audio-24khz-48kbitrate-mono-mp3",
@@ -8,37 +8,37 @@
     "targetPeakDbfs": -3,
     "maxGainDb": 12
   },
-  "generatedAt": "2026-11-17T14:53:52.315Z",
-  "totalSeconds": 65.304,
+  "generatedAt": "2026-11-17T19:56:38.859Z",
+  "totalSeconds": 65.064,
   "scenes": [
     {
       "index": 0,
       "file": "voice/scene-01.mp3",
       "text": "100 Points of Care.",
-      "hash": "47745fcfb444",
-      "durationInSeconds": 2.592,
-      "peakDbfs": -2.813,
-      "gainDb": 0,
+      "hash": "da71924fbade",
+      "durationInSeconds": 2.496,
+      "peakDbfs": -3,
+      "gainDb": 1.538,
       "words": [
         {
           "text": "100",
-          "start": 0.052,
-          "end": 0.716
+          "start": 0.05,
+          "end": 0.688
         },
         {
           "text": "Points",
-          "start": 0.729,
-          "end": 1.055
+          "start": 0.701,
+          "end": 1.04
         },
         {
           "text": "of",
-          "start": 1.068,
-          "end": 1.172
+          "start": 1.053,
+          "end": 1.131
         },
         {
           "text": "Care",
-          "start": 1.198,
-          "end": 1.667
+          "start": 1.144,
+          "end": 1.534
         }
       ]
     },
@@ -46,55 +46,55 @@
       "index": 1,
       "file": "voice/scene-02.mp3",
       "text": "You only wake up with 100 points of care.",
-      "hash": "bf08bd73573f",
-      "durationInSeconds": 3.672,
+      "hash": "659fe54acb02",
+      "durationInSeconds": 3.504,
       "peakDbfs": -3,
-      "gainDb": 1.057,
+      "gainDb": 2.129,
       "words": [
         {
           "text": "You",
-          "start": 0.052,
-          "end": 0.26
+          "start": 0.05,
+          "end": 0.245
         },
         {
           "text": "only",
-          "start": 0.273,
-          "end": 0.495
+          "start": 0.258,
+          "end": 0.519
         },
         {
           "text": "wake",
-          "start": 0.521,
-          "end": 0.755
+          "start": 0.532,
+          "end": 0.818
         },
         {
           "text": "up",
-          "start": 0.781,
-          "end": 0.938
+          "start": 0.831,
+          "end": 0.988
         },
         {
           "text": "with",
-          "start": 0.964,
-          "end": 1.12
+          "start": 1.001,
+          "end": 1.105
         },
         {
           "text": "100",
-          "start": 1.146,
-          "end": 1.745
+          "start": 1.118,
+          "end": 1.73
         },
         {
           "text": "points",
-          "start": 1.771,
-          "end": 2.096
+          "start": 1.743,
+          "end": 2.068
         },
         {
           "text": "of",
-          "start": 2.122,
-          "end": 2.227
+          "start": 2.081,
+          "end": 2.159
         },
         {
           "text": "care",
-          "start": 2.253,
-          "end": 2.695
+          "start": 2.172,
+          "end": 2.55
         }
       ]
     },
@@ -102,20 +102,20 @@
       "index": 2,
       "file": "voice/scene-03.mp3",
       "text": "That’s it.",
-      "hash": "3cdce463a31a",
-      "durationInSeconds": 1.872,
-      "peakDbfs": -1.938,
-      "gainDb": 0,
+      "hash": "b3ed4ea77c3f",
+      "durationInSeconds": 1.92,
+      "peakDbfs": -3,
+      "gainDb": 3.505,
       "words": [
         {
           "text": "That’s",
-          "start": 0.052,
-          "end": 0.469
+          "start": 0.05,
+          "end": 0.284
         },
         {
           "text": "it",
-          "start": 0.482,
-          "end": 0.768
+          "start": 0.297,
+          "end": 0.558
         }
       ]
     },
@@ -123,25 +123,25 @@
       "index": 3,
       "file": "voice/scene-04.mp3",
       "text": "Every single day.",
-      "hash": "1678e8db6d16",
+      "hash": "a3457ca85a5f",
       "durationInSeconds": 2.16,
       "peakDbfs": -3,
-      "gainDb": 2.32,
+      "gainDb": 2.213,
       "words": [
         {
           "text": "Every",
-          "start": 0.052,
-          "end": 0.417
+          "start": 0.05,
+          "end": 0.389
         },
         {
           "text": "single",
-          "start": 0.443,
-          "end": 0.82
+          "start": 0.402,
+          "end": 0.792
         },
         {
           "text": "day",
-          "start": 0.846,
-          "end": 1.198
+          "start": 0.805,
+          "end": 1.209
         }
       ]
     },
@@ -149,50 +149,50 @@
       "index": 4,
       "file": "voice/scene-05.mp3",
       "text": "The question is: where are you spending them.",
-      "hash": "9b795cd68370",
-      "durationInSeconds": 3.336,
-      "peakDbfs": -2.758,
+      "hash": "6f87190d6d86",
+      "durationInSeconds": 3.432,
+      "peakDbfs": -3.32,
       "gainDb": 0,
       "words": [
         {
           "text": "The",
-          "start": 0.052,
-          "end": 0.195
+          "start": 0.05,
+          "end": 0.206
         },
         {
           "text": "question",
-          "start": 0.221,
-          "end": 0.664
+          "start": 0.219,
+          "end": 0.662
         },
         {
           "text": "is",
-          "start": 0.677,
-          "end": 0.911
+          "start": 0.675,
+          "end": 0.961
         },
         {
           "text": "where",
-          "start": 1.172,
-          "end": 1.393
+          "start": 1.222,
+          "end": 1.391
         },
         {
           "text": "are",
-          "start": 1.419,
-          "end": 1.523
+          "start": 1.404,
+          "end": 1.521
         },
         {
           "text": "you",
-          "start": 1.55,
-          "end": 1.667
+          "start": 1.534,
+          "end": 1.73
         },
         {
           "text": "spending",
-          "start": 1.693,
-          "end": 2.122
+          "start": 1.743,
+          "end": 2.237
         },
         {
           "text": "them",
-          "start": 2.148,
-          "end": 2.396
+          "start": 2.251,
+          "end": 2.511
         }
       ]
     },
@@ -200,30 +200,30 @@
       "index": 5,
       "file": "voice/scene-06.mp3",
       "text": "What will people think.",
-      "hash": "a8148ad9adef",
-      "durationInSeconds": 2.28,
+      "hash": "e761afa95e93",
+      "durationInSeconds": 2.304,
       "peakDbfs": -3,
-      "gainDb": 0.569,
+      "gainDb": 1.372,
       "words": [
         {
           "text": "What",
-          "start": 0.052,
-          "end": 0.326
+          "start": 0.05,
+          "end": 0.31
         },
         {
           "text": "will",
-          "start": 0.352,
-          "end": 0.521
+          "start": 0.323,
+          "end": 0.48
         },
         {
           "text": "people",
-          "start": 0.547,
-          "end": 0.885
+          "start": 0.493,
+          "end": 0.857
         },
         {
           "text": "think",
-          "start": 0.898,
-          "end": 1.315
+          "start": 0.87,
+          "end": 1.339
         }
       ]
     },
@@ -231,20 +231,20 @@
       "index": 6,
       "file": "voice/scene-07.mp3",
       "text": "Minus twenty.",
-      "hash": "3522b9ad3988",
-      "durationInSeconds": 2.04,
+      "hash": "a0d9838f27ba",
+      "durationInSeconds": 1.968,
       "peakDbfs": -3,
-      "gainDb": 0.852,
+      "gainDb": 0.583,
       "words": [
         {
           "text": "Minus",
-          "start": 0.052,
-          "end": 0.521
+          "start": 0.05,
+          "end": 0.519
         },
         {
           "text": "twenty",
-          "start": 0.547,
-          "end": 1.081
+          "start": 0.532,
+          "end": 1.001
         }
       ]
     },
@@ -252,35 +252,35 @@
       "index": 7,
       "file": "voice/scene-08.mp3",
       "text": "They left me on read.",
-      "hash": "f1799a1d3a0d",
-      "durationInSeconds": 2.328,
+      "hash": "5988b693b0f4",
+      "durationInSeconds": 2.376,
       "peakDbfs": -3,
-      "gainDb": 1.104,
+      "gainDb": 1.359,
       "words": [
         {
           "text": "They",
-          "start": 0.052,
-          "end": 0.221
+          "start": 0.05,
+          "end": 0.245
         },
         {
           "text": "left",
-          "start": 0.247,
-          "end": 0.573
+          "start": 0.258,
+          "end": 0.584
         },
         {
           "text": "me",
-          "start": 0.599,
-          "end": 0.755
+          "start": 0.597,
+          "end": 0.714
         },
         {
           "text": "on",
-          "start": 0.781,
-          "end": 0.938
+          "start": 0.727,
+          "end": 0.922
         },
         {
           "text": "read",
-          "start": 0.964,
-          "end": 1.354
+          "start": 0.935,
+          "end": 1.417
         }
       ]
     },
@@ -288,20 +288,20 @@
       "index": 8,
       "file": "voice/scene-09.mp3",
       "text": "Minus twenty-five.",
-      "hash": "d7f500cf16ab",
-      "durationInSeconds": 2.28,
-      "peakDbfs": -3.014,
-      "gainDb": 0,
+      "hash": "6dd296f1f1ab",
+      "durationInSeconds": 2.424,
+      "peakDbfs": -3,
+      "gainDb": 1.23,
       "words": [
         {
           "text": "Minus",
-          "start": 0.052,
-          "end": 0.534
+          "start": 0.05,
+          "end": 0.519
         },
         {
           "text": "twenty-five",
-          "start": 0.56,
-          "end": 1.367
+          "start": 0.532,
+          "end": 1.456
         }
       ]
     },
@@ -309,35 +309,35 @@
       "index": 9,
       "file": "voice/scene-10.mp3",
       "text": "Someone my age earns more.",
-      "hash": "69c6a9e5b357",
-      "durationInSeconds": 2.76,
+      "hash": "939778400fd8",
+      "durationInSeconds": 2.736,
       "peakDbfs": -3,
-      "gainDb": 0.864,
+      "gainDb": 2.023,
       "words": [
         {
           "text": "Someone",
-          "start": 0.052,
-          "end": 0.534
+          "start": 0.05,
+          "end": 0.506
         },
         {
           "text": "my",
-          "start": 0.56,
-          "end": 0.742
+          "start": 0.519,
+          "end": 0.701
         },
         {
           "text": "age",
-          "start": 0.755,
-          "end": 1.029
+          "start": 0.714,
+          "end": 1.014
         },
         {
           "text": "earns",
-          "start": 1.055,
-          "end": 1.328
+          "start": 1.027,
+          "end": 1.352
         },
         {
           "text": "more",
-          "start": 1.354,
-          "end": 1.784
+          "start": 1.365,
+          "end": 1.769
         }
       ]
     },
@@ -345,20 +345,20 @@
       "index": 10,
       "file": "voice/scene-11.mp3",
       "text": "Minus twenty-five.",
-      "hash": "d7f500cf16ab",
-      "durationInSeconds": 2.28,
-      "peakDbfs": -3.195,
-      "gainDb": 0,
+      "hash": "6dd296f1f1ab",
+      "durationInSeconds": 2.424,
+      "peakDbfs": -3,
+      "gainDb": 1.23,
       "words": [
         {
           "text": "Minus",
-          "start": 0.052,
-          "end": 0.534
+          "start": 0.05,
+          "end": 0.519
         },
         {
           "text": "twenty-five",
-          "start": 0.56,
-          "end": 1.367
+          "start": 0.532,
+          "end": 1.456
         }
       ]
     },
@@ -366,30 +366,30 @@
       "index": 11,
       "file": "voice/scene-12.mp3",
       "text": "My last reel flopped.",
-      "hash": "d9eff1dba3b7",
-      "durationInSeconds": 2.376,
+      "hash": "ec6ea6754535",
+      "durationInSeconds": 2.448,
       "peakDbfs": -3,
-      "gainDb": 0.964,
+      "gainDb": 3.915,
       "words": [
         {
           "text": "My",
-          "start": 0.052,
-          "end": 0.221
+          "start": 0.05,
+          "end": 0.271
         },
         {
           "text": "last",
-          "start": 0.247,
-          "end": 0.625
+          "start": 0.284,
+          "end": 0.61
         },
         {
           "text": "reel",
-          "start": 0.651,
-          "end": 0.911
+          "start": 0.623,
+          "end": 0.935
         },
         {
           "text": "flopped",
-          "start": 0.925,
-          "end": 1.406
+          "start": 0.948,
+          "end": 1.482
         }
       ]
     },
@@ -397,20 +397,20 @@
       "index": 12,
       "file": "voice/scene-13.mp3",
       "text": "Minus twenty.",
-      "hash": "3522b9ad3988",
-      "durationInSeconds": 2.04,
+      "hash": "a0d9838f27ba",
+      "durationInSeconds": 1.968,
       "peakDbfs": -3,
-      "gainDb": 0.852,
+      "gainDb": 0.583,
       "words": [
         {
           "text": "Minus",
-          "start": 0.052,
-          "end": 0.521
+          "start": 0.05,
+          "end": 0.519
         },
         {
           "text": "twenty",
-          "start": 0.547,
-          "end": 1.081
+          "start": 0.532,
+          "end": 1.001
         }
       ]
     },
@@ -418,30 +418,30 @@
       "index": 13,
       "file": "voice/scene-14.mp3",
       "text": "By evening, you’re empty.",
-      "hash": "2051d72abcad",
-      "durationInSeconds": 2.544,
+      "hash": "7f814e39027d",
+      "durationInSeconds": 2.568,
       "peakDbfs": -3,
-      "gainDb": 0.836,
+      "gainDb": 1.88,
       "words": [
         {
           "text": "By",
-          "start": 0.052,
-          "end": 0.26
+          "start": 0.05,
+          "end": 0.258
         },
         {
           "text": "evening",
-          "start": 0.273,
-          "end": 0.703
+          "start": 0.271,
+          "end": 0.818
         },
         {
           "text": "you’re",
-          "start": 0.938,
-          "end": 1.107
+          "start": 1.014,
+          "end": 1.196
         },
         {
           "text": "empty",
-          "start": 1.133,
-          "end": 1.576
+          "start": 1.209,
+          "end": 1.613
         }
       ]
     },
@@ -449,60 +449,60 @@
       "index": 14,
       "file": "voice/scene-15.mp3",
       "text": "And the things that actually matter get whatever is left.",
-      "hash": "e6331e0b1819",
-      "durationInSeconds": 3.96,
+      "hash": "1e52fdddc0a7",
+      "durationInSeconds": 3.72,
       "peakDbfs": -3,
-      "gainDb": 0.942,
+      "gainDb": 2.851,
       "words": [
         {
           "text": "And",
-          "start": 0.052,
-          "end": 0.221
+          "start": 0.05,
+          "end": 0.232
         },
         {
           "text": "the",
-          "start": 0.247,
-          "end": 0.365
+          "start": 0.245,
+          "end": 0.336
         },
         {
           "text": "things",
-          "start": 0.391,
-          "end": 0.69
+          "start": 0.35,
+          "end": 0.636
         },
         {
           "text": "that",
-          "start": 0.716,
-          "end": 0.885
+          "start": 0.649,
+          "end": 0.792
         },
         {
           "text": "actually",
-          "start": 0.911,
-          "end": 1.354
+          "start": 0.805,
+          "end": 1.17
         },
         {
           "text": "matter",
-          "start": 1.38,
-          "end": 1.732
+          "start": 1.183,
+          "end": 1.495
         },
         {
           "text": "get",
-          "start": 1.758,
-          "end": 1.94
+          "start": 1.508,
+          "end": 1.691
         },
         {
           "text": "whatever",
-          "start": 1.966,
-          "end": 2.409
+          "start": 1.704,
+          "end": 2.107
         },
         {
           "text": "is",
-          "start": 2.435,
-          "end": 2.565
+          "start": 2.12,
+          "end": 2.277
         },
         {
           "text": "left",
-          "start": 2.591,
-          "end": 2.995
+          "start": 2.29,
+          "end": 2.758
         }
       ]
     },
@@ -510,20 +510,20 @@
       "index": 15,
       "file": "voice/scene-16.mp3",
       "text": "Almost nothing.",
-      "hash": "a6c1297ead71",
-      "durationInSeconds": 2.112,
+      "hash": "28fabf741934",
+      "durationInSeconds": 2.04,
       "peakDbfs": -3,
-      "gainDb": 0.935,
+      "gainDb": 2.611,
       "words": [
         {
           "text": "Almost",
-          "start": 0.052,
-          "end": 0.638
+          "start": 0.05,
+          "end": 0.571
         },
         {
           "text": "nothing",
-          "start": 0.664,
-          "end": 1.146
+          "start": 0.584,
+          "end": 1.079
         }
       ]
     },
@@ -531,35 +531,35 @@
       "index": 16,
       "file": "voice/scene-17.mp3",
       "text": "Mark Manson’s point is simple.",
-      "hash": "02805cef3b27",
-      "durationInSeconds": 2.784,
-      "peakDbfs": -2.374,
-      "gainDb": 0,
+      "hash": "ac274f19aab2",
+      "durationInSeconds": 2.808,
+      "peakDbfs": -3,
+      "gainDb": 1.741,
       "words": [
         {
           "text": "Mark",
-          "start": 0.052,
-          "end": 0.378
+          "start": 0.05,
+          "end": 0.441
         },
         {
           "text": "Manson’s",
-          "start": 0.391,
-          "end": 0.885
+          "start": 0.454,
+          "end": 0.935
         },
         {
           "text": "point",
-          "start": 0.911,
-          "end": 1.224
+          "start": 0.948,
+          "end": 1.274
         },
         {
           "text": "is",
-          "start": 1.237,
-          "end": 1.367
+          "start": 1.287,
+          "end": 1.417
         },
         {
           "text": "simple",
-          "start": 1.393,
-          "end": 1.875
+          "start": 1.43,
+          "end": 1.86
         }
       ]
     },
@@ -567,65 +567,65 @@
       "index": 17,
       "file": "voice/scene-18.mp3",
       "text": "Not giving a f*ck doesn’t mean caring about nothing.",
-      "hash": "58e23da65888",
-      "durationInSeconds": 4.728,
+      "hash": "8ccf35dcfe43",
+      "durationInSeconds": 4.584,
       "peakDbfs": -3,
-      "gainDb": 0.816,
+      "gainDb": 1.236,
       "words": [
         {
           "text": "Not",
-          "start": 0.052,
-          "end": 0.339
+          "start": 0.05,
+          "end": 0.297
         },
         {
           "text": "giving",
-          "start": 0.365,
-          "end": 0.677
+          "start": 0.31,
+          "end": 0.61
         },
         {
           "text": "a",
-          "start": 0.703,
-          "end": 0.781
+          "start": 0.623,
+          "end": 0.753
         },
         {
           "text": "f",
-          "start": 0.807,
-          "end": 1.003
+          "start": 0.766,
+          "end": 0.988
         },
         {
           "text": "*",
-          "start": 1.029,
-          "end": 1.536
+          "start": 1.001,
+          "end": 1.456
         },
         {
           "text": "ck",
-          "start": 1.563,
-          "end": 2.07
+          "start": 1.469,
+          "end": 1.834
         },
         {
           "text": "doesn’t",
-          "start": 2.083,
-          "end": 2.422
+          "start": 1.847,
+          "end": 2.146
         },
         {
           "text": "mean",
-          "start": 2.448,
-          "end": 2.669
+          "start": 2.159,
+          "end": 2.394
         },
         {
           "text": "caring",
-          "start": 2.695,
-          "end": 3.034
+          "start": 2.407,
+          "end": 2.81
         },
         {
           "text": "about",
-          "start": 3.047,
-          "end": 3.307
+          "start": 2.823,
+          "end": 3.11
         },
         {
           "text": "nothing",
-          "start": 3.333,
-          "end": 3.75
+          "start": 3.123,
+          "end": 3.631
         }
       ]
     },
@@ -633,65 +633,65 @@
       "index": 18,
       "file": "voice/scene-19.mp3",
       "text": "It means refusing to care about things that don’t deserve it.",
-      "hash": "d5af3267ddf3",
-      "durationInSeconds": 4.152,
+      "hash": "52ad38194fde",
+      "durationInSeconds": 4.104,
       "peakDbfs": -3,
-      "gainDb": 1.301,
+      "gainDb": 2.321,
       "words": [
         {
           "text": "It",
-          "start": 0.052,
-          "end": 0.26
+          "start": 0.05,
+          "end": 0.245
         },
         {
           "text": "means",
-          "start": 0.273,
-          "end": 0.547
+          "start": 0.258,
+          "end": 0.545
         },
         {
           "text": "refusing",
-          "start": 0.56,
-          "end": 1.094
+          "start": 0.558,
+          "end": 1.079
         },
         {
           "text": "to",
-          "start": 1.12,
-          "end": 1.237
+          "start": 1.092,
+          "end": 1.196
         },
         {
           "text": "care",
-          "start": 1.263,
-          "end": 1.51
+          "start": 1.209,
+          "end": 1.417
         },
         {
           "text": "about",
-          "start": 1.536,
-          "end": 1.823
+          "start": 1.43,
+          "end": 1.756
         },
         {
           "text": "things",
-          "start": 1.849,
-          "end": 2.174
+          "start": 1.769,
+          "end": 2.094
         },
         {
           "text": "that",
-          "start": 2.201,
-          "end": 2.357
+          "start": 2.107,
+          "end": 2.264
         },
         {
           "text": "don’t",
-          "start": 2.383,
-          "end": 2.591
+          "start": 2.277,
+          "end": 2.498
         },
         {
           "text": "deserve",
-          "start": 2.604,
-          "end": 2.969
+          "start": 2.511,
+          "end": 2.889
         },
         {
           "text": "it",
-          "start": 2.982,
-          "end": 3.177
+          "start": 2.902,
+          "end": 3.149
         }
       ]
     },
@@ -699,30 +699,30 @@
       "index": 19,
       "file": "voice/scene-20.mp3",
       "text": "So change the question.",
-      "hash": "8427ec2470bc",
-      "durationInSeconds": 2.4,
+      "hash": "b2c273d13716",
+      "durationInSeconds": 2.352,
       "peakDbfs": -3,
-      "gainDb": 0.748,
+      "gainDb": 0.987,
       "words": [
         {
           "text": "So",
-          "start": 0.052,
-          "end": 0.312
+          "start": 0.05,
+          "end": 0.31
         },
         {
           "text": "change",
-          "start": 0.339,
-          "end": 0.716
+          "start": 0.323,
+          "end": 0.688
         },
         {
           "text": "the",
-          "start": 0.742,
-          "end": 0.846
+          "start": 0.701,
+          "end": 0.792
         },
         {
           "text": "question",
-          "start": 0.859,
-          "end": 1.419
+          "start": 0.805,
+          "end": 1.391
         }
       ]
     },
@@ -730,70 +730,70 @@
       "index": 20,
       "file": "voice/scene-21.mp3",
       "text": "Not “should I care?” but “what am I choosing to care about.",
-      "hash": "afcde49d3fd9",
-      "durationInSeconds": 3.936,
+      "hash": "89afad74b07d",
+      "durationInSeconds": 4.2,
       "peakDbfs": -3,
-      "gainDb": 0.702,
+      "gainDb": 1.928,
       "words": [
         {
           "text": "Not",
-          "start": 0.052,
-          "end": 0.286
+          "start": 0.05,
+          "end": 0.363
         },
         {
           "text": "should",
-          "start": 0.3,
-          "end": 0.456
+          "start": 0.389,
+          "end": 0.584
         },
         {
           "text": "I",
-          "start": 0.482,
-          "end": 0.56
+          "start": 0.597,
+          "end": 0.675
         },
         {
           "text": "care",
-          "start": 0.586,
-          "end": 0.938
+          "start": 0.688,
+          "end": 1.066
         },
         {
           "text": "but",
-          "start": 1.185,
-          "end": 1.354
+          "start": 1.287,
+          "end": 1.43
         },
         {
           "text": "what",
-          "start": 1.38,
-          "end": 1.549
+          "start": 1.456,
+          "end": 1.639
         },
         {
           "text": "am",
-          "start": 1.576,
-          "end": 1.667
+          "start": 1.652,
+          "end": 1.743
         },
         {
           "text": "I",
-          "start": 1.693,
-          "end": 1.784
+          "start": 1.756,
+          "end": 1.873
         },
         {
           "text": "choosing",
-          "start": 1.81,
-          "end": 2.174
+          "start": 1.886,
+          "end": 2.29
         },
         {
           "text": "to",
-          "start": 2.201,
-          "end": 2.305
+          "start": 2.303,
+          "end": 2.407
         },
         {
           "text": "care",
-          "start": 2.331,
-          "end": 2.552
+          "start": 2.42,
+          "end": 2.641
         },
         {
           "text": "about",
-          "start": 2.578,
-          "end": 2.969
+          "start": 2.654,
+          "end": 3.24
         }
       ]
     },
@@ -801,25 +801,25 @@
       "index": 21,
       "file": "voice/scene-22.mp3",
       "text": "Pick three things.",
-      "hash": "b31ddbe2c463",
-      "durationInSeconds": 2.136,
+      "hash": "59e6874f5b50",
+      "durationInSeconds": 2.208,
       "peakDbfs": -3,
-      "gainDb": 3.239,
+      "gainDb": 3.035,
       "words": [
         {
           "text": "Pick",
-          "start": 0.052,
-          "end": 0.326
+          "start": 0.05,
+          "end": 0.31
         },
         {
           "text": "three",
-          "start": 0.339,
-          "end": 0.586
+          "start": 0.323,
+          "end": 0.61
         },
         {
           "text": "things",
-          "start": 0.612,
-          "end": 1.172
+          "start": 0.623,
+          "end": 1.248
         }
       ]
     },
@@ -827,30 +827,30 @@
       "index": 22,
       "file": "voice/scene-23.mp3",
       "text": "Let the rest go.",
-      "hash": "f0c817594613",
-      "durationInSeconds": 2.064,
-      "peakDbfs": -1.884,
+      "hash": "59e492114914",
+      "durationInSeconds": 1.992,
+      "peakDbfs": -3.474,
       "gainDb": 0,
       "words": [
         {
           "text": "Let",
-          "start": 0.052,
-          "end": 0.326
+          "start": 0.05,
+          "end": 0.271
         },
         {
           "text": "the",
-          "start": 0.352,
-          "end": 0.469
+          "start": 0.284,
+          "end": 0.376
         },
         {
           "text": "rest",
-          "start": 0.495,
-          "end": 0.781
+          "start": 0.389,
+          "end": 0.688
         },
         {
           "text": "go",
-          "start": 0.794,
-          "end": 1.146
+          "start": 0.701,
+          "end": 1.092
         }
       ]
     },
@@ -858,35 +858,35 @@
       "index": 23,
       "file": "voice/scene-24.mp3",
       "text": "Follow for the next lesson.",
-      "hash": "190b892393f0",
-      "durationInSeconds": 2.472,
-      "peakDbfs": -2.332,
+      "hash": "7c7333e8aaa2",
+      "durationInSeconds": 2.328,
+      "peakDbfs": -3.498,
       "gainDb": 0,
       "words": [
         {
           "text": "Follow",
-          "start": 0.052,
-          "end": 0.534
+          "start": 0.05,
+          "end": 0.428
         },
         {
           "text": "for",
-          "start": 0.56,
-          "end": 0.69
+          "start": 0.441,
+          "end": 0.532
         },
         {
           "text": "the",
-          "start": 0.703,
-          "end": 0.781
+          "start": 0.545,
+          "end": 0.636
         },
         {
           "text": "next",
-          "start": 0.794,
-          "end": 1.12
+          "start": 0.649,
+          "end": 0.961
         },
         {
           "text": "lesson",
-          "start": 1.133,
-          "end": 1.563
+          "start": 0.975,
+          "end": 1.43
         }
       ]
     }
