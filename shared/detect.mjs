@@ -652,7 +652,11 @@ export const applyDetection = (scenes, options = {}) => {
     const guest = scene.guest ?? (detectedGuest
       ? {
           name: detectedGuest,
-          word: guestWordIndex(text, detectedGuest),
+          // Same guard as the per-scene detection below: a name the word
+          // matcher can't find (weird encoding) must not emit word: -1.
+          ...(guestWordIndex(text, detectedGuest) >= 0
+            ? { word: guestWordIndex(text, detectedGuest) }
+            : {}),
           at: guestTiming(text, detectedGuest),
           enter: entranceFor(text),
         }
