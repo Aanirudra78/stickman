@@ -190,21 +190,30 @@ Starting a new habit? Two minutes is enough.
       const $ = (selector) => document.querySelector(selector);
       const STORE = "stickman.cloud.v1";
 
+      // Free Edge voices first and as the default: phone renders must never
+      // spend ElevenLabs credits by accident.
+      const DEFAULT_VOICE = "en-GB-RyanNeural";
+
       const VOICES = [
-        { id: "nPczCjzI2devNBz1zQrb", name: "Brian · Deep, Resonant & Comforting (default)", provider: "elevenlabs" },
-        { id: "pqHfZKP75CvOlQylNhV4", name: "Bill · Wise, Mature, Balanced", provider: "elevenlabs" },
-        { id: "pNInz6obpgDQGcFmaJgB", name: "Adam · Dominant & Firm", provider: "elevenlabs" },
-        { id: "cjVigY5qzO86Huf0OWal", name: "Eric · Smooth & Trustworthy", provider: "elevenlabs" },
-        { id: "JBFqnCBsd6RMkjVDRZzb", name: "George · Warm Storyteller (British)", provider: "elevenlabs" },
-        { id: "jWu9BIg1r9UOe2ivl02q", name: "Ron Sage · Warm & Soulful (paid plan)", provider: "elevenlabs" },
-        { id: "t1yzxMpe9zK42bXmI1T2", name: "K. V. Hagen · Deep Warm (paid plan)", provider: "elevenlabs" },
-        { id: "en-US-AndrewMultilingualNeural", name: "Andrew · Edge (free)", provider: "edge" },
-        { id: "en-US-BrianNeural", name: "Brian · Edge (free)", provider: "edge" },
-        { id: "en-US-ChristopherNeural", name: "Christopher · Edge (free)", provider: "edge" },
-        { id: "hi-IN-MadhurNeural", name: "Madhur · Hindi (Edge)", provider: "edge" }
+        { id: "en-GB-RyanNeural", name: "Ryan · British (free)", provider: "edge" },
+        { id: "en-US-AndrewMultilingualNeural", name: "Andrew · Warm & Natural (free)", provider: "edge" },
+        { id: "en-US-BrianNeural", name: "Brian · Deep (free)", provider: "edge" },
+        { id: "en-US-ChristopherNeural", name: "Christopher · Reflective (free)", provider: "edge" },
+        { id: "en-US-EricNeural", name: "Eric · Smooth (free)", provider: "edge" },
+        { id: "en-US-GuyNeural", name: "Guy · Lively (free)", provider: "edge" },
+        { id: "en-US-JennyNeural", name: "Jenny · Friendly (free)", provider: "edge" },
+        { id: "hi-IN-MadhurNeural", name: "Madhur · Hindi (free)", provider: "edge" },
+        { id: "hi-IN-SwaraNeural", name: "Swara · Hindi female (free)", provider: "edge" },
+        { id: "nPczCjzI2devNBz1zQrb", name: "Brian · Deep, Resonant (ElevenLabs · credits)", provider: "elevenlabs" },
+        { id: "pqHfZKP75CvOlQylNhV4", name: "Bill · Wise, Mature (ElevenLabs · credits)", provider: "elevenlabs" },
+        { id: "pNInz6obpgDQGcFmaJgB", name: "Adam · Dominant & Firm (ElevenLabs · credits)", provider: "elevenlabs" },
+        { id: "cjVigY5qzO86Huf0OWal", name: "Eric · Smooth & Trustworthy (ElevenLabs · credits)", provider: "elevenlabs" },
+        { id: "JBFqnCBsd6RMkjVDRZzb", name: "George · Warm Storyteller (ElevenLabs · credits)", provider: "elevenlabs" },
+        { id: "jWu9BIg1r9UOe2ivl02q", name: "Ron Sage · Warm & Soulful (ElevenLabs · paid plan)", provider: "elevenlabs" },
+        { id: "t1yzxMpe9zK42bXmI1T2", name: "K. V. Hagen · Deep Warm (ElevenLabs · paid plan)", provider: "elevenlabs" }
       ];
 
-      let config = { repo: "Aanirudra78/stickman", token: "", voice: VOICES[0].id };
+      let config = { repo: "Aanirudra78/stickman", token: "", voice: DEFAULT_VOICE };
       let toastTimer;
 
       const toast = (message, isError = false) => {
@@ -221,9 +230,20 @@ Starting a new habit? Two minutes is enough.
           const saved = JSON.parse(localStorage.getItem(STORE) || "{}");
           config = { ...config, ...saved };
         } catch {}
+        // One-time migration: an older session may have saved an ElevenLabs
+        // voice as default. Move it to the free Edge default once, then keep
+        // whatever the user picks afterwards.
+        if (!config.voiceMigrated) {
+          const chosen = VOICES.find((voice) => voice.id === config.voice);
+          if (!chosen || chosen.provider !== "edge") config.voice = DEFAULT_VOICE;
+          config.voiceMigrated = true;
+          try {
+            localStorage.setItem(STORE, JSON.stringify(config));
+          } catch {}
+        }
         $("#repo").value = config.repo || "";
         $("#token").value = config.token || "";
-        $("#voice").value = config.voice || VOICES[0].id;
+        $("#voice").value = config.voice || DEFAULT_VOICE;
         $("#repo-chip").textContent = config.repo || "no repo";
         const draft = localStorage.getItem("stickman.cloud.script");
         if (draft) $("#script").value = draft;
