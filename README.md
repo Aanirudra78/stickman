@@ -28,6 +28,10 @@ Remotion → compress) and shows live progress over SSE. Renders land in
 - **Transitions (Phase 5B):** cuts are directed too - questions iris, the
   refusal whips the camera, the low beat dips through black and the closing
   beat blooms with warm light. All frame-driven, no random values.
+- **Lip sync (Phase 5C):** the jaw follows the narration word timings - one
+  open/close cycle per syllable, shut in the pauses, and round vowels pull the
+  mouth in while wide vowels spread it. Voices without timings fall back to the
+  patterned mouth.
 
 ## Render from the phone (PC off)
 

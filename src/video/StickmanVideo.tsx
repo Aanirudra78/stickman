@@ -23,6 +23,7 @@ import {
   TEXT_LOOK,
 } from "../animation/motion";
 import { blendAction, getActiveAction, sampleAction } from "../actions/sample";
+import { mouthAt } from "../animation/lipsync";
 import type { ActionId } from "../actions/types";
 import { MusicBed } from "../audio/MusicBed";
 import { SceneSfx } from "../audio/SceneSfx";
@@ -487,6 +488,19 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
     acted.face.browLift +
     poseEnergy * 0.2 +
     (speaking ? Math.abs(lilt) * 0.12 : 0);
+  // ---- Lip sync ---------------------------------------------------------
+  // Word timings drive the jaw: one open/close cycle per syllable, shut in the
+  // pauses. Voices without timings keep the old patterned mouth; silent scenes
+  // keep the pose's own mouth (a shout stays a shout).
+  const sceneSeconds = (frame - window.start) / fps;
+  const timedWords = voice?.words;
+  const mouth =
+    timedWords && timedWords.length > 0
+      ? mouthAt(timedWords, sceneSeconds)
+      : speaking
+        ? { open: getTalkingMouth(frame), width: 1 }
+        : { open: acted.face.mouthOpen, width: 1 };
+
   const face: FaceParams = {
     ...acted.face,
     browLift,
@@ -497,7 +511,8 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
       lookX +
       (hasGuest ? 2.2 * guestPresence : 0),
     gazeY: acted.face.gazeY + saccade.y + lookY,
-    mouthOpen: speaking ? getTalkingMouth(frame) : acted.face.mouthOpen,
+    mouthOpen: mouth.open,
+    mouthWidth: acted.face.mouthWidth * mouth.width,
   };
   const blink = getEyeOpenness(frame, fps);
 
