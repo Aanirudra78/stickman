@@ -43,7 +43,6 @@ import { solveSkeleton } from "../rig/skeleton";
 import { lookForName } from "../rig/looks";
 import { isSpeaking } from "../script/parseScript";
 import { PointsScene } from "../scenes/PointsScene";
-import type { SceneTransitionVariant } from "../scenes/SceneFrame";
 import { TextScene } from "../scenes/TextScene";
 import {
   buildPoseKeyframes,
@@ -67,6 +66,7 @@ import { pickEnvironment, withAlpha, ENV_PALETTES, type EnvId } from "./environm
 import { Overlays } from "./Overlays";
 import { PoseFx } from "./PoseFx";
 import { cameraRig, pickMove, pickShot, SHOTS } from "./shots";
+import { cutAccent, pickTransition, type TransitionId } from "./transitions";
 
 /** Scene windows, stretched to fit the narration. */
 export const useSceneWindows = (script: VideoScript) => {
@@ -123,6 +123,8 @@ type GuestState = {
   cameraScale: number;
   /** Camera transform-origin X in % of the frame. */
   cameraOriginX: number;
+  /** Lateral camera kick (whip) in px, so the clamp can follow it. */
+  cameraOffsetX: number;
 };
 
 /** The guest cameo figure + name tag. Rendered next to the main character. */
@@ -134,6 +136,7 @@ const GuestCameo: React.FC<GuestState> = ({
   frame,
   cameraScale,
   cameraOriginX,
+  cameraOffsetX,
 }) => {
   const guest = scene.guest;
   const duration = sceneSeconds;
@@ -250,7 +253,7 @@ const GuestCameo: React.FC<GuestState> = ({
   const tagHalf = (tagWidth * tagScale) / 2;
   const tagCenterWorld = GUEST_SPOT.x + offsetX + 14;
   const originPx = (cameraOriginX / 100) * WIDTH;
-  const worldLimit = originPx + (WIDTH - TAG_SAFE_MARGIN - originPx) / cameraScale;
+  const worldLimit = originPx + (WIDTH - TAG_SAFE_MARGIN - originPx) / cameraScale - cameraOffsetX;
   const tagShift = Math.max(0, tagCenterWorld + tagHalf - worldLimit) / scale;
 
   return (
@@ -641,14 +644,26 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
     rotate: `${(sway * 0.35 + weight * 0.4 + actionRot).toFixed(2)}deg`,
   } as const;
 
-  // Mixed cuts: each scene gets a different transition flavour.
-  const SCENE_TRANSITIONS: readonly SceneTransitionVariant[] = [
-    "zoom",
-    "slide",
-    "wipe",
-    "rise",
-  ];
-  const sceneVariant = SCENE_TRANSITIONS[sceneIndex % SCENE_TRANSITIONS.length];
+  // Mixed cuts: each scene gets a transition chosen from its content and its
+  // role in the film (questions iris, actions whip, the low beat dips, the
+  // close blooms), never repeating the previous one.
+  const transitions = useMemo(() => {
+    const list: TransitionId[] = [];
+    script.scenes.forEach((entry, index) => {
+      list.push(pickTransition(entry, index, script.scenes.length, list[index - 1]));
+    });
+    return list;
+  }, [script.scenes]);
+  const sceneVariant = transitions[sceneIndex];
+  const accent = cutAccent(
+    transitions,
+    windows.map((entry) => entry.start),
+    frame,
+  );
+  // The whip is a whole-world move: overscan so the frame edge never shows,
+  // and a lateral kick that the name-tag clamp also has to know about.
+  const worldScale = cameraScale * (1 + accent.whip * 0.19);
+  const worldOffsetX = accent.whip * accent.whipDir * 80;
 
   // ---- Environment lighting ----------------------------------------------
   // The character is lit by his world: the halo behind him and a soft rim
@@ -672,8 +687,8 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
         style={{
           position: "absolute",
           inset: 0,
-          scale: `${cameraScale}`,
-          translate: `${cameraDriftX}px ${cameraDriftY}px`,
+          scale: `${worldScale.toFixed(4)}`,
+          translate: `${(cameraDriftX + worldOffsetX).toFixed(2)}px ${cameraDriftY.toFixed(2)}px`,
           rotate: `${rig.rotate}deg`,
           transformOrigin: `${SHOTS[shotId].originX}% ${SHOTS[shotId].originY}%`,
         }}
@@ -771,8 +786,9 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
           localSeconds={localSeconds}
           fps={fps}
           frame={frame}
-          cameraScale={cameraScale}
+          cameraScale={worldScale}
           cameraOriginX={SHOTS[shotId].originX}
+          cameraOffsetX={worldOffsetX}
         />
 
         {/* Persistent main character */}
@@ -805,6 +821,30 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
           />
         </div>
       </div>
+
+      {/* Cut accents (Phase 5B): the whole frame reacts at a cut, not just the
+          text block - a dip to black on the low beat, a warm bloom on the
+          close. Deterministic, frame-driven, and captions-only scenes still
+          read because the veil peaks on the cut frame itself. */}
+      {accent.black > 0.001 ? (
+        <AbsoluteFill
+          style={{
+            backgroundColor: "#0B0E14",
+            opacity: accent.black,
+            pointerEvents: "none",
+          }}
+        />
+      ) : null}
+      {accent.flash > 0.001 ? (
+        <AbsoluteFill
+          style={{
+            background:
+              "radial-gradient(circle at 50% 44%, rgba(255, 238, 205, 1) 0%, rgba(255, 238, 205, 0.5) 48%, rgba(255, 238, 205, 0) 76%)",
+            opacity: accent.flash,
+            pointerEvents: "none",
+          }}
+        />
+      ) : null}
 
       <Overlays title={script.title} windows={windows} />
     </AbsoluteFill>

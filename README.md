@@ -25,6 +25,9 @@ Remotion → compress) and shows live progress over SSE. Renders land in
   camera move (push / pull / hold / pan / tilt). Left on auto, the scene's own
   words plus the film's narrative arc pick deterministically - so the same
   script always renders the same film.
+- **Transitions (Phase 5B):** cuts are directed too - questions iris, the
+  refusal whips the camera, the low beat dips through black and the closing
+  beat blooms with warm light. All frame-driven, no random values.
 
 ## Render from the phone (PC off)
 

@@ -11,6 +11,7 @@ import { TEXT_FONT_FAMILY } from "../fonts";
 import { VOICE_MANIFEST } from "../voice/voiceover";
 import { fitFontSize } from "./fitText";
 import { SceneFrame } from "./SceneFrame";
+import type { TransitionId } from "../video/transitions";
 
 /**
  * "text" scene template: one big editorial statement above the character.
@@ -181,7 +182,7 @@ export const TextScene: React.FC<{
   durationInFrames: number;
   /** Scene index in the script - used to pick the spoken-word timings. */
   sceneIndex?: number;
-  variant?: "zoom" | "slide" | "wipe" | "rise";
+  variant?: TransitionId;
   reverse?: boolean;
 }> = ({ text, durationInFrames, sceneIndex, variant, reverse }) => {
   const frame = useCurrentFrame();

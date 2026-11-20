@@ -10,6 +10,7 @@ import { COLORS, SAFE_X } from "../config";
 import { TEXT_FONT_FAMILY } from "../fonts";
 import { fitFontSize } from "./fitText";
 import { SceneFrame } from "./SceneFrame";
+import type { TransitionId } from "../video/transitions";
 
 /**
  * "points" scene template: heading + numbered list items that arrive one by
@@ -43,7 +44,7 @@ export const PointsScene: React.FC<{
   /** Seconds, one per item. Falls back to a fixed stagger when omitted. */
   revealTimes?: readonly number[];
   durationInFrames: number;
-  variant?: "zoom" | "slide" | "wipe" | "rise";
+  variant?: TransitionId;
   reverse?: boolean;
 }> = ({ text, items, revealTimes, durationInFrames, variant, reverse }) => {
   const frame = useCurrentFrame();
