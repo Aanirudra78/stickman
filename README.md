@@ -20,6 +20,11 @@ Remotion → compress) and shows live progress over SSE. Renders land in
   Both providers produce word timings, so lip sync works either way.
 - Settings dialog stores the key in `.env` and shows a QR code for the phone.
   Set `STUDIO_PIN` to require a PIN on LAN access.
+- **World + camera (Phase 5A):** every scene can pin its background (22
+  illustrated worlds), camera shot (wide / medium / close / low / high) and
+  camera move (push / pull / hold / pan / tilt). Left on auto, the scene's own
+  words plus the film's narrative arc pick deterministically - so the same
+  script always renders the same film.
 
 ## Render from the phone (PC off)
 

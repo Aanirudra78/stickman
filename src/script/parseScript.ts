@@ -1,6 +1,8 @@
 import { ACTION_IDS, isActionId } from "../actions/types";
 import { POSE_NAMES, type PoseName } from "../poses/poses";
 import { isPropId, PROP_IDS } from "../props/ids";
+import { ENV_IDS, type EnvId } from "../video/environments";
+import { CAMERA_MOVES, SHOT_IDS, type CameraMove, type ShotId } from "../video/shots";
 import type {
   GuestEntrance,
   PoseChange,
@@ -18,6 +20,30 @@ import type {
  */
 
 const SCENE_TYPES: SceneType[] = ["text", "points"];
+
+const parseEnv = (value: unknown, path: string): EnvId | undefined => {
+  if (value === undefined) return undefined;
+  if (typeof value !== "string" || !ENV_IDS.includes(value as EnvId)) {
+    fail(path, `must be one of: ${ENV_IDS.join(", ")}`);
+  }
+  return value as EnvId;
+};
+
+const parseShot = (value: unknown, path: string): ShotId | undefined => {
+  if (value === undefined) return undefined;
+  if (typeof value !== "string" || !SHOT_IDS.includes(value as ShotId)) {
+    fail(path, `must be one of: ${SHOT_IDS.join(", ")}`);
+  }
+  return value as ShotId;
+};
+
+const parseMove = (value: unknown, path: string): CameraMove | undefined => {
+  if (value === undefined) return undefined;
+  if (typeof value !== "string" || !CAMERA_MOVES.includes(value as CameraMove)) {
+    fail(path, `must be one of: ${CAMERA_MOVES.join(", ")}`);
+  }
+  return value as CameraMove;
+};
 
 const parseWordIndex = (value: unknown, path: string): number | undefined => {
   if (value === undefined) return undefined;
@@ -213,6 +239,9 @@ const parseScene = (raw: unknown, index: number): Scene => {
     actions: parseActions(raw.actions, `${path}.actions`),
     props: parseProps(raw.props, `${path}.props`),
     guest: parseGuest(raw.guest, `${path}.guest`),
+    env: parseEnv(raw.env, `${path}.env`),
+    shot: parseShot(raw.shot, `${path}.shot`),
+    move: parseMove(raw.move, `${path}.move`),
     voiceover: raw.voiceover as string | undefined,
   };
 };

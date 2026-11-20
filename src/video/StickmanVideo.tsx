@@ -26,7 +26,8 @@ import { blendAction, getActiveAction, sampleAction } from "../actions/sample";
 import type { ActionId } from "../actions/types";
 import { MusicBed } from "../audio/MusicBed";
 import { SceneSfx } from "../audio/SceneSfx";
-import { COLORS, type Scene, type VideoScript } from "../config";import { assertFontsLoaded, TEXT_FONT_FAMILY } from "../fonts";
+import { COLORS, WIDTH, type Scene, type VideoScript } from "../config";
+import { assertFontsLoaded, TEXT_FONT_FAMILY } from "../fonts";
 import { mixPose, POSES, type FaceParams, type JointAngles } from "../poses/poses";
 import type { PropId } from "../props/ids";
 import { DustPuffs, SpeedSmear } from "./ActionFx";
@@ -65,6 +66,7 @@ import { Background } from "./Background";
 import { pickEnvironment, withAlpha, ENV_PALETTES, type EnvId } from "./environments";
 import { Overlays } from "./Overlays";
 import { PoseFx } from "./PoseFx";
+import { cameraRig, pickMove, pickShot, SHOTS } from "./shots";
 
 /** Scene windows, stretched to fit the narration. */
 export const useSceneWindows = (script: VideoScript) => {
@@ -117,6 +119,10 @@ type GuestState = {
   localSeconds: number;
   fps: number;
   frame: number;
+  /** Current camera zoom of the world layer, so the name tag can stay inside. */
+  cameraScale: number;
+  /** Camera transform-origin X in % of the frame. */
+  cameraOriginX: number;
 };
 
 /** The guest cameo figure + name tag. Rendered next to the main character. */
@@ -126,6 +132,8 @@ const GuestCameo: React.FC<GuestState> = ({
   localSeconds,
   fps,
   frame,
+  cameraScale,
+  cameraOriginX,
 }) => {
   const guest = scene.guest;
   const duration = sceneSeconds;
@@ -231,6 +239,20 @@ const GuestCameo: React.FC<GuestState> = ({
 
   const tagScale = 0.7 + 0.3 * eased;
 
+  // Keep the name tag inside the frame. The tag lives inside the world layer,
+  // which the camera zooms around `cameraOriginX`, so its screen position
+  // depends on the shot: a medium/close on a guest would push the right edge
+  // of the pill past 1080px. Estimate the pill width from the name and slide
+  // it left just enough (in guest-local px, hence the /scale) to leave a
+  // margin. Deterministic and frame-driven, no measurement needed.
+  const TAG_SAFE_MARGIN = 36;
+  const tagWidth = Math.min(560, 54 + guest.name.length * 24);
+  const tagHalf = (tagWidth * tagScale) / 2;
+  const tagCenterWorld = GUEST_SPOT.x + offsetX + 14;
+  const originPx = (cameraOriginX / 100) * WIDTH;
+  const worldLimit = originPx + (WIDTH - TAG_SAFE_MARGIN - originPx) / cameraScale;
+  const tagShift = Math.max(0, tagCenterWorld + tagHalf - worldLimit) / scale;
+
   return (
     <>
       <div
@@ -262,7 +284,7 @@ const GuestCameo: React.FC<GuestState> = ({
         <div
           style={{
             position: "absolute",
-            left: STICKMAN_HIP_X,
+            left: STICKMAN_HIP_X - tagShift,
             top: STICKMAN_HIP_Y - 306,
             transform: `translate(-50%, -100%) scale(${tagScale.toFixed(3)})`,
             transformOrigin: "50% 100%",
@@ -329,12 +351,22 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
   const localSeconds = Math.max(0, (frame - window.start) / fps);
 
   // ---- Environment -------------------------------------------------------
-  // Each scene plays somewhere: the world is picked from the scene's own
-  // words (memo-stable, deterministic), and cross-fades on scene changes.
+  // Each scene plays somewhere: an explicit `scene.env` (studio UI) wins,
+  // otherwise the world comes from the scene's words + the narrative arc.
+  // Memo-stable and deterministic, and it cross-fades on scene changes.
   const environments = useMemo(() => {
     const list: EnvId[] = [];
     script.scenes.forEach((entry, index) => {
-      list.push(pickEnvironment(entry.text, entry.items, index, list[index - 1]));
+      list.push(
+        entry.env ??
+          pickEnvironment(
+            entry.text,
+            entry.items,
+            index,
+            list[index - 1],
+            script.scenes.length,
+          ),
+      );
     });
     return list;
   }, [script.scenes]);
@@ -491,10 +523,19 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
   const punch = action ? (ACTION_CAMERA[action.id] ?? 0) * actionWeight : 0;
+
+  // Phase 5A shot language: an explicit per-scene shot/move (studio UI) wins,
+  // otherwise the scene's role picks one deterministically. The rig moves the
+  // WORLD layer only - captions never move.
+  const shotId = scene.shot ?? pickShot(scene, sceneIndex, script.scenes.length);
+  const moveId = scene.move ?? pickMove(shotId, sceneIndex);
+  const rig = cameraRig(shotId, moveId, sceneProgress);
+
   const cameraScale =
-    (1 + 0.06 * sceneProgress) *
-    (1 + punch) *
-    (1 - guestPresence * 0.02);
+    rig.scale * (1 + punch) * (1 - guestPresence * 0.02);
+  // Handheld breathing on holds: 1-2 px, deterministic, keeps shots alive.
+  const cameraDriftX = rig.x + Math.sin(frame * 0.019) * 1.6;
+  const cameraDriftY = rig.y + Math.cos(frame * 0.014) * 1.2;
 
   // ---- Hook entrance ---------------------------------------------------
   const hookPop =
@@ -632,7 +673,9 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
           position: "absolute",
           inset: 0,
           scale: `${cameraScale}`,
-          transformOrigin: "50% 52%",
+          translate: `${cameraDriftX}px ${cameraDriftY}px`,
+          rotate: `${rig.rotate}deg`,
+          transformOrigin: `${SHOTS[shotId].originX}% ${SHOTS[shotId].originY}%`,
         }}
       >
         {/* Warm halo behind the character, attached to his stage position. */}
@@ -728,6 +771,8 @@ export const StickmanVideo: React.FC<{ script: VideoScript }> = ({ script }) => 
           localSeconds={localSeconds}
           fps={fps}
           frame={frame}
+          cameraScale={cameraScale}
+          cameraOriginX={SHOTS[shotId].originX}
         />
 
         {/* Persistent main character */}

@@ -848,6 +848,43 @@ const overridesState = {
   data: null, // GET /api/scenes response
 };
 
+/** Phase 5A: world + camera vocabularies (keep in sync with src/video). */
+const ENV_OPTIONS = [
+  "study",
+  "office",
+  "duskCity",
+  "park",
+  "dreamNight",
+  "neonStreet",
+  "skylineNight",
+  "metroPlatform",
+  "officeNight",
+  "rooftopDawn",
+  "hilltopDawn",
+  "riverbank",
+  "forestPath",
+  "gardenBench",
+  "starlitField",
+  "library",
+  "cafe",
+  "rainWindow",
+  "classroom",
+  "bedroomDesk",
+  "kitchenTable",
+  "workshop",
+];
+const SHOT_OPTIONS = ["wide", "medium", "close", "low", "high"];
+const MOVE_OPTIONS = ["push", "pull", "hold", "pan", "tilt"];
+
+const pickOptions = (ids, selected) =>
+  '<option value="">(auto)</option>' +
+  ids
+    .map(
+      (id) =>
+        `<option value="${id}"${selected === id ? " selected" : ""}>${id}</option>`,
+    )
+    .join("");
+
 const overrideRow = (scene, index) => {
   const catalog = overridesState.data;
   const voice = catalog.voices[index];
@@ -894,6 +931,15 @@ const overrideRow = (scene, index) => {
       <label class="ov-label"><span>Guest</span>
         <input data-apply="guest" placeholder="(no guest)" value="${escapeAttr(scene.guest?.name ?? "")}" />
       </label>
+      <label class="ov-label"><span>World</span>
+        <select data-apply="env">${pickOptions(ENV_OPTIONS, scene.env)}</select>
+      </label>
+      <label class="ov-label"><span>Shot</span>
+        <select data-apply="shot">${pickOptions(SHOT_OPTIONS, scene.shot)}</select>
+      </label>
+      <label class="ov-label"><span>Camera</span>
+        <select data-apply="move">${pickOptions(MOVE_OPTIONS, scene.move)}</select>
+      </label>
     </div>
     <div class="ov-side">
       <button type="button" class="ghost tiny" data-ov="regen" title="Generate this line's voice and play it">♪ <span>${escapeHtml(voice ? `${voice.durationInSeconds?.toFixed?.(1) ?? "?"}s` : "gen + play")}</span></button>
@@ -939,7 +985,15 @@ $("#overrides").addEventListener("change", async (event) => {
   const row = event.target.closest(".override-row");
   const index = Number(row.dataset.index);
   const patch = {};
-  if (field === "action" || field === "prop" || field === "prop2" || field === "guest") {
+  if (
+    field === "action" ||
+    field === "prop" ||
+    field === "prop2" ||
+    field === "guest" ||
+    field === "env" ||
+    field === "shot" ||
+    field === "move"
+  ) {
     patch[field] = event.target.value;
   } else if (field === "word") {
     patch.word = Number(event.target.value) || 0;

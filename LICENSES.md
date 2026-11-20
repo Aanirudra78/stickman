@@ -41,16 +41,21 @@ royalty-free by construction.
 
 ## Background plates (`public/env/plates/`)
 
-Since Phase 3 the five environment backdrops are AI-generated illustrations
-(flat pastel storybook style, one plate per environment: study, office,
-dusk-city, park, dream-night). They were generated with the Recraft flash
-image model via OpenRouter's free tier, from hand-written prompts in this
-repo's session history — no third-party artwork was copied or used as source.
-Generated images carry no third-party rights claims; they are treated as
-original project assets. Pixel-probed for the caption-band lightness contract
-(`out/probe-plates.ps1`).
+Since Phase 3 the environment backdrops are AI-generated illustrations
+(flat pastel storybook style, one plate per world). Phase 5A expanded the
+library to 22 worlds: study, office, dusk-city, park, dream-night,
+neon-street, skyline-night, metro-platform, office-night, rooftop-dawn,
+hilltop-dawn, riverbank, forest-path, garden-bench, starlit-field, library,
+cafe, rain-window, classroom, bedroom-desk, kitchen-table, workshop. They were
+generated with the Recraft flash image model via OpenRouter's free tier, from
+hand-written prompts in this repo's session history — no third-party artwork
+was copied or used as source. Generated images carry no third-party rights
+claims; they are treated as original project assets. Pixel-probed for the
+caption-band lightness contract (`out/probe-plates.ps1`).
 
 ## Voiceover
 
-Narration is generated with ElevenLabs under its commercial license for the
-project's own account (not committed as CC0; regenerated per script change).
+Narration is generated with Microsoft Edge TTS (free, no account, no credits)
+by default; ElevenLabs remains available in the studio for manual use under
+its commercial license. Neither voice set is committed as CC0; it is
+regenerated per script change.

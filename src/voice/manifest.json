@@ -8,8 +8,8 @@
     "targetPeakDbfs": -3,
     "maxGainDb": 12
   },
-  "generatedAt": "2026-11-17T19:56:38.859Z",
-  "totalSeconds": 65.064,
+  "generatedAt": "2026-11-20T14:15:34.831Z",
+  "totalSeconds": 56.28,
   "scenes": [
     {
       "index": 0,
@@ -230,27 +230,6 @@
     {
       "index": 6,
       "file": "voice/scene-07.mp3",
-      "text": "Minus twenty.",
-      "hash": "a0d9838f27ba",
-      "durationInSeconds": 1.968,
-      "peakDbfs": -3,
-      "gainDb": 0.583,
-      "words": [
-        {
-          "text": "Minus",
-          "start": 0.05,
-          "end": 0.519
-        },
-        {
-          "text": "twenty",
-          "start": 0.532,
-          "end": 1.001
-        }
-      ]
-    },
-    {
-      "index": 7,
-      "file": "voice/scene-08.mp3",
       "text": "They left me on read.",
       "hash": "5988b693b0f4",
       "durationInSeconds": 2.376,
@@ -285,29 +264,8 @@
       ]
     },
     {
-      "index": 8,
-      "file": "voice/scene-09.mp3",
-      "text": "Minus twenty-five.",
-      "hash": "6dd296f1f1ab",
-      "durationInSeconds": 2.424,
-      "peakDbfs": -3,
-      "gainDb": 1.23,
-      "words": [
-        {
-          "text": "Minus",
-          "start": 0.05,
-          "end": 0.519
-        },
-        {
-          "text": "twenty-five",
-          "start": 0.532,
-          "end": 1.456
-        }
-      ]
-    },
-    {
-      "index": 9,
-      "file": "voice/scene-10.mp3",
+      "index": 7,
+      "file": "voice/scene-08.mp3",
       "text": "Someone my age earns more.",
       "hash": "939778400fd8",
       "durationInSeconds": 2.736,
@@ -342,29 +300,8 @@
       ]
     },
     {
-      "index": 10,
-      "file": "voice/scene-11.mp3",
-      "text": "Minus twenty-five.",
-      "hash": "6dd296f1f1ab",
-      "durationInSeconds": 2.424,
-      "peakDbfs": -3,
-      "gainDb": 1.23,
-      "words": [
-        {
-          "text": "Minus",
-          "start": 0.05,
-          "end": 0.519
-        },
-        {
-          "text": "twenty-five",
-          "start": 0.532,
-          "end": 1.456
-        }
-      ]
-    },
-    {
-      "index": 11,
-      "file": "voice/scene-12.mp3",
+      "index": 8,
+      "file": "voice/scene-09.mp3",
       "text": "My last reel flopped.",
       "hash": "ec6ea6754535",
       "durationInSeconds": 2.448,
@@ -394,34 +331,13 @@
       ]
     },
     {
-      "index": 12,
-      "file": "voice/scene-13.mp3",
-      "text": "Minus twenty.",
-      "hash": "a0d9838f27ba",
-      "durationInSeconds": 1.968,
-      "peakDbfs": -3,
-      "gainDb": 0.583,
-      "words": [
-        {
-          "text": "Minus",
-          "start": 0.05,
-          "end": 0.519
-        },
-        {
-          "text": "twenty",
-          "start": 0.532,
-          "end": 1.001
-        }
-      ]
-    },
-    {
-      "index": 13,
-      "file": "voice/scene-14.mp3",
+      "index": 9,
+      "file": "voice/scene-10.mp3",
       "text": "By evening, you’re empty.",
       "hash": "7f814e39027d",
       "durationInSeconds": 2.568,
       "peakDbfs": -3,
-      "gainDb": 1.88,
+      "gainDb": 1.822,
       "words": [
         {
           "text": "By",
@@ -446,8 +362,8 @@
       ]
     },
     {
-      "index": 14,
-      "file": "voice/scene-15.mp3",
+      "index": 10,
+      "file": "voice/scene-11.mp3",
       "text": "And the things that actually matter get whatever is left.",
       "hash": "1e52fdddc0a7",
       "durationInSeconds": 3.72,
@@ -507,8 +423,8 @@
       ]
     },
     {
-      "index": 15,
-      "file": "voice/scene-16.mp3",
+      "index": 11,
+      "file": "voice/scene-12.mp3",
       "text": "Almost nothing.",
       "hash": "28fabf741934",
       "durationInSeconds": 2.04,
@@ -528,8 +444,8 @@
       ]
     },
     {
-      "index": 16,
-      "file": "voice/scene-17.mp3",
+      "index": 12,
+      "file": "voice/scene-13.mp3",
       "text": "Mark Manson’s point is simple.",
       "hash": "ac274f19aab2",
       "durationInSeconds": 2.808,
@@ -564,8 +480,8 @@
       ]
     },
     {
-      "index": 17,
-      "file": "voice/scene-18.mp3",
+      "index": 13,
+      "file": "voice/scene-14.mp3",
       "text": "Not giving a f*ck doesn’t mean caring about nothing.",
       "hash": "8ccf35dcfe43",
       "durationInSeconds": 4.584,
@@ -630,8 +546,8 @@
       ]
     },
     {
-      "index": 18,
-      "file": "voice/scene-19.mp3",
+      "index": 14,
+      "file": "voice/scene-15.mp3",
       "text": "It means refusing to care about things that don’t deserve it.",
       "hash": "52ad38194fde",
       "durationInSeconds": 4.104,
@@ -696,8 +612,8 @@
       ]
     },
     {
-      "index": 19,
-      "file": "voice/scene-20.mp3",
+      "index": 15,
+      "file": "voice/scene-16.mp3",
       "text": "So change the question.",
       "hash": "b2c273d13716",
       "durationInSeconds": 2.352,
@@ -727,13 +643,13 @@
       ]
     },
     {
-      "index": 20,
-      "file": "voice/scene-21.mp3",
+      "index": 16,
+      "file": "voice/scene-17.mp3",
       "text": "Not “should I care?” but “what am I choosing to care about.",
       "hash": "89afad74b07d",
       "durationInSeconds": 4.2,
       "peakDbfs": -3,
-      "gainDb": 1.928,
+      "gainDb": 1.739,
       "words": [
         {
           "text": "Not",
@@ -798,8 +714,8 @@
       ]
     },
     {
-      "index": 21,
-      "file": "voice/scene-22.mp3",
+      "index": 17,
+      "file": "voice/scene-18.mp3",
       "text": "Pick three things.",
       "hash": "59e6874f5b50",
       "durationInSeconds": 2.208,
@@ -824,8 +740,8 @@
       ]
     },
     {
-      "index": 22,
-      "file": "voice/scene-23.mp3",
+      "index": 18,
+      "file": "voice/scene-19.mp3",
       "text": "Let the rest go.",
       "hash": "59e492114914",
       "durationInSeconds": 1.992,
@@ -855,8 +771,8 @@
       ]
     },
     {
-      "index": 23,
-      "file": "voice/scene-24.mp3",
+      "index": 19,
+      "file": "voice/scene-20.mp3",
       "text": "Follow for the next lesson.",
       "hash": "7c7333e8aaa2",
       "durationInSeconds": 2.328,

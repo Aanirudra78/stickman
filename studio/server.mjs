@@ -692,6 +692,52 @@ const handleScenePatch = async (req, res, url) => {
     }
   }
 
+  // --- world + camera (Phase 5A) ------------------------------------------
+  // `env`, `shot` and `move` are optional per-scene overrides. An empty value
+  // clears the override and falls back to automatic detection.
+  const ENV_IDS = [
+    "study",
+    "office",
+    "duskCity",
+    "park",
+    "dreamNight",
+    "neonStreet",
+    "skylineNight",
+    "metroPlatform",
+    "officeNight",
+    "rooftopDawn",
+    "hilltopDawn",
+    "riverbank",
+    "forestPath",
+    "gardenBench",
+    "starlitField",
+    "library",
+    "cafe",
+    "rainWindow",
+    "classroom",
+    "bedroomDesk",
+    "kitchenTable",
+    "workshop",
+  ];
+  const SHOT_IDS = ["wide", "medium", "close", "low", "high"];
+  const CAMERA_MOVES = ["push", "pull", "hold", "pan", "tilt"];
+  for (const [field, allowed] of [
+    ["env", ENV_IDS],
+    ["shot", SHOT_IDS],
+    ["move", CAMERA_MOVES],
+  ]) {
+    if (body[field] === undefined) continue;
+    const value = String(body[field]).trim();
+    if (value === "") {
+      delete scene[field];
+      continue;
+    }
+    if (!allowed.includes(value)) {
+      return json(res, 400, { error: `unknown ${field} "${value}"` });
+    }
+    scene[field] = value;
+  }
+
   await writeCommittedScript(script);
   log(`scene ${index + 1} overridden`);
   return json(res, 200, { ok: true, index, scene });

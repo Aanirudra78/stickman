@@ -1,6 +1,8 @@
 import type { ActionId } from "./actions/types";
 import type { PoseName } from "./poses/poses";
 import type { PropId } from "./props/ids";
+import type { EnvId } from "./video/environments";
+import type { CameraMove, ShotId } from "./video/shots";
 
 /** Composition constants. */
 export const FPS = 30;
@@ -124,6 +126,15 @@ export type Scene = {
   props?: PropId[];
   /** Optional guest cameo. */
   guest?: SceneGuest;
+  /**
+   * Phase 5A: which world this scene plays in. Omitted = keyword detection
+   * plus the narrative arc (see pickEnvironment).
+   */
+  env?: EnvId;
+  /** Camera shot for this scene. Omitted = deterministic pick. */
+  shot?: ShotId;
+  /** Camera move for this scene. Omitted = derived from the shot. */
+  move?: CameraMove;
   /**
    * Narration for this scene. Run `npm run voiceover` after changing it;
    * the generated clip is what actually gets played.

@@ -586,7 +586,7 @@ const dreamNightArt = (p: EnvPalette): EnvArt => ({
   ),
 });
 
-const ENV_ART: Record<EnvId, (palette: EnvPalette) => EnvArt> = {
+const ENV_ART: Partial<Record<EnvId, (palette: EnvPalette) => EnvArt>> = {
   study: studyArt,
   office: officeArt,
   duskCity: duskCityArt,
@@ -668,7 +668,7 @@ const EnvironmentStack: React.FC<{
     );
   }
 
-  const art = ENV_ART[env](palette);
+  const art = (ENV_ART[env] ?? studyArt)(palette);
 
   return (
     <AbsoluteFill style={{ opacity }}>

@@ -10,7 +10,7 @@
       "similarity_boost": 0.8,
       "style": 0.3,
       "use_speaker_boost": true,
-      "speed": 1.01
+      "speed": 1
     },
     "rate": "-4%"
   },
@@ -23,7 +23,8 @@
       "duration": 1.6,
       "speaking": false,
       "actions": [],
-      "props": []
+      "props": [],
+      "env": "study"
     },
     {
       "text": "You only wake up with 100 points of care",
@@ -46,7 +47,8 @@
       ],
       "props": [
         "heart"
-      ]
+      ],
+      "env": "bedroomDesk"
     },
     {
       "text": "That’s it",
@@ -62,7 +64,8 @@
           "id": "shrug"
         }
       ],
-      "props": []
+      "props": [],
+      "env": "kitchenTable"
     },
     {
       "text": "Every single day",
@@ -80,7 +83,8 @@
       ],
       "props": [
         "clock"
-      ]
+      ],
+      "env": "cafe"
     },
     {
       "text": "The question is: where are you spending them",
@@ -103,7 +107,8 @@
       ],
       "props": [
         "question"
-      ]
+      ],
+      "env": "metroPlatform"
     },
     {
       "text": "What will people think",
@@ -121,23 +126,8 @@
       ],
       "props": [
         "question"
-      ]
-    },
-    {
-      "text": "Minus twenty",
-      "voiceover": "Minus twenty.",
-      "pose": "talking",
-      "scene_type": "text",
-      "duration": 1.6,
-      "speaking": true,
-      "actions": [
-        {
-          "at": 0,
-          "word": 0,
-          "id": "hands_hips"
-        }
       ],
-      "props": []
+      "env": "bedroomDesk"
     },
     {
       "text": "They left me on read",
@@ -155,23 +145,10 @@
       ],
       "props": [
         "book"
-      ]
-    },
-    {
-      "text": "Minus twenty-five",
-      "voiceover": "Minus twenty-five.",
-      "pose": "talking",
-      "scene_type": "text",
-      "duration": 1.6,
-      "speaking": true,
-      "actions": [
-        {
-          "at": 0,
-          "word": 0,
-          "id": "point_aside"
-        }
       ],
-      "props": []
+      "env": "rainWindow",
+      "shot": "medium",
+      "move": "push"
     },
     {
       "text": "Someone my age earns more",
@@ -187,23 +164,8 @@
           "id": "point_up"
         }
       ],
-      "props": []
-    },
-    {
-      "text": "Minus twenty-five",
-      "voiceover": "Minus twenty-five.",
-      "pose": "talking",
-      "scene_type": "text",
-      "duration": 1.6,
-      "speaking": true,
-      "actions": [
-        {
-          "at": 0,
-          "word": 0,
-          "id": "point_aside"
-        }
-      ],
-      "props": []
+      "props": [],
+      "env": "officeNight"
     },
     {
       "text": "My last reel flopped",
@@ -221,23 +183,8 @@
       ],
       "props": [
         "camera"
-      ]
-    },
-    {
-      "text": "Minus twenty",
-      "voiceover": "Minus twenty.",
-      "pose": "talking",
-      "scene_type": "text",
-      "duration": 1.6,
-      "speaking": true,
-      "actions": [
-        {
-          "at": 0,
-          "word": 0,
-          "id": "hands_hips"
-        }
       ],
-      "props": []
+      "env": "workshop"
     },
     {
       "text": "By evening, you’re empty",
@@ -253,7 +200,8 @@
           "id": "lean_in"
         }
       ],
-      "props": []
+      "props": [],
+      "env": "duskCity"
     },
     {
       "text": "And the things that actually matter get whatever is left",
@@ -274,7 +222,8 @@
           "id": "hands_hips"
         }
       ],
-      "props": []
+      "props": [],
+      "env": "kitchenTable"
     },
     {
       "text": "Almost nothing",
@@ -290,7 +239,8 @@
           "id": "lean_in"
         }
       ],
-      "props": []
+      "props": [],
+      "env": "gardenBench"
     },
     {
       "text": "Mark Manson’s point is simple",
@@ -311,7 +261,8 @@
         "at": 0.25,
         "enter": "walk"
       },
-      "props": []
+      "props": [],
+      "env": "library"
     },
     {
       "text": "Not giving a f*ck doesn’t mean caring about nothing",
@@ -332,7 +283,8 @@
           "id": "wave"
         }
       ],
-      "props": []
+      "props": [],
+      "env": "neonStreet"
     },
     {
       "text": "It means refusing to care about things that don’t deserve it",
@@ -350,7 +302,8 @@
       ],
       "props": [
         "heart"
-      ]
+      ],
+      "env": "skylineNight"
     },
     {
       "text": "So change the question",
@@ -369,7 +322,8 @@
       "props": [
         "coin",
         "question"
-      ]
+      ],
+      "env": "starlitField"
     },
     {
       "text": "Not “should I care?” but “what am I choosing to care about",
@@ -393,7 +347,8 @@
       "props": [
         "question",
         "heart"
-      ]
+      ],
+      "env": "study"
     },
     {
       "text": "Pick three things",
@@ -409,7 +364,8 @@
           "id": "point_aside"
         }
       ],
-      "props": []
+      "props": [],
+      "env": "rooftopDawn"
     },
     {
       "text": "Let the rest go",
@@ -425,7 +381,8 @@
           "id": "shrug"
         }
       ],
-      "props": []
+      "props": [],
+      "env": "dreamNight"
     },
     {
       "text": "Follow for the next lesson",
@@ -443,7 +400,8 @@
       ],
       "props": [
         "arrow"
-      ]
+      ],
+      "env": "classroom"
     }
   ]
 }
